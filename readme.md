@@ -1,4 +1,6 @@
-# CollegeMC
+![Logo](documentation/logo.png)
+
+---
 
 Multi module project of CollegeMC containing
 - Common code
