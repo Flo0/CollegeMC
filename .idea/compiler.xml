@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="CollegeCommon" />
         <module name="CollegeMC-Lobby" />
+        <module name="CollegeMC-Libs" />
         <module name="CollegeMC-Primary" />
         <module name="CollegeVelocity-Core" />
         <module name="CollegeMC-Core" />

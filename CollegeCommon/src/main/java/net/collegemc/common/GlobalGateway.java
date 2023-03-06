@@ -7,7 +7,8 @@ import com.mongodb.client.MongoClients;
 import lombok.Getter;
 import net.collegemc.common.bridge.RemoteEventManager;
 import net.collegemc.common.model.DataDomainManager;
-import net.collegemc.common.network.data.NetworkUserManager;
+import net.collegemc.common.network.data.college.CollegeProfileManager;
+import net.collegemc.common.network.data.network.NetworkUserManager;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -26,6 +27,7 @@ public class GlobalGateway {
   private static boolean mongodbInitialized = false;
   private static RemoteEventManager remoteEventManager;
   private static NetworkUserManager networkUserManager;
+  private static CollegeProfileManager collegeProfileManager;
 
   public static DataDomainManager getDataDomainManager() {
     if (dataDomainManager == null) {
@@ -33,6 +35,14 @@ public class GlobalGateway {
       dataDomainManager = new DataDomainManager(getRemoteEventManager());
     }
     return dataDomainManager;
+  }
+
+  public static CollegeProfileManager getCollegeProfileManager() {
+    if (collegeProfileManager == null) {
+      Preconditions.checkState(redissonInitialized && mongodbInitialized, "Redisson and MongoDB need to be initialized.");
+      collegeProfileManager = new CollegeProfileManager(redissonClient, mongoClient);
+    }
+    return collegeProfileManager;
   }
 
   public static NetworkUserManager getNetworkUserManager() {

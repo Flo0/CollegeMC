@@ -15,6 +15,7 @@
         <module>CollegeVelocity-Core</module>
         <module>CollegeMC-Primary</module>
         <module>CollegeMC-Lobby</module>
+        <module>CollegeMC-Libs</module>
     </modules>
 
     <dependencies>

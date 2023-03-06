@@ -3,6 +3,7 @@
 ---
 
 Multi module project of CollegeMC containing
+
 - Common code
 - Minecraft common code
 - Velocity common code
@@ -10,6 +11,7 @@ Multi module project of CollegeMC containing
 - Minecraft primary server implementation
 
 ---
+
 ## Quick start
 
 Run the `paper-nms:init` maven lifecycle to create remapped nms sources.
@@ -20,6 +22,7 @@ The project can be build by running `package` or `install` on either the
 parent or each child module respectively.
 
 ---
+
 ## Dependency tree
 
 - Common depends on only external dependencies
@@ -29,3 +32,18 @@ parent or each child module respectively.
 - CollegeMC-Primary depends on CollegeMC-Core
 
 ![Dependency Tree](documentation/dependencies.png)
+
+---
+
+## Running the server
+
+Before starting the server you need to make sure you have:
+
+- Redis instance
+- MongoDB instance
+
+Using Docker is strongly recommended, especially if you are on
+Windows.
+
+After that you need `Core` and either `Lobby` or `Primary` on the server.
+You also need to install `ProtocolLib` as its a hard dependency.

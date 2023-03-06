@@ -4,3 +4,6 @@ main: net.collegemc.mc.lobby.CollegeLobby
 api-version: 1.19
 authors: [ Gestankbratwurst ]
 description: Primary server plugin for CollegeMC
+depend:
+  - CollegeMC-Libs
+  - CollegeMC-Core

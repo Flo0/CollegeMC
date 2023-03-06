@@ -12,28 +12,8 @@
 
     <artifactId>CollegeMC-Core</artifactId>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>bytecode.space</id>
-            <url>https://repo.bytecode.space/repository/maven-public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>ca.bkaw</groupId>
-                <artifactId>paper-nms-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>remap</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -108,20 +88,6 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Paper NMS -->
-        <dependency>
-            <groupId>ca.bkaw</groupId>
-            <artifactId>paper-nms</artifactId>
-            <version>${nms.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- ProtocolLib -->
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Annotation Command Framework -->
         <dependency>
             <groupId>co.aikar</groupId>
@@ -131,20 +97,8 @@
         <!-- Common -->
         <dependency>
             <groupId>net.collegemc</groupId>
-            <artifactId>CollegeCommon</artifactId>
+            <artifactId>CollegeMC-Libs</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <!-- AnvilGUI -->
-        <dependency>
-            <groupId>net.wesjd</groupId>
-            <artifactId>anvilgui</artifactId>
-            <version>1.6.3-SNAPSHOT</version>
-        </dependency>
-        <!-- MineSkin -->
-        <dependency>
-            <groupId>org.mineskin</groupId>
-            <artifactId>java-client</artifactId>
-            <version>1.2.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

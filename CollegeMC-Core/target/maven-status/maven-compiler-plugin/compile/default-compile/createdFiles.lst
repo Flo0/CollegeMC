@@ -1,1 +1,6 @@
-net\collegemc\mc\core\CollegeCore.class
+net\collegemc\mc\core\functionality\transport\teleport\TeleportManager.class
+net\collegemc\mc\core\functionality\transport\teleport\TeleportCommand.class
+net\collegemc\mc\core\functionality\active\ActiveCollegeUserManager.class
+net\collegemc\mc\core\functionality\CollegeCoreListener.class
+net\collegemc\mc\core\functionality\CollegeCore.class
+net\collegemc\mc\core\functionality\active\ActiveCollegeUser.class
