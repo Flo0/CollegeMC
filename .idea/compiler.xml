@@ -9,11 +9,9 @@
         <module name="CollegeCommon" />
         <module name="CollegeMC-Lobby" />
         <module name="CollegeMC-Primary" />
+        <module name="CollegeVelocity-Core" />
         <module name="CollegeMC-Core" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="CollegeVelocity-Core" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>

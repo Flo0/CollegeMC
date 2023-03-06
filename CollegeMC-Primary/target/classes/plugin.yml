@@ -1,0 +1,6 @@
+name: CollegeMC-Primary
+version: '1.0.0-SNAPSHOT'
+main: net.collegemc.mc.lobby.CollegeLobby
+api-version: 1.19
+authors: [ Gestankbratwurst ]
+description: Primary server plugin for CollegeMC

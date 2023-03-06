@@ -1,6 +1,6 @@
 name: CollegeMC-Core
 version: '${project.version}'
-main: net.collegemc.mc.core
+main: net.collegemc.mc.core.CollegeCore
 api-version: 1.19
 authors: [ Gestankbratwurst ]
 description: Core plugin for CollegeMC functionality

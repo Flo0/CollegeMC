@@ -1,0 +1,6 @@
+name: CollegeMC-Lobby
+version: '${project.version}'
+main: net.collegemc.mc.lobby.CollegeLobby
+api-version: 1.19
+authors: [ Gestankbratwurst ]
+description: Lobby plugin for CollegeMC
