@@ -1,1 +1,0 @@
-{"id":"collegemc_proxy","name":"CollegeProxy","version":"1.0.0-SNAPSHOT","description":"Proxy for CollegeMC","authors":["Gestankbratwurst"],"dependencies":[],"main":"net.collegemc.velocity.CollegeVelocity"}

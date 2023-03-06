@@ -1,8 +1,0 @@
-name: CollegeMC-Core
-version: '1.0.0-SNAPSHOT'
-main: net.collegemc.mc.core.CollegeCore
-api-version: 1.19
-authors: [ Gestankbratwurst ]
-description: Core plugin for CollegeMC functionality
-depend:
-  - CollegeMC-Libs

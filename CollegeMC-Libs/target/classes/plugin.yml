@@ -1,8 +1,0 @@
-name: CollegeMC-Libs
-version: '1.0.0-SNAPSHOT'
-main: net.collegemc.mc.libs.CollegeLibrary
-api-version: 1.19
-authors: [ Gestankbratwurst ]
-description: Library plugin for CollegeMC
-depend:
-  - ProtocolLib

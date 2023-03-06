@@ -11,6 +11,9 @@ import net.collegemc.common.gson.GsonSerializer;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,6 +64,9 @@ public class MongoMap<K, V> implements Map<K, V> {
     return false;
   }
 
+
+  @Nullable
+  @Contract("null -> null")
   @Override
   public V get(Object key) {
     if (!mongoBackbone.getDocumentClass().isInstance(key)) {
@@ -70,32 +76,34 @@ public class MongoMap<K, V> implements Map<K, V> {
     return mongoBackbone.find(Filters.eq(key)).first();
   }
 
+  @Nullable
   @Override
-  public V put(K key, V value) {
+  public V put(@NotNull K key, @NotNull V value) {
     ReplaceOptions options = new ReplaceOptions().upsert(true);
     V replaced = get(key);
     mongoBackbone.replaceOne(Filters.eq(key), value, options);
     return replaced;
   }
 
-  public void fastPut(K key, V value) {
+  public void fastPut(@NotNull K key, @NotNull V value) {
     ReplaceOptions options = new ReplaceOptions().upsert(true);
     mongoBackbone.replaceOne(Filters.eq(key), value, options);
   }
 
+  @Nullable
   @Override
-  public V remove(Object key) {
+  public V remove(@NotNull Object key) {
     V replaced = get(key);
     mongoBackbone.deleteOne(Filters.eq(key));
     return replaced;
   }
 
-  public void fastRemove(Object key) {
+  public void fastRemove(@NotNull Object key) {
     mongoBackbone.deleteOne(Filters.eq(key));
   }
 
   @Override
-  public void putAll(Map<? extends K, ? extends V> map) {
+  public void putAll(@NotNull Map<? extends K, ? extends V> map) {
     map.forEach(this::fastPut);
   }
 
@@ -109,6 +117,7 @@ public class MongoMap<K, V> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
+  @NotNull
   @Override
   public Collection<V> values() {
     List<V> values = new ArrayList<>();
@@ -121,7 +130,8 @@ public class MongoMap<K, V> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  public <E> List<V> findByProperty(String property, E value) {
+  @NotNull
+  public <E> List<V> findByProperty(@NotNull String property, E value) {
     return query(coll -> coll.find(Filters.eq(property, value)), iter -> {
       List<V> values = new ArrayList<>();
       iter.into(values);
@@ -129,7 +139,8 @@ public class MongoMap<K, V> implements Map<K, V> {
     });
   }
 
-  public List<V> queryToplist(String property, int limit, boolean ascending) {
+  @NotNull
+  public List<V> queryToplist(@NotNull String property, int limit, boolean ascending) {
     Bson sort = ascending ? Sorts.ascending(property) : Sorts.descending(property);
     return query(MongoCollection::find, iter -> {
       List<V> values = new ArrayList<>();
@@ -138,7 +149,8 @@ public class MongoMap<K, V> implements Map<K, V> {
     });
   }
 
-  public <I, R> R query(Function<MongoCollection<V>, I> queryFunction, Function<I, R> resultFunction) {
+  @NotNull
+  public <I, R> R query(@NotNull Function<MongoCollection<V>, I> queryFunction, @NotNull Function<I, R> resultFunction) {
     return resultFunction.apply(queryFunction.apply(this.mongoBackbone));
   }
 
