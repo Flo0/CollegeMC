@@ -97,6 +97,11 @@
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/repository/public/</url>
         </repository>
+        <!-- Jitpack -->
+        <repository>
+            <id>jitpack-repo</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -144,6 +149,13 @@
             <groupId>org.mineskin</groupId>
             <artifactId>java-client</artifactId>
             <version>1.2.4-SNAPSHOT</version>
+        </dependency>
+        <!-- ItemsAdder -->
+        <dependency>
+            <groupId>com.github.LoneDev6</groupId>
+            <artifactId>api-itemsadder</artifactId>
+            <version>3.2.5</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

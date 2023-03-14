@@ -4,88 +4,70 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" name="Changes" comment="Complete project restructure">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/CollegeCommon.iml" afterDir="false" />
+    <list default="true" id="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" name="Changes" comment="Several implementations">
+      <change afterPath="$PROJECT_DIR$/.idea/saveactions_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mongodb/GsonCodecRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/FallbackConfigurationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/gson/CollegeGsonSerializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/gson/adapters/LocationAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/warp/Warp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/warp/WarpCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/warp/WarpManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/ItemsAdderHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/ItemsAdderListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/IdleNPC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/AbstractNPC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/NPC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/listener/NPCListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/listener/NPCPacketListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/serializer/OfflinePlayerSerializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/tasks/NPCSenderTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/Region.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionChunkDomain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionSelection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/RegionWorldDomain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/spigot/UtilVect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/bridge/RemoteEventManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/bridge/RemoteEventManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/gson/GsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/gson/GsonSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/model/DataMapContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/model/DataMapContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mongodb/MongoGsonCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mongodb/MongoGsonCodec.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mongodb/MongoMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mongodb/MongoMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/CollegeCommon-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/target/CollegeCommon-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/GlobalGateway.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/bridge/RemoteEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/bridge/RemoteEventManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/AbstractClassAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/GsonSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/PostDeserializationAdapterFactory$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/PostDeserializationAdapterFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/PostDeserializationReactor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/adapters/ClassAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/gson/adapters/UUIDAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/AutoSyncUpdateEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/AutoSynchronizedGlobalDataMap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/ContextKey.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/DataDomainManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/DataMapContext$MapContextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/DataMapContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/DataObjectContext$ObjectContextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/DataObjectContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/GlobalDataMap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/GlobalDataObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/LocalDataMap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/model/MongoBackedLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/mongodb/MongoDriverProperties$MongoDriverPropertiesBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/mongodb/MongoDriverProperties.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/mongodb/MongoGsonCodec$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/mongodb/MongoGsonCodec.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/mongodb/MongoMap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/NetworkGsonSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/college/CollegeProfile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/college/CollegeProfileManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/network/NetworkRank.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/network/NetworkUserData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/data/network/NetworkUserManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/proxy/ProxyTransferRequest$ProxyTransferRequestBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/network/proxy/ProxyTransferRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/redis/GsonDecoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/redis/GsonEncoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/redis/RedisGsonCodec.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/utils/Pair.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/utils/ResourceCopy.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/utils/StringUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/classes/net/collegemc/common/utils/TypeInferredSerializedUnit.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/target/original-CollegeCommon-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/target/original-CollegeCommon-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/target/CollegeMC-Core-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/target/CollegeMC-Core-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/target/original-CollegeMC-Core-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/target/original-CollegeMC-Core-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/CollegeMC-Libs-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/CollegeMC-Libs-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/gui/abstraction/GuiButton$GuiButtonBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/gui/abstraction/GuiButton$GuiButtonBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/assembly/ResourcepackAssembler.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/assembly/ResourcepackAssembler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/PlayerBoundResourcePackServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/PlayerBoundResourcePackServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/ResourceServerConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/ResourceServerConnection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/ResourcepackManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/resourcepack/distribution/ResourcepackManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/spigot/UtilItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/classes/net/collegemc/mc/libs/spigot/UtilItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/target/original-CollegeMC-Libs-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/target/original-CollegeMC-Libs-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Lobby/target/CollegeMC-Lobby-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Lobby/target/CollegeMC-Lobby-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Lobby/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Lobby/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Lobby/target/original-CollegeMC-Lobby-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Lobby/target/original-CollegeMC-Lobby-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Primary/target/CollegeMC-Primary-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Primary/target/CollegeMC-Primary-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Primary/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Primary/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Primary/target/original-CollegeMC-Primary-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Primary/target/original-CollegeMC-Primary-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeVelocity-Core/target/CollegeVelocity-Core-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeVelocity-Core/target/CollegeVelocity-Core-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeVelocity-Core/target/classes/net/collegemc/velocity/CollegeVelocity.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeVelocity-Core/target/classes/net/collegemc/velocity/CollegeVelocity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeVelocity-Core/target/classes/net/collegemc/velocity/ProxyConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeVelocity-Core/target/classes/net/collegemc/velocity/ProxyConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeVelocity-Core/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeVelocity-Core/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeVelocity-Core/target/original-CollegeVelocity-Core-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeVelocity-Core/target/original-CollegeVelocity-Core-1.0.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/CollegeCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/CollegeCoreListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCoreListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/active/ActiveCollegeUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/active/ActiveCollegeUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/transport/teleport/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/teleport/TeleportCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/functionality/transport/teleport/TeleportManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/teleport/TeleportManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegePlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegePlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/holograms/implementations/protocollib/PlibHologramLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/holograms/implementations/protocollib/PlibHologramLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/tasks/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/tasks/TaskManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -113,24 +95,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/collegemc/CollegeMC",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/collegemc/CollegeMC&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.saveactions&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="net.collegemc.mc.libs.spigot" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -140,6 +128,16 @@
       <option name="presentableId" value="Default" />
       <updated>1678099430847</updated>
       <workItem from="1678099432410" duration="1761000" />
+      <workItem from="1678101409149" duration="2771000" />
+      <workItem from="1678122003674" duration="2624000" />
+      <workItem from="1678189748761" duration="5842000" />
+      <workItem from="1678271602850" duration="17690000" />
+      <workItem from="1678395011538" duration="1862000" />
+      <workItem from="1678443797753" duration="6790000" />
+      <workItem from="1678527050820" duration="23122000" />
+      <workItem from="1678647356135" duration="2202000" />
+      <workItem from="1678711281503" duration="17335000" />
+      <workItem from="1678791960074" duration="332000" />
     </task>
     <task id="LOCAL-00001" summary="Complete project restructure">
       <created>1678100064989</created>
@@ -148,7 +146,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678100064989</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Complete project restructure">
+      <created>1678101622161</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1678101622161</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,6 +161,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Complete project restructure" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete project restructure" />
+    <MESSAGE value="Several implementations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Several implementations" />
   </component>
 </project>

@@ -29,7 +29,7 @@ public class PlibHologramLine implements HologramLine {
   private final UUID entityUid;
   private final int entityId;
   private Location location;
-  private String text;
+  private String text = "ERROR";
 
   public PlibHologramLine(Location location) {
     this.location = location;

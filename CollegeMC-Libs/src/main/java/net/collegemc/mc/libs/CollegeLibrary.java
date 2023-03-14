@@ -1,9 +1,9 @@
 package net.collegemc.mc.libs;
 
 import co.aikar.commands.PaperCommandManager;
-import com.google.common.base.Preconditions;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import net.collegemc.common.GlobalGateway;
 import net.collegemc.common.gson.GsonSerializer;
@@ -15,6 +15,10 @@ import net.collegemc.mc.libs.gui.GuiManager;
 import net.collegemc.mc.libs.holograms.HologramManager;
 import net.collegemc.mc.libs.holograms.implementations.protocollib.PlibHologramFactory;
 import net.collegemc.mc.libs.messaging.Msg;
+import net.collegemc.mc.libs.npcs.NPCManager;
+import net.collegemc.mc.libs.npcs.abstraction.NPC;
+import net.collegemc.mc.libs.npcs.serializer.OfflinePlayerSerializer;
+import net.collegemc.mc.libs.regions.RegionManager;
 import net.collegemc.mc.libs.resourcepack.assembly.BlockModel;
 import net.collegemc.mc.libs.resourcepack.assembly.CustomSound;
 import net.collegemc.mc.libs.resourcepack.assembly.TextureModel;
@@ -26,6 +30,7 @@ import net.collegemc.mc.libs.tablist.implementation.EmptyTabList;
 import net.collegemc.mc.libs.tokenclick.TokenActionManager;
 import org.bson.UuidRepresentation;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.redisson.config.Config;
@@ -35,8 +40,8 @@ import java.util.Optional;
 
 public class CollegeLibrary extends JavaPlugin {
 
-  public static final String CORE_DB = "college-core";
-
+  @Getter
+  private static String serverName;
   @Getter
   private static CollegeLibrary instance;
   @Getter
@@ -57,6 +62,20 @@ public class CollegeLibrary extends JavaPlugin {
   private static ResourcepackManager resourcepackManager;
   @Getter
   private static GuiManager guiManager;
+  @Getter
+  private static NPCManager npcManager;
+  @Getter
+  private static RegionManager regionManager;
+  @Getter
+  private static GsonSerializer gsonSerializer;
+
+  public static MongoDatabase getServerDatabase() {
+    return GlobalGateway.getMongoClient().getDatabase(getServerDatabaseName());
+  }
+
+  public static String getServerDatabaseName() {
+    return GlobalGateway.DATABASE_NAME + "-" + serverName;
+  }
 
   private ServerConfigurationService coreConfigurationService;
 
@@ -64,7 +83,14 @@ public class CollegeLibrary extends JavaPlugin {
   public void onEnable() {
     instance = this;
 
-    this.fetchConfigurationService();
+    if (!this.fetchConfigurationService()) {
+      return;
+    }
+
+    serverName = this.coreConfigurationService.getServerName();
+    gsonSerializer = this.coreConfigurationService.getSerializer();
+    this.injectLibrarySerialisation(gsonSerializer);
+
     this.setupGateway();
     Msg.setServerPrefix(this.coreConfigurationService.getMessagePrefix());
 
@@ -76,9 +102,10 @@ public class CollegeLibrary extends JavaPlugin {
     tokenActionManager = new TokenActionManager(this, commandManager);
     playerSkinManager = new PlayerSkinManager(new GsonSerializer());
     guiManager = new GuiManager(this);
+    npcManager = new NPCManager(this);
+    regionManager = new RegionManager(this);
 
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
-
 
     this.setupResourcepack();
   }
@@ -139,10 +166,20 @@ public class CollegeLibrary extends JavaPlugin {
     GlobalGateway.initializeMongodb(mongoSettings);
   }
 
-  private void fetchConfigurationService() {
+  private boolean fetchConfigurationService() {
     RegisteredServiceProvider<ServerConfigurationService> configServiceProvider = Bukkit.getServicesManager().getRegistration(ServerConfigurationService.class);
-    Preconditions.checkState(configServiceProvider != null, "No configuration service is provided.");
+    if (configServiceProvider == null) {
+      new IllegalStateException("No configuration service is provided.").printStackTrace();
+      Bukkit.shutdown();
+      return false;
+    }
     this.coreConfigurationService = configServiceProvider.getProvider();
+    return true;
+  }
+
+  private void injectLibrarySerialisation(GsonSerializer serializer) {
+    serializer.registerAbstractTypeAdapter(NPC.class);
+    serializer.registerTypeHierarchyAdapter(OfflinePlayer.class, new OfflinePlayerSerializer());
   }
 
 }

@@ -25,14 +25,14 @@ import java.util.function.Consumer;
 
 public class PlayerSkinManager {
 
-  private static final String SKIN_NAMESPACE = "skin-data";
+  private static final String NAMESPACE = "Skin-Cache";
   private static final String USER_AGENT = "CoreAgent";
   private static final String API_KEY = "4e4d5e9f0d61a084e0673f99f49fd182280fb670151209f46fdc5c2a38867fdb";
   private static final String KEY_SECRET = "4ee3343aec34213a2df5616b137c6a36f4a0e89884b9b3b4852019b7faa33c4d912d9cd89c78c4b968d0b78d34b0c35d9025b8f7d7da4a78c2ca131ff5c05528";
 
   public PlayerSkinManager(GsonSerializer gsonSerializer) {
     this.mineskinClient = new MineskinClient(USER_AGENT, API_KEY);
-    this.globalObject = GlobalGateway.getDataDomainManager().getOrCreateGlobalObject(new PlayerSkinData(), gsonSerializer, CollegeLibrary.CORE_DB, SKIN_NAMESPACE);
+    this.globalObject = GlobalGateway.getDataDomainManager().getOrCreateGlobalObject(new PlayerSkinData(), gsonSerializer, GlobalGateway.DATABASE_NAME, NAMESPACE);
     this.playerSkinData = this.globalObject.getOrCreateRealTimeData();
   }
 

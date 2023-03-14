@@ -93,12 +93,14 @@
             <groupId>co.aikar</groupId>
             <artifactId>acf-paper</artifactId>
             <version>0.5.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Common -->
         <dependency>
             <groupId>net.collegemc</groupId>
             <artifactId>CollegeMC-Libs</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

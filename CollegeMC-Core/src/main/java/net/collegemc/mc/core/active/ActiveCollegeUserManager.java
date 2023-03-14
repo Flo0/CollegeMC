@@ -1,16 +1,16 @@
-package net.collegemc.mc.core.functionality.active;
+package net.collegemc.mc.core.active;
 
 import com.google.common.base.Preconditions;
 import net.collegemc.common.GlobalGateway;
 import net.collegemc.common.network.data.college.CollegeProfileManager;
 import net.collegemc.common.network.data.network.NetworkUserData;
 import net.collegemc.common.network.data.network.NetworkUserManager;
+import net.collegemc.mc.libs.tasks.TaskManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ActiveCollegeUserManager {
@@ -58,7 +58,7 @@ public class ActiveCollegeUserManager {
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
 
-    CompletableFuture.runAsync(() -> {
+    TaskManager.runOnIOPool(() -> {
       NetworkUserData networkUserData = networkUserManager.getLocalCopy(userId);
       networkUserData.getCollegeProfiles().forEach(collegeProfileManager::unload);
       networkUserManager.uncache(userId);

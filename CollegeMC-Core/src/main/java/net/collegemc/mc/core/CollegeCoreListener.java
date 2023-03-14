@@ -1,22 +1,24 @@
-package net.collegemc.mc.core.functionality;
+package net.collegemc.mc.core;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.concurrent.CompletableFuture;
-
 public class CollegeCoreListener implements Listener {
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.MONITOR)
   public void onPreLogin(AsyncPlayerPreLoginEvent event) {
+    if (event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
+      return;
+    }
     CollegeCore.getActiveCollegeUserManager().load(event.getUniqueId(), event.getName());
   }
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    CompletableFuture.runAsync(() -> CollegeCore.getActiveCollegeUserManager().unload(event.getPlayer().getUniqueId()));
+    CollegeCore.getActiveCollegeUserManager().unload(event.getPlayer().getUniqueId());
   }
 
 }

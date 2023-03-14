@@ -42,19 +42,19 @@ public class MongoGsonCodec<V> implements Codec<V> {
 
   @Override
   public Class<V> getEncoderClass() {
-    return typeClass;
+    return this.typeClass;
   }
 
   @Override
   public V decode(BsonReader reader, DecoderContext decoderContext) {
-    JsonObject rootObject = readObject(reader);
-    return gsonSerializer.fromJson(rootObject.toString(), this.typeClass);
+    JsonObject rootObject = this.readObject(reader);
+    return this.gsonSerializer.fromJson(rootObject.toString(), this.typeClass);
   }
 
   @Override
   public void encode(BsonWriter writer, V value, EncoderContext encoderContext) {
-    JsonElement jsonElement = gsonSerializer.toJsonTree(value);
-    writeJsonElement(writer, jsonElement);
+    JsonElement jsonElement = this.gsonSerializer.toJsonTree(value);
+    this.writeJsonElement(writer, jsonElement);
   }
 
   private void writeJsonElement(BsonWriter writer, JsonElement element) {
@@ -63,7 +63,7 @@ public class MongoGsonCodec<V> implements Codec<V> {
 
       element.getAsJsonObject().asMap().forEach((key, value) -> {
         writer.writeName(key);
-        writeJsonElement(writer, value);
+        this.writeJsonElement(writer, value);
       });
 
       writer.writeEndDocument();
@@ -79,7 +79,7 @@ public class MongoGsonCodec<V> implements Codec<V> {
       writer.writeNull();
     } else if (element.isJsonArray()) {
       writer.writeStartArray();
-      element.getAsJsonArray().forEach(value -> writeJsonElement(writer, value));
+      element.getAsJsonArray().forEach(value -> this.writeJsonElement(writer, value));
       writer.writeEndArray();
     } else {
       throw new IllegalStateException("Unidentified json type");
@@ -90,21 +90,22 @@ public class MongoGsonCodec<V> implements Codec<V> {
     JsonObject object = new JsonObject();
     reader.readStartDocument();
 
-    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+    BsonType type;
+    while ((type = reader.readBsonType()) != BsonType.END_OF_DOCUMENT) {
       String key = reader.readName();
-      object.add(key, readElement(reader));
+      object.add(key, this.readElement(reader, type));
     }
 
     reader.readEndDocument();
     return object;
   }
 
-  private JsonElement readElement(BsonReader reader) {
-    return switch (reader.readBsonType()) {
+  private JsonElement readElement(BsonReader reader, BsonType type) {
+    return switch (type) {
       case DOUBLE -> new JsonPrimitive(reader.readDouble());
       case STRING -> new JsonPrimitive(reader.readString());
-      case DOCUMENT -> readObject(reader);
-      case ARRAY -> readArray(reader);
+      case DOCUMENT -> this.readObject(reader);
+      case ARRAY -> this.readArray(reader);
       case BOOLEAN -> new JsonPrimitive(reader.readBoolean());
       case INT32 -> new JsonPrimitive(reader.readInt32());
       case INT64 -> new JsonPrimitive(reader.readInt64());
@@ -124,8 +125,9 @@ public class MongoGsonCodec<V> implements Codec<V> {
     JsonArray jsonArray = new JsonArray();
     reader.readStartArray();
 
-    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-      jsonArray.add(readElement(reader));
+    BsonType type;
+    while ((type = reader.readBsonType()) != BsonType.END_OF_DOCUMENT) {
+      jsonArray.add(this.readElement(reader, type));
     }
 
     reader.readEndArray();

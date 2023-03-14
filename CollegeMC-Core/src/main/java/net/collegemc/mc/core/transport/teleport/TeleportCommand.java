@@ -1,20 +1,20 @@
-package net.collegemc.mc.core.functionality.transport.teleport;
+package net.collegemc.mc.core.transport.teleport;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
-import net.collegemc.mc.core.functionality.CollegeCore;
-import net.collegemc.mc.core.functionality.active.ActiveCollegeUser;
+import co.aikar.commands.annotation.Values;
+import net.collegemc.mc.core.CollegeCore;
+import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.libs.messaging.Msg;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandPermission("ADMIN")
+@CommandPermission("command.tp")
 @CommandAlias("tp|teleport")
 public class TeleportCommand extends BaseCommand {
 
@@ -23,11 +23,11 @@ public class TeleportCommand extends BaseCommand {
     Msg.sendAdminInfo(sender, "/tp here <Player>");
     Msg.sendAdminInfo(sender, "/tp to <Player>");
     Msg.sendAdminInfo(sender, "/tp to <Player> <Player>");
-    Msg.sendAdminInfo(sender, "/tp at <Player> <x> <y> <z>");
   }
 
   @Subcommand("here")
-  public void onTpHere(Player sender, ActiveCollegeUser target) {
+  @CommandCompletion("@ActiveCollegeUser")
+  public void onTpHere(Player sender, @Values("@ActiveCollegeUser") ActiveCollegeUser target) {
     TeleportManager teleportManager = CollegeCore.getTeleportManager();
     ActiveCollegeUser senderUser = CollegeCore.getActiveCollegeUserManager().get(sender.getUniqueId());
     Player targetPlayer = target.getBukkitPlayer();
@@ -39,7 +39,8 @@ public class TeleportCommand extends BaseCommand {
   }
 
   @Subcommand("to")
-  public void onTpTo(Player sender, ActiveCollegeUser target, @Optional ActiveCollegeUser secondTarget) {
+  @CommandCompletion("@ActiveCollegeUser @ActiveCollegeUser")
+  public void onTpTo(Player sender, @Values("@ActiveCollegeUser") ActiveCollegeUser target, @Values("@ActiveCollegeUser") @Optional ActiveCollegeUser secondTarget) {
     TeleportManager teleportManager = CollegeCore.getTeleportManager();
     ActiveCollegeUser senderUser = CollegeCore.getActiveCollegeUserManager().get(sender.getUniqueId());
 
@@ -49,12 +50,6 @@ public class TeleportCommand extends BaseCommand {
     teleportManager.teleport(movedUser.getBukkitPlayer(), targetUser.getBukkitPlayer().getLocation()).thenRun(() -> {
       Msg.sendInfo(movedUser.getBukkitPlayer(), "You have been teleported to {}.", targetUser.resolveName());
     });
-  }
-
-  @Subcommand("at")
-  public void onTpAt(Player sender, OnlinePlayer target, Location location) {
-    TeleportManager teleportManager = CollegeCore.getTeleportManager();
-    teleportManager.teleport(target.player, location);
   }
 
 }

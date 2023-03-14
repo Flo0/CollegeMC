@@ -1,4 +1,4 @@
-package net.collegemc.mc.core.functionality.active;
+package net.collegemc.mc.core.active;
 
 import net.collegemc.common.GlobalGateway;
 import net.collegemc.common.network.data.college.CollegeProfile;
@@ -43,7 +43,7 @@ public record ActiveCollegeUser(UUID minecraftId) {
   }
 
   public boolean hasPermission(String permission) {
-    return true;
+    return this.getBukkitPlayer().hasPermission(permission);
   }
 
 }

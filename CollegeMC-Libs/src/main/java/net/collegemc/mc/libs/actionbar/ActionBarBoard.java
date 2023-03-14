@@ -1,11 +1,9 @@
 package net.collegemc.mc.libs.actionbar;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import net.collegemc.common.utils.StringUtils;
 
 public class ActionBarBoard {
 
@@ -24,6 +22,42 @@ public class ActionBarBoard {
   @Setter
   private String delimiter = " ";
 
+  private int ticks = 0;
+  private int index = 0;
+  private final String[] lines = {
+          "खदशॆॖ०ॶআখদশ৆৖০৶",
+          "਌ਜਬ਼ੌੜ੬੼ઌજબ઼ૌ૜૬",
+          "ଂ଒ଢଲୂ୒ୢ୲ஂஒ஢லூ௒௢"
+  };
+
+  private final String[] prefixes = {
+          "§a৥৥  §f",
+          "§a૛૛  §f",
+          "§a௑௑  §f"
+  };
+
+  public void update() {
+    StringBuilder builder = new StringBuilder();
+    String nextLine = "௦".repeat(15);
+    for (int i = 0; i < this.lines.length; i++) {
+      if (this.index == i) {
+        builder.append(this.prefixes[i]).append(this.lines[i]);
+      } else {
+        builder.append("§7   ").append(this.lines[i]);
+      }
+      if (i != this.lines.length - 1) {
+        builder.append(nextLine);
+      }
+    }
+    if (++this.ticks % 15 == 0) {
+      if (++this.index == this.lines.length) {
+        this.index = 0;
+      }
+    }
+    this.currentDisplay = builder.toString();
+  }
+
+  /*
   public void update() {
     final String left = this.sections[0].getMostSignificantLayer().getLineSupplier().get();
     String middle = this.sections[1].getMostSignificantLayer().getLineSupplier().get();
@@ -41,6 +75,7 @@ public class ActionBarBoard {
               + StringUtils.rightPad(right, 20);
     }
   }
+   */
 
   public ActionBarSection getSection(final Section section) {
     return this.getSection(section.index);

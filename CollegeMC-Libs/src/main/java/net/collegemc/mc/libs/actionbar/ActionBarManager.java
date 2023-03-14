@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class ActionBarManager {
 
-  private static final int DISTRIBUTION_SIZE = 10;
+  private static final int DISTRIBUTION_SIZE = 1;
 
   private final Object2ObjectOpenHashMap<UUID, ActionBarBoard> boardMap;
   private final List<List<Player>> distributedOnlineList = new ArrayList<>();

@@ -18,6 +18,8 @@ public interface ServerConfigurationService {
 
   MongoDriverProperties getMongoDriverProperties();
 
+  String getServerName();
+
   default String resourcepackServerHost() {
     return "127.0.0.1";
   }

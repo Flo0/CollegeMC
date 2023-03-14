@@ -8,9 +8,14 @@ public abstract class CollegePlugin extends JavaPlugin {
 
   @Override
   public void onLoad() {
-    Bukkit.getServicesManager().register(ServerConfigurationService.class, this.provideConfig(), this, ServicePriority.Normal);
+    this.getLogger().info("Registering configuration service...");
+    Bukkit.getServicesManager().register(ServerConfigurationService.class, this.provideConfig(), this, this.getPriority());
   }
 
   public abstract ServerConfigurationService provideConfig();
+
+  public ServicePriority getPriority() {
+    return ServicePriority.Normal;
+  }
 
 }
