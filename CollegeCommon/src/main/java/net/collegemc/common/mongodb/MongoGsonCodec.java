@@ -48,7 +48,7 @@ public class MongoGsonCodec<V> implements Codec<V> {
   @Override
   public V decode(BsonReader reader, DecoderContext decoderContext) {
     JsonObject rootObject = this.readObject(reader);
-    return this.gsonSerializer.fromJson(rootObject.toString(), this.typeClass);
+    return this.gsonSerializer.fromJsonTree(rootObject, this.typeClass);
   }
 
   @Override
@@ -71,9 +71,14 @@ public class MongoGsonCodec<V> implements Codec<V> {
       JsonPrimitive jsonPrimitive = element.getAsJsonPrimitive();
       if (jsonPrimitive.isString()) {
         writer.writeString(jsonPrimitive.getAsString());
-      } else {
+      } else if (jsonPrimitive.isNumber()) {
         Number jsonNumber = jsonPrimitive.getAsNumber();
         NUM_WRITERS.get(jsonNumber.getClass()).accept(jsonNumber, writer);
+      } else if (jsonPrimitive.isBoolean()) {
+        boolean jsonBoolean = jsonPrimitive.getAsBoolean();
+        writer.writeBoolean(jsonBoolean);
+      } else {
+        throw new IllegalStateException("Json primitive is of unknown type.");
       }
     } else if (element.isJsonNull()) {
       writer.writeNull();

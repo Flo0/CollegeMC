@@ -8,21 +8,21 @@ import java.util.List;
 
 public class RegionChunkDomain {
 
-  private final List<Region> regions = new ArrayList<>();
+  private final List<AbstractRegion> regions = new ArrayList<>();
 
-  public Region getRegionWithHighestPriorityAt(Location location) {
+  public AbstractRegion getRegionWithHighestPriorityAt(Location location) {
     Vector vector = location.toVector();
     return this.regions.stream()
-            .filter(region -> region.getBoundingBox().contains(vector))
-            .max(Region::compareTo)
+            .filter(region -> region.contains(vector))
+            .max(AbstractRegion::compareTo)
             .orElse(null);
   }
 
-  public void addRegion(Region region) {
+  public void addRegion(AbstractRegion region) {
     this.regions.add(region);
   }
 
-  public void removeRegion(Region region) {
+  public void removeRegion(AbstractRegion region) {
     this.regions.remove(region);
   }
 

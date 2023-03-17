@@ -24,6 +24,7 @@ public class GsonSerializer {
 
   private final Gson prettyProxy = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
   private final Set<Type> typeSet = new HashSet<>();
+  private final Set<Class<?>> abstractRegistrations = new HashSet<>();
   private Gson currentGson;
   private final Map<Object, Consumer<GsonBuilder>> builderConsumer = new HashMap<>();
   private final Map<Object, Gson> adapterSkipMap = new HashMap<>();
@@ -93,10 +94,12 @@ public class GsonSerializer {
   }
 
   public <T> void registerAbstractTypeHierarchyAdapter(Class<T> tClass) {
+    this.abstractRegistrations.add(tClass);
     this.registerTypeHierarchyAdapter(tClass, new AbstractClassAdapter(this));
   }
 
-  public void registerAbstractTypeAdapter(Type type) {
+  public <T> void registerAbstractTypeAdapter(Class<T> type) {
+    this.abstractRegistrations.add(type);
     this.registerTypeAdapter(type, new AbstractClassAdapter(this));
   }
 
@@ -110,6 +113,7 @@ public class GsonSerializer {
   }
 
   public <T> void registerTypeHierarchyAdapter(Class<T> tClass, Object adapter) {
+    this.typeSet.add(tClass);
     this.register(adapter, builder -> builder.registerTypeHierarchyAdapter(tClass, adapter));
   }
 
@@ -119,6 +123,10 @@ public class GsonSerializer {
 
   public boolean hasTypeAdapter(Type type) {
     return this.typeSet.contains(type);
+  }
+
+  public List<Type> getRegisteredTypes() {
+    return List.copyOf(this.typeSet);
   }
 
   public CodecRegistry createCodecRegistry() {

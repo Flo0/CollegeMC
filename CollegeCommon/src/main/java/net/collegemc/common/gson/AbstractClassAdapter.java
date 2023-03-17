@@ -26,7 +26,7 @@ public class AbstractClassAdapter implements JsonSerializer<Object>, JsonDeseria
     try {
       Class<?> tClass = Class.forName(jsonObject.get(CLASS_KEY).getAsString());
       JsonElement data = jsonObject.get(DATA_KEY);
-      return serializer.getGsonWithout(this).fromJson(data, tClass);
+      return this.serializer.getGsonWithout(this).fromJson(data, tClass);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
       return null;
@@ -37,7 +37,7 @@ public class AbstractClassAdapter implements JsonSerializer<Object>, JsonDeseria
   public JsonElement serialize(Object o, Type type, JsonSerializationContext jsonSerializationContext) {
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty(CLASS_KEY, o.getClass().getName());
-    jsonObject.addProperty(DATA_KEY, serializer.getGsonWithout(this).toJson(o));
+    jsonObject.add(DATA_KEY, this.serializer.getGsonWithout(this).toJsonTree(o));
     return jsonObject;
   }
 }

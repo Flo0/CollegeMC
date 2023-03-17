@@ -4,7 +4,7 @@ package net.collegemc.mc.libs.tablist.abstraction;
 import lombok.Getter;
 import net.collegemc.mc.libs.tablist.implementation.AbstractTabList;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 

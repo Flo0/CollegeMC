@@ -1,7 +1,7 @@
 package net.collegemc.mc.libs.gui;
 
-import net.collegemc.mc.libs.gui.abstraction.GuiHandler;
 import net.collegemc.mc.libs.gui.abstraction.InventoryHandler;
+import net.collegemc.mc.libs.gui.baseimpl.GuiHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;

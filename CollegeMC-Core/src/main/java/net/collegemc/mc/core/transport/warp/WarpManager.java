@@ -3,15 +3,17 @@ package net.collegemc.mc.core.transport.warp;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.collegemc.common.mongodb.MongoMap;
-import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.tasks.TaskManager;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.Flushable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WarpManager {
+public class WarpManager implements Iterable<Warp>, Flushable {
 
   public static final String NAMESPACE = "Warps";
 
@@ -23,7 +25,7 @@ public class WarpManager {
     MongoCollection<Warp> collection = database.getCollection(NAMESPACE, Warp.class);
 
     this.warpMap = new ConcurrentHashMap<>();
-    this.warpMongoMap = new MongoMap<>(collection, CollegeCore.getGsonSerializer(), String.class);
+    this.warpMongoMap = new MongoMap<>(collection, CollegeLibrary.getGsonSerializer(), String.class);
 
     this.loadWarps();
   }
@@ -50,4 +52,14 @@ public class WarpManager {
     return List.copyOf(this.warpMap.keySet());
   }
 
+  @NotNull
+  @Override
+  public Iterator<Warp> iterator() {
+    return List.copyOf(this.warpMap.values()).iterator();
+  }
+
+  @Override
+  public void flush() {
+    this.warpMongoMap.putAll(this.warpMap);
+  }
 }

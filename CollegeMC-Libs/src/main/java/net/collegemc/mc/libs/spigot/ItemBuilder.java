@@ -2,6 +2,7 @@ package net.collegemc.mc.libs.spigot;
 
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -168,7 +169,7 @@ public class ItemBuilder {
     return this;
   }
 
-  public ItemBuilder lore(final Collection<Component> lines) {
+  public ItemBuilder lore(final Collection<TextComponent> lines) {
     this.loreLines.addAll(lines);
     return this;
   }

@@ -10,6 +10,7 @@ import co.aikar.commands.annotation.Values;
 import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.libs.messaging.Msg;
+import net.collegemc.mc.libs.spigot.CustomHeads;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,6 +20,7 @@ public class WarpCommand extends BaseCommand {
 
   @Default
   public void onDefault(CommandSender sender) {
+    Msg.sendAdminInfo(sender, "/warps");
     Msg.sendAdminInfo(sender, "/warp create <Warp>");
     Msg.sendAdminInfo(sender, "/warp tp <Warp>");
     Msg.sendAdminInfo(sender, "/warp tpplayer <Player> <Warp>");
@@ -34,8 +36,15 @@ public class WarpCommand extends BaseCommand {
       Msg.sendError(sender, "A warp with the name {} already exists.", name);
       return;
     }
-    warpManager.addWarp(new Warp(sender.getLocation(), name));
+    warpManager.addWarp(new Warp(sender.getLocation(), name, CustomHeads.LODE_STONE.getItem()));
     Msg.sendAdminInfo(sender, "The warp {} was created.", name);
+  }
+
+  @CommandAlias("warps")
+  @Subcommand("list")
+  public void onWarpsList(Player sender) {
+    new WarpGUI().openFor(sender);
+    Msg.sendAdminInfo(sender, "You opened the warps GUI.");
   }
 
   @Subcommand("tp")

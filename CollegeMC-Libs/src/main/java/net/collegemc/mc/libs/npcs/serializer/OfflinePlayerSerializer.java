@@ -8,7 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_19_R2.CraftOfflinePlayer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftOfflinePlayer;
 
 import java.lang.reflect.Type;
 import java.util.Map;

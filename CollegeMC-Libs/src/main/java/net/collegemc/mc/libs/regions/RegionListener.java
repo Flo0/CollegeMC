@@ -2,6 +2,7 @@ package net.collegemc.mc.libs.regions;
 
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.holograms.abstraction.Hologram;
+import net.collegemc.mc.libs.regions.permissions.RegionPermission;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -23,8 +24,11 @@ public class RegionListener implements Listener {
     if (interactionPoint == null) {
       return;
     }
-    Region region = CollegeLibrary.getRegionManager().getRegionWithHighestPriorityAt(interactionPoint);
+    AbstractRegion region = CollegeLibrary.getRegionManager().getRegionWithHighestPriorityAt(interactionPoint);
     if (region == null) {
+      return;
+    }
+    if (region.getPermissionContainer().hasPermission(event.getPlayer().getUniqueId(), RegionPermission.INTERACT)) {
       return;
     }
     event.setCancelled(true);

@@ -4,7 +4,6 @@ import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.core.active.ActiveCollegeUserManager;
-import net.collegemc.mc.core.gson.CollegeGsonSerializer;
 import net.collegemc.mc.core.transport.teleport.TeleportCommand;
 import net.collegemc.mc.core.transport.teleport.TeleportManager;
 import net.collegemc.mc.core.transport.warp.WarpCommand;
@@ -18,8 +17,6 @@ import org.bukkit.plugin.ServicePriority;
 public class CollegeCore extends CollegePlugin {
 
   @Getter
-  private static CollegeGsonSerializer gsonSerializer;
-  @Getter
   private static ActiveCollegeUserManager activeCollegeUserManager;
   @Getter
   private static TeleportManager teleportManager;
@@ -28,7 +25,6 @@ public class CollegeCore extends CollegePlugin {
 
   @Override
   public void onEnable() {
-    gsonSerializer = new CollegeGsonSerializer();
     activeCollegeUserManager = new ActiveCollegeUserManager();
     teleportManager = new TeleportManager();
     warpManager = new WarpManager();
@@ -55,7 +51,7 @@ public class CollegeCore extends CollegePlugin {
 
   @Override
   public void onDisable() {
-    
+    warpManager.flush();
   }
 
   @Override
@@ -67,4 +63,5 @@ public class CollegeCore extends CollegePlugin {
   public ServicePriority getPriority() {
     return ServicePriority.Lowest;
   }
+
 }

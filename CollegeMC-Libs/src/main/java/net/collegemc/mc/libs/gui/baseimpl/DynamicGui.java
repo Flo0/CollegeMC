@@ -1,13 +1,13 @@
 package net.collegemc.mc.libs.gui.baseimpl;
 
 
-import net.collegemc.mc.libs.gui.abstraction.GuiHandler;
-
-public abstract class DynamicGui extends GuiHandler {
+public abstract non-sealed class DynamicGui extends GuiHandler {
 
   @Override
   public void decorate() {
-    this.setupButtons();
+    if (!this.isDecorated()) {
+      this.setupButtons();
+    }
     super.decorate();
   }
 

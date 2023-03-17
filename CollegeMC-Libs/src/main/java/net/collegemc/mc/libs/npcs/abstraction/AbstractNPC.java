@@ -10,6 +10,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.collegemc.common.gson.PostDeserializationReactor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class AbstractNPC implements NPC {
+public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   private final int entityId;
   private final UUID playerId;
@@ -33,13 +34,13 @@ public abstract class AbstractNPC implements NPC {
   private final OfflinePlayer offlinePlayer;
   private Location location;
 
-  private PacketContainer infoUpdatePacket;
-  private PacketContainer spawnPacket;
-  private PacketContainer infoRemovePacket;
-  private PacketContainer despawnPacket;
-  private PacketContainer teleportPacket;
-  private PacketContainer rotationPacket;
-  private PacketContainer positionPacket;
+  private transient PacketContainer infoUpdatePacket;
+  private transient PacketContainer spawnPacket;
+  private transient PacketContainer infoRemovePacket;
+  private transient PacketContainer despawnPacket;
+  private transient PacketContainer teleportPacket;
+  private transient PacketContainer rotationPacket;
+  private transient PacketContainer positionPacket;
 
   public AbstractNPC(Location location, String internalName, String displayName) {
     this.entityId = ThreadLocalRandom.current().nextInt();
@@ -231,5 +232,10 @@ public abstract class AbstractNPC implements NPC {
   @Override
   public Location getLocation() {
     return this.location;
+  }
+
+  @Override
+  public void postDeserialization() {
+    this.setupPackets();
   }
 }

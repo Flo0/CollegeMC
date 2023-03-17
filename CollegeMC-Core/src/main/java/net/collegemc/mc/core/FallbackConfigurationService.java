@@ -1,23 +1,15 @@
 package net.collegemc.mc.core;
 
 import net.collegemc.common.gson.GsonSerializer;
-import net.collegemc.common.gson.adapters.ClassAdapter;
-import net.collegemc.common.gson.adapters.UUIDAdapter;
 import net.collegemc.common.mongodb.MongoDriverProperties;
+import net.collegemc.mc.core.gson.CollegeGsonSerializer;
 import net.collegemc.mc.libs.ServerConfigurationService;
-
-import java.util.UUID;
 
 public class FallbackConfigurationService implements ServerConfigurationService {
 
   @Override
   public GsonSerializer getSerializer() {
-    GsonSerializer serializer = new GsonSerializer();
-    ClassAdapter classAdapter = new ClassAdapter();
-    UUIDAdapter uuidAdapter = new UUIDAdapter();
-    serializer.registerTypeAdapter(Class.class, classAdapter);
-    serializer.registerTypeAdapter(UUID.class, uuidAdapter);
-    return serializer;
+    return new CollegeGsonSerializer();
   }
 
   @Override

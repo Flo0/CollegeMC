@@ -18,7 +18,9 @@ import net.collegemc.mc.libs.messaging.Msg;
 import net.collegemc.mc.libs.npcs.NPCManager;
 import net.collegemc.mc.libs.npcs.abstraction.NPC;
 import net.collegemc.mc.libs.npcs.serializer.OfflinePlayerSerializer;
+import net.collegemc.mc.libs.regions.AbstractRegion;
 import net.collegemc.mc.libs.regions.RegionManager;
+import net.collegemc.mc.libs.regions.serializer.PolygonSerializer;
 import net.collegemc.mc.libs.resourcepack.assembly.BlockModel;
 import net.collegemc.mc.libs.resourcepack.assembly.CustomSound;
 import net.collegemc.mc.libs.resourcepack.assembly.TextureModel;
@@ -36,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
 
+import java.awt.Polygon;
 import java.util.Optional;
 
 public class CollegeLibrary extends JavaPlugin {
@@ -100,7 +103,7 @@ public class CollegeLibrary extends JavaPlugin {
     hologramManager = new HologramManager(new PlibHologramFactory());
     tabListManager = new TabListManager(this, player -> new EmptyTabList());
     tokenActionManager = new TokenActionManager(this, commandManager);
-    playerSkinManager = new PlayerSkinManager(new GsonSerializer());
+    playerSkinManager = new PlayerSkinManager();
     guiManager = new GuiManager(this);
     npcManager = new NPCManager(this);
     regionManager = new RegionManager(this);
@@ -112,6 +115,8 @@ public class CollegeLibrary extends JavaPlugin {
 
   @Override
   public void onDisable() {
+    npcManager.flush();
+    regionManager.flush();
     Optional.ofNullable(blockDataManager).ifPresent(BlockDataManager::terminate);
     if (this.coreConfigurationService.isResourcepackEnabled() && resourcepackManager != null) {
       resourcepackManager.shutdown();
@@ -178,7 +183,9 @@ public class CollegeLibrary extends JavaPlugin {
   }
 
   private void injectLibrarySerialisation(GsonSerializer serializer) {
-    serializer.registerAbstractTypeAdapter(NPC.class);
+    serializer.registerTypeAdapter(Polygon.class, new PolygonSerializer());
+    serializer.registerAbstractTypeHierarchyAdapter(NPC.class);
+    serializer.registerAbstractTypeHierarchyAdapter(AbstractRegion.class);
     serializer.registerTypeHierarchyAdapter(OfflinePlayer.class, new OfflinePlayerSerializer());
   }
 

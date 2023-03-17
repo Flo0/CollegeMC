@@ -14,11 +14,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.Flushable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NPCManager {
+public class NPCManager implements Flushable {
 
   public static final String NAMESPACE = "NPCs";
   private static final int ticksPerNPCSend = 4;
@@ -98,4 +99,8 @@ public class NPCManager {
     }
   }
 
+  @Override
+  public void flush() {
+    this.npcMongoMap.putAll(this.nameMap);
+  }
 }
