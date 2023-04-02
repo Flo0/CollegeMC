@@ -9,18 +9,21 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class TaskManager {
 
+  private static final double TIMEOUT_PERCENTAGE_LENIENCY = 1.1;
   private static final BukkitScheduler scheduler = Bukkit.getScheduler();
   private static final Executor IOExecutor = Executors.newFixedThreadPool(4);
-  private static final Executor computationExecutor = Executors.newFixedThreadPool(2);
+  private static final Executor computationPool = Executors.newFixedThreadPool(2);
 
   private static JavaPlugin plugin() {
     return CollegeLibrary.getInstance();
@@ -86,6 +89,21 @@ public class TaskManager {
     return scheduler.runTaskTimer(plugin(), runnable, delay, repeatDelay);
   }
 
+  public static CompletableFuture<Void> tickDelayedFuture(int ticks) {
+    return runOnComputationPool(() -> {
+      CountDownLatch latch = new CountDownLatch(1);
+      TaskManager.runTaskLater(latch::countDown, ticks);
+      try {
+        long seconds = (long) ((20L * ticks) * TIMEOUT_PERCENTAGE_LENIENCY);
+        if (!latch.await(seconds, TimeUnit.SECONDS)) {
+          throw new RuntimeException("Unexpected timeout.");
+        }
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    });
+  }
+
   public static <T> CompletableFuture<T> supplyOnIOPool(Supplier<T> supplier) {
     return CompletableFuture.supplyAsync(supplier, IOExecutor).whenComplete(TaskManager::handleResult);
   }
@@ -95,11 +113,11 @@ public class TaskManager {
   }
 
   public static <T> CompletableFuture<T> supplyOnComputationPool(Supplier<T> supplier) {
-    return CompletableFuture.supplyAsync(supplier, IOExecutor).whenComplete(TaskManager::handleResult);
+    return CompletableFuture.supplyAsync(supplier, computationPool).whenComplete(TaskManager::handleResult);
   }
 
   public static CompletableFuture<Void> runOnComputationPool(Runnable runnable) {
-    return CompletableFuture.runAsync(runnable, IOExecutor).whenComplete(TaskManager::handleResult);
+    return CompletableFuture.runAsync(runnable, computationPool).whenComplete(TaskManager::handleResult);
   }
 
   private static <T> void handleResult(T value, Throwable throwable) {

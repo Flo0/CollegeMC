@@ -11,6 +11,7 @@ import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.libs.messaging.Msg;
 import net.collegemc.mc.libs.spigot.CustomHeads;
+import net.collegemc.mc.libs.spigot.UtilPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -34,6 +35,7 @@ public class WarpCommand extends BaseCommand {
     Warp warp = warpManager.getWarp(name);
     if (warp != null) {
       Msg.sendError(sender, "A warp with the name {} already exists.", name);
+      UtilPlayer.playFailurePling(sender);
       return;
     }
     warpManager.addWarp(new Warp(sender.getLocation(), name, CustomHeads.LODE_STONE.getItem()));
@@ -54,6 +56,7 @@ public class WarpCommand extends BaseCommand {
     Warp warp = warpManager.getWarp(name);
     if (warp == null) {
       Msg.sendError(sender, "No warp with the name {} exists.", name);
+      UtilPlayer.playFailurePling(sender);
       return;
     }
     CollegeCore.getTeleportManager().teleport(sender, warp.getLocation()).thenRun(() -> {
@@ -68,6 +71,7 @@ public class WarpCommand extends BaseCommand {
     Warp warp = warpManager.getWarp(name);
     if (warp == null) {
       Msg.sendError(sender, "No warp with the name {} exists.", name);
+      UtilPlayer.playFailurePling(sender);
       return;
     }
     Msg.sendAdminInfo(sender, "You have teleported {} to {}.", user.resolveName(), name);
@@ -83,6 +87,9 @@ public class WarpCommand extends BaseCommand {
     Warp warp = warpManager.getWarp(name);
     if (warp == null) {
       Msg.sendError(sender, "No warp with the name {} exists.", name);
+      if (sender instanceof Player player) {
+        UtilPlayer.playFailurePling(player);
+      }
       return;
     }
     warpManager.removeWarp(name);

@@ -1,14 +1,12 @@
 package net.collegemc.mc.libs.npcs;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import net.collegemc.common.mongodb.MongoMap;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.npcs.abstraction.NPC;
 import net.collegemc.mc.libs.npcs.listener.NPCListener;
 import net.collegemc.mc.libs.npcs.listener.NPCPacketListener;
 import net.collegemc.mc.libs.npcs.tasks.NPCSenderTask;
+import net.collegemc.mc.libs.protocol.ProtocolManager;
+import net.collegemc.mc.libs.tasks.MongoBackedMap;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,18 +23,14 @@ public class NPCManager implements Flushable {
   private static final int ticksPerNPCSend = 4;
 
   private final Map<Integer, NPC> activeMap = new HashMap<>();
-  private final Map<String, NPC> nameMap = new HashMap<>();
-  private final Map<String, NPC> npcMongoMap;
+  private final MongoBackedMap<String, NPC> nameMap;
 
   public NPCManager(JavaPlugin plugin) {
-    MongoDatabase database = CollegeLibrary.getServerDatabase();
-    MongoCollection<NPC> collection = database.getCollection(NAMESPACE, NPC.class);
+    this.nameMap = new MongoBackedMap<>(new HashMap<>(), NAMESPACE, String.class, NPC.class);
+    this.nameMap.loadDataFromRemote();
+    this.nameMap.values().forEach(npc -> this.activeMap.put(npc.getEntityId(), npc));
 
-    this.npcMongoMap = new MongoMap<>(collection, CollegeLibrary.getGsonSerializer(), String.class);
-
-    this.loadAllNPCs();
-
-    ProtocolLibrary.getProtocolManager().addPacketListener(new NPCPacketListener(plugin));
+    ProtocolManager.registerPacketHandler(new NPCPacketListener());
     CollegeLibrary.getCommandManager().registerCommand(new NPCCommand());
     CollegeLibrary.getCommandManager().getCommandCompletions().registerCompletion("NPC", context -> {
       return List.copyOf(this.nameMap.keySet());
@@ -50,10 +44,6 @@ public class NPCManager implements Flushable {
     TaskManager.runTaskTimerAsync(task, ticksPerNPCSend, ticksPerNPCSend);
   }
 
-  private void loadAllNPCs() {
-    this.npcMongoMap.values().forEach(npc -> this.add(npc, false));
-  }
-
   private void tickNPCs() {
     for (NPC npc : this.activeMap.values()) {
       if (!npc.isTicked() || !npc.isInLoadedChunk()) {
@@ -63,16 +53,13 @@ public class NPCManager implements Flushable {
     }
   }
 
-  public void add(NPC npc) {
-    this.add(npc, true);
-  }
-
-  private void add(NPC npc, boolean remoteMirror) {
-    this.activeMap.put(npc.getEntityId(), npc);
-    this.nameMap.put(npc.getInternalName(), npc);
-    if (remoteMirror) {
-      TaskManager.runOnIOPool(() -> this.npcMongoMap.put(npc.getInternalName(), npc));
+  protected void add(NPC npc) {
+    if (npc.isPersistent()) {
+      this.nameMap.put(npc.getInternalName(), npc);
+    } else {
+      this.nameMap.putLocal(npc.getInternalName(), npc);
     }
+    this.activeMap.put(npc.getEntityId(), npc);
   }
 
   public NPC getByEntityId(int id) {
@@ -87,7 +74,6 @@ public class NPCManager implements Flushable {
     NPC npc = this.activeMap.remove(id);
     if (npc != null) {
       this.nameMap.remove(npc.getInternalName());
-      TaskManager.runOnIOPool(() -> this.npcMongoMap.remove(npc.getInternalName()));
     }
   }
 
@@ -95,12 +81,11 @@ public class NPCManager implements Flushable {
     NPC npc = this.nameMap.remove(name);
     if (npc != null) {
       this.activeMap.remove(npc.getEntityId());
-      TaskManager.runOnIOPool(() -> this.npcMongoMap.remove(npc.getInternalName()));
     }
   }
 
   @Override
   public void flush() {
-    this.npcMongoMap.putAll(this.nameMap);
+    this.nameMap.saveDataToRemote();
   }
 }

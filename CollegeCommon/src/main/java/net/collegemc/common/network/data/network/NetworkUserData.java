@@ -1,6 +1,7 @@
 package net.collegemc.common.network.data.network;
 
 import lombok.Data;
+import net.collegemc.common.network.data.college.ProfileId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ public class NetworkUserData {
     this(null);
   }
 
-  private final List<UUID> collegeProfiles;
+  private final List<ProfileId> collegeProfiles;
   private String lastSeenMinecraftName;
   private UUID minecraftUid;
   private Long registeredDiscordId;
   private NetworkRank networkRank = NetworkRank.USER;
   private long lastLoginTimestamp = 0L;
-  private UUID activeCollegeProfileId = null;
+  private ProfileId activeCollegeProfileId = null;
 
 }

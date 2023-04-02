@@ -2,7 +2,7 @@ package net.collegemc.mc.core.transport.warp;
 
 import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.libs.gui.abstraction.GuiButton;
-import net.collegemc.mc.libs.gui.baseimpl.DynamicGui;
+import net.collegemc.mc.libs.gui.baseimpl.DynamicGUI;
 import net.collegemc.mc.libs.messaging.Msg;
 import net.collegemc.mc.libs.spigot.ItemBuilder;
 import net.collegemc.mc.libs.spigot.UtilPlayer;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import reactor.core.publisher.Mono;
 
-public class WarpGUI extends DynamicGui {
+public class WarpGUI extends DynamicGUI {
   @Override
   protected Inventory createInventory() {
     return Bukkit.createInventory(null, 3 * 9, Component.text("Warps"));

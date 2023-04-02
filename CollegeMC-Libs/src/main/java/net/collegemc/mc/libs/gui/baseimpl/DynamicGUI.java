@@ -1,7 +1,7 @@
 package net.collegemc.mc.libs.gui.baseimpl;
 
 
-public abstract non-sealed class DynamicGui extends GuiHandler {
+public abstract non-sealed class DynamicGUI extends GuiHandler {
 
   @Override
   public void decorate() {

@@ -5,11 +5,11 @@ import com.google.common.base.Preconditions;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract non-sealed class StaticGui extends GuiHandler {
+public abstract non-sealed class StaticGUI extends GuiHandler {
 
-  private static final Set<Class<? extends StaticGui>> instanceSafeguard = new HashSet<>();
+  private static final Set<Class<? extends StaticGUI>> instanceSafeguard = new HashSet<>();
 
-  public StaticGui() {
+  public StaticGUI() {
     Preconditions.checkState(!instanceSafeguard.contains(this.getClass()), "Dont instantiate static GUIs multiple times.");
     instanceSafeguard.add(this.getClass());
   }

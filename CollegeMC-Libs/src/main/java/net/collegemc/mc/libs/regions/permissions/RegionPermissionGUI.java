@@ -1,7 +1,7 @@
 package net.collegemc.mc.libs.regions.permissions;
 
 import net.collegemc.mc.libs.gui.abstraction.GuiButton;
-import net.collegemc.mc.libs.gui.baseimpl.DynamicGui;
+import net.collegemc.mc.libs.gui.baseimpl.DynamicGUI;
 import net.collegemc.mc.libs.regions.AbstractRegion;
 import net.collegemc.mc.libs.spigot.ItemBuilder;
 import net.kyori.adventure.text.Component;
@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-public class RegionPermissionGUI extends DynamicGui {
+public class RegionPermissionGUI extends DynamicGUI {
 
   private final AbstractRegion region;
 

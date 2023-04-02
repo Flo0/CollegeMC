@@ -2,13 +2,16 @@ package net.collegemc.common.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonElement;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import net.collegemc.common.gson.adapters.ClassAdapter;
+import net.collegemc.common.gson.adapters.ProfileIdAdapter;
 import net.collegemc.common.gson.adapters.UUIDAdapter;
 import net.collegemc.common.mongodb.GsonCodecRegistry;
+import net.collegemc.common.network.data.college.ProfileId;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.reflect.Type;
@@ -33,6 +36,7 @@ public class GsonSerializer {
   public GsonSerializer() {
     this.registerTypeAdapter(UUID.class, new UUIDAdapter());
     this.registerTypeAdapter(Class.class, new ClassAdapter());
+    this.registerTypeAdapter(ProfileId.class, new ProfileIdAdapter());
   }
 
   public Gson getGson() {
@@ -133,4 +137,7 @@ public class GsonSerializer {
     return new GsonCodecRegistry(this);
   }
 
+  public <T> void registerInstanceCreator(Class<T> type, InstanceCreator<T> multiMapInstanceCreator) {
+    this.registerTypeAdapter(type, multiMapInstanceCreator);
+  }
 }

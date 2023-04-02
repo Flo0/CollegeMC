@@ -16,4 +16,22 @@ public class UtilPlayer {
     player.playSound(sound, Sound.Emitter.self());
   }
 
+  public static void playSuccessPling(Player player) {
+    Sound sound = Sound.sound()
+            .pitch(0.75F)
+            .volume(1.25F)
+            .type(org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING.key())
+            .build();
+    player.playSound(sound, Sound.Emitter.self());
+  }
+
+  public static void playFailurePling(Player player) {
+    Sound sound = Sound.sound()
+            .pitch(0.75F)
+            .volume(0.66F)
+            .type(org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING.key())
+            .build();
+    player.playSound(sound, Sound.Emitter.self());
+  }
+
 }

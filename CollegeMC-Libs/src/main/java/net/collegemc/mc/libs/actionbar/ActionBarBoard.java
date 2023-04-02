@@ -36,14 +36,26 @@ public class ActionBarBoard {
           "§a௑௑  §f"
   };
 
+  private final String[] spacesS = {
+          "ऄऄऄऄ§f",
+          "৺৺৺৺§f",
+          "૰૰૰૰§f"
+  };
+
+  private final String[] spaces = {
+          "ऄऄऄऄ§7",
+          "৺৺৺৺§7",
+          "૰૰૰૰§7"
+  };
+
   public void update() {
     StringBuilder builder = new StringBuilder();
-    String nextLine = "௦".repeat(15);
+    String nextLine = "௦".repeat(19);
     for (int i = 0; i < this.lines.length; i++) {
       if (this.index == i) {
-        builder.append(this.prefixes[i]).append(this.lines[i]);
+        builder.append(this.spacesS[i]).append(this.lines[i]);
       } else {
-        builder.append("§7   ").append(this.lines[i]);
+        builder.append(this.spaces[i]).append(this.lines[i]);
       }
       if (i != this.lines.length - 1) {
         builder.append(nextLine);

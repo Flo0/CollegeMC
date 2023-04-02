@@ -30,6 +30,7 @@ public class IdleNPC extends AbstractNPC {
             .min(Comparator.comparingDouble(pl -> pl.getLocation().distanceSquared(this.getLocation())))
             .ifPresent(pl -> {
               this.lookAt(pl.getEyeLocation());
+              this.broadcastLookDirChange();
               this.broadcastRotationChange();
             });
   }

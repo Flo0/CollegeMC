@@ -25,22 +25,15 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
   }
 
   private void fireUpdate(K key) {
-    String json = serializer.toJson(key);
-    TypeInferredSerializedUnit<K> typeInferredSerializedUnit = new TypeInferredSerializedUnit<>(contextKey.keyClass, json);
-    AutoSyncUpdateEvent<K, V> event = new AutoSyncUpdateEvent<>(contextKey, typeInferredSerializedUnit);
+    String json = this.serializer.toJson(key);
+    TypeInferredSerializedUnit<K> typeInferredSerializedUnit = new TypeInferredSerializedUnit<>(this.contextKey.keyClass, json);
+    AutoSyncUpdateEvent<K, V> event = new AutoSyncUpdateEvent<>(this.contextKey, typeInferredSerializedUnit);
     GlobalGateway.getRemoteEventManager().callEvent("_AUTO_SYNC_", event);
   }
 
   @Override
-  public V getOrCreateRealTimeData(K key) {
-    V realTimeData = super.getOrCreateRealTimeData(key);
-    fireUpdate(key);
-    return realTimeData;
-  }
-
-  @Override
   public synchronized void forEach(BiConsumer<K, V> consumer) {
-    super.forEach(consumer.andThen((k, v) -> fireUpdate(k)));
+    super.forEach(consumer.andThen((k, v) -> this.fireUpdate(k)));
   }
 
   @Override
@@ -51,8 +44,8 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
   @Override
   public void applyToBoth(K keyOne, K keyTwo, BiConsumer<V, V> action) {
     super.applyToBoth(keyOne, keyTwo, action);
-    fireUpdate(keyOne);
-    fireUpdate(keyTwo);
+    this.fireUpdate(keyOne);
+    this.fireUpdate(keyTwo);
   }
 
   @Override
@@ -64,7 +57,7 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
   @Override
   public void applyToData(K key, Consumer<V> action) {
     super.applyToData(key, action);
-    fireUpdate(key);
+    this.fireUpdate(key);
   }
 
   @Override
@@ -77,15 +70,15 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
   @Override
   public <T> T biCompute(K keyOne, K keyTwo, BiFunction<V, V, T> computation) {
     T value = super.biCompute(keyOne, keyTwo, computation);
-    fireUpdate(keyOne);
-    fireUpdate(keyTwo);
+    this.fireUpdate(keyOne);
+    this.fireUpdate(keyTwo);
     return value;
   }
 
   @Override
   public <T> T compute(K key, Function<V, T> computation) {
     T value = super.compute(key, computation);
-    fireUpdate(key);
+    this.fireUpdate(key);
     return value;
   }
 }

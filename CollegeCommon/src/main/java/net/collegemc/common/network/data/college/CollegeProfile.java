@@ -1,26 +1,43 @@
 package net.collegemc.common.network.data.college;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import net.collegemc.common.network.data.college.attributes.AttributeContainer;
+import net.collegemc.common.network.data.college.courses.CourseContainer;
+import net.collegemc.common.network.data.college.traits.TraitContainer;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 public class CollegeProfile {
 
-  public CollegeProfile(UUID profileId) {
+  public CollegeProfile(ProfileId profileId) {
     this.collegeProfileId = profileId;
+    this.attributeContainer = new AttributeContainer();
+    this.traitContainer = new TraitContainer();
+    this.courseContainer = new CourseContainer();
   }
 
   public CollegeProfile() {
     this(null);
   }
 
-  private UUID collegeProfileId;
-  private String firstName = "NO_NAME";
-  private String lastName = "NO_NAME";
+  private ProfileId collegeProfileId;
+  private UUID minecraftUserId;
+  private String name = "NO_NAME";
+  private AttributeContainer attributeContainer;
+  private TraitContainer traitContainer;
+  private CourseContainer courseContainer;
+  private String skinName;
 
-  public String getFullName() {
-    return this.firstName + " " + this.lastName;
+  @Override
+  public int hashCode() {
+    return this.collegeProfileId.hashCode();
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof CollegeProfile other && this.collegeProfileId.equals(other.collegeProfileId);
+  }
 }

@@ -3,19 +3,18 @@ package net.collegemc.common.network.data.network;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import net.collegemc.common.GlobalGateway;
+import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.common.model.AutoSynchronizedGlobalDataMap;
 import net.collegemc.common.model.DataDomainManager;
 import net.collegemc.common.model.DataMapContext;
-import net.collegemc.common.network.data.NetworkGsonSerializer;
 import org.redisson.api.RedissonClient;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class NetworkUserManager {
 
-  public static final String NETWORK_USER_NAMESPACE = "network-user-data";
+  public static final String NETWORK_USER_NAMESPACE = "Network-Users";
 
   private final AutoSynchronizedGlobalDataMap<UUID, NetworkUserData> userDataMap;
 
@@ -27,7 +26,7 @@ public class NetworkUserManager {
             .keyClass(UUID.class)
             .mongoDatabase(mongoDatabase)
             .namespace(NETWORK_USER_NAMESPACE)
-            .serializer(new NetworkGsonSerializer())
+            .serializer(new GsonSerializer())
             .valueClass(NetworkUserData.class)
             .build();
 
@@ -35,8 +34,8 @@ public class NetworkUserManager {
     this.userDataMap = domainManager.getOrCreateAutoSyncDataDomain(dataMapContext);
   }
 
-  public CompletableFuture<Void> cache(UUID userId) {
-    return this.userDataMap.enableLocalCacheAsyncFor(userId);
+  public void cache(UUID userId) {
+    this.userDataMap.enableLocalCacheFor(userId);
   }
 
   public void uncache(UUID userId) {

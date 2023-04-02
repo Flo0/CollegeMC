@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract sealed class GuiHandler implements InventoryHandler permits DynamicGui, StaticGui {
+public abstract sealed class GuiHandler implements InventoryHandler permits DynamicGUI, StaticGUI {
 
   private final Map<Integer, GuiButton> buttonMap;
 

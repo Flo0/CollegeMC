@@ -1,54 +1,56 @@
 package net.collegemc.mc.libs.npcs.abstraction;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.collegemc.common.gson.PostDeserializationReactor;
+import net.collegemc.mc.libs.CollegeLibrary;
+import net.collegemc.mc.libs.protocol.ProtocolManager;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
+import org.mineskin.data.Skin;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
-  private final int entityId;
-  private final UUID playerId;
-  private final String displayName;
+  private final ServerPlayer serverPlayer;
+  private String displayName;
   private final String internalName;
-  private final OfflinePlayer offlinePlayer;
-  private Location location;
 
-  private transient PacketContainer infoUpdatePacket;
-  private transient PacketContainer spawnPacket;
-  private transient PacketContainer infoRemovePacket;
-  private transient PacketContainer despawnPacket;
-  private transient PacketContainer teleportPacket;
-  private transient PacketContainer rotationPacket;
-  private transient PacketContainer positionPacket;
+  private transient ClientboundPlayerInfoUpdatePacket infoUpdatePacket;
+  private transient ClientboundAddPlayerPacket spawnPacket;
+  private transient ClientboundPlayerInfoRemovePacket infoRemovePacket;
+  private transient ClientboundRemoveEntitiesPacket despawnPacket;
+  private transient ClientboundTeleportEntityPacket teleportPacket;
+  private transient ClientboundRotateHeadPacket lookAtPacket;
+  private transient ClientboundMoveEntityPacket rotationPacket;
 
   public AbstractNPC(Location location, String internalName, String displayName) {
-    this.entityId = ThreadLocalRandom.current().nextInt();
+    GameProfile gameProfile = new GameProfile(UUID.randomUUID(), internalName);
+    ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
+    this.serverPlayer = new ServerPlayer(MinecraftServer.getServer(), world, gameProfile);
+    this.serverPlayer.setPos(location.getX(), location.getY(), location.getZ());
     this.internalName = internalName;
     this.displayName = displayName;
-    this.location = location;
-    this.offlinePlayer = Bukkit.getOfflinePlayer(UUID.randomUUID());
-    this.playerId = this.offlinePlayer.getUniqueId();
     this.setupPackets();
   }
 
@@ -57,110 +59,42 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
     this.setupSpawnPacket();
     this.setupInfoRemovePacket();
     this.setupDespawnPacket();
-    this.setupRotationPackets();
+    this.setupLookPacket();
+    this.setupRotationPacket();
   }
 
   private void setupInfoPacket() {
-    this.infoUpdatePacket = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
-
-    // Setting actions
-    EnumSet<EnumWrappers.PlayerInfoAction> actions = EnumSet.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER);
-    this.infoUpdatePacket.getPlayerInfoActions().write(0, actions);
-
-    // Setting entries
-    WrappedGameProfile wrappedGameProfile = WrappedGameProfile.fromOfflinePlayer(this.offlinePlayer).withName(this.internalName);
-    int latency = 0;
-    EnumWrappers.NativeGameMode gameMode = EnumWrappers.NativeGameMode.CREATIVE;
-    WrappedChatComponent displayName = WrappedChatComponent.fromLegacyText(this.displayName);
-
-    List<PlayerInfoData> infoDataList = new ArrayList<>();
-    PlayerInfoData addData = new PlayerInfoData(wrappedGameProfile, latency, gameMode, displayName);
-    infoDataList.add(addData);
-
-    this.infoUpdatePacket.getPlayerInfoDataLists().write(1, infoDataList);
+    ClientboundPlayerInfoUpdatePacket.Action action = ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER;
+    this.infoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(action, this.serverPlayer);
   }
 
   private void setupSpawnPacket() {
-    this.spawnPacket = new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN);
-
-    this.spawnPacket.getIntegers().write(0, this.entityId);
-    this.spawnPacket.getUUIDs().write(0, this.playerId);
-
-    this.spawnPacket.getDoubles()
-            .write(0, this.location.getX())
-            .write(1, this.location.getY())
-            .write(2, this.location.getZ());
-
-    byte yRot = (byte) ((int) (this.location.getYaw() * (256.0F / 360.0F)));
-    byte xRot = (byte) ((int) (this.location.getPitch() * (256.0F / 360.0F)));
-
-    this.spawnPacket.getBytes()
-            .write(0, yRot)
-            .write(1, xRot);
+    this.spawnPacket = new ClientboundAddPlayerPacket(this.serverPlayer);
   }
 
   private void setupInfoRemovePacket() {
-    this.infoRemovePacket = new PacketContainer(PacketType.Play.Server.PLAYER_INFO_REMOVE);
-    this.infoRemovePacket.getUUIDLists().write(0, List.of(this.playerId));
+    this.infoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(this.serverPlayer.getUUID()));
   }
 
   private void setupDespawnPacket() {
-    this.despawnPacket = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-    this.despawnPacket.getIntLists().write(0, IntList.of(this.entityId));
+    this.despawnPacket = new ClientboundRemoveEntitiesPacket(IntList.of(this.serverPlayer.getId()));
   }
 
   private void setupTeleportPacket() {
-    this.teleportPacket = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
-
-    this.teleportPacket.getIntegers().write(0, this.entityId);
-
-    this.teleportPacket.getDoubles()
-            .write(0, this.location.getX())
-            .write(1, this.location.getY())
-            .write(2, this.location.getZ());
-
-    byte yRot = (byte) ((int) (this.location.getYaw() * (256.0F / 360.0F)));
-    byte xRot = (byte) ((int) (this.location.getPitch() * (256.0F / 360.0F)));
-
-    this.teleportPacket.getBytes()
-            .write(0, yRot)
-            .write(1, xRot);
-
-    this.teleportPacket.getBooleans().write(0, true);
+    this.teleportPacket = new ClientboundTeleportEntityPacket(this.serverPlayer);
   }
 
-  private void setupRotationPackets() {
-    this.rotationPacket = new PacketContainer(PacketType.Play.Server.ENTITY_HEAD_ROTATION);
-
-    this.rotationPacket.getIntegers().write(0, this.entityId);
-
-    byte yRot = (byte) ((int) (this.location.getYaw() * (256.0F / 360.0F)));
-    byte xRot = (byte) ((int) (this.location.getPitch() * (256.0F / 360.0F)));
-
-    this.rotationPacket.getBytes()
-            .write(0, yRot);
-
-    this.positionPacket = new PacketContainer(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK);
-
-    this.positionPacket.getIntegers().write(0, this.entityId);
-
-    this.positionPacket.getShorts()
-            .write(0, (short) 0)
-            .write(1, (short) 0)
-            .write(2, (short) 0);
-
-    this.positionPacket.getBytes()
-            .write(0, yRot)
-            .write(1, xRot);
-
-    this.positionPacket.getBooleans()
-            .write(0, true)
-            .write(1, true)
-            .write(2, false);
+  private void setupLookPacket() {
+    byte yRot = (byte) ((int) (this.serverPlayer.getYHeadRot() * (256.0F / 360.0F)));
+    this.lookAtPacket = new ClientboundRotateHeadPacket(this.serverPlayer, yRot);
   }
 
-  private Location getEyeLocation() {
-    return this.location.clone().add(0, 1.75, 0);
+  private void setupRotationPacket() {
+    int id = this.serverPlayer.getId();
+    byte yRot = (byte) ((int) (this.serverPlayer.getYRot() * (256.0F / 360.0F)));
+    byte xRot = (byte) ((int) (this.serverPlayer.getXRot() * (256.0F / 360.0F)));
+    boolean onGround = true;
+    this.rotationPacket = new ClientboundMoveEntityPacket.Rot(id, yRot, xRot, onGround);
   }
 
   @Override
@@ -170,55 +104,92 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   @Override
   public int getEntityId() {
-    return this.entityId;
+    return this.serverPlayer.getId();
   }
 
   @Override
   public void setPosition(Location location) {
-    this.location = location;
+    this.serverPlayer.setPos(location.getX(), location.getY(), location.getZ());
     this.setupTeleportPacket();
   }
 
   @Override
   public void broadcastPositionChange() {
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-    protocolManager.broadcastServerPacket(this.teleportPacket);
+    ProtocolManager.broadcastPacket(this.teleportPacket);
   }
 
   @Override
   public void lookAt(Location location) {
-    Vector lookDir = location.toVector().subtract(this.getEyeLocation().toVector());
-    this.location.setDirection(lookDir);
-    this.setupRotationPackets();
+    CraftPlayer player = this.serverPlayer.getBukkitEntity();
+    Vector direction = location.toVector().subtract(player.getEyeLocation().toVector());
+    location.setDirection(direction);
+    this.serverPlayer.setYHeadRot(location.getYaw());
+    this.serverPlayer.setYRot(location.getYaw());
+    this.serverPlayer.setXRot(location.getPitch());
+    this.setupLookPacket();
+    this.setupRotationPacket();
   }
 
   @Override
-  public void broadcastRotationChange() {
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-    protocolManager.broadcastServerPacket(this.positionPacket);
-    protocolManager.broadcastServerPacket(this.rotationPacket);
+  public void setLookDir(float pitch, float yaw) {
+    this.serverPlayer.setYHeadRot(yaw);
+    this.serverPlayer.setXRot(pitch);
+    this.serverPlayer.setYRot(yaw);
+    this.setupLookPacket();
+  }
+
+  public void setLookYaw(float yaw) {
+    this.setLookDir(this.serverPlayer.getXRot(), yaw);
+  }
+
+  public void matchHeadAndBodyRotation() {
+    this.setLookYaw(this.serverPlayer.getYRot());
+  }
+
+  @Override
+  public void broadcastLookDirChange() {
+    ProtocolManager.broadcastPacket(this.lookAtPacket);
   }
 
   @Override
   public void showTo(Player player) {
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-    protocolManager.sendServerPacket(player, this.infoUpdatePacket);
-    protocolManager.sendServerPacket(player, this.spawnPacket);
+    ProtocolManager.sendTo(player, this.infoUpdatePacket);
+    ProtocolManager.sendTo(player, this.spawnPacket);
+    CollegeLibrary.getNameTagManager().getTag(this.serverPlayer.getId()).showTo(player);
+  }
+
+  @Override
+  public void broadcastShow() {
+    ProtocolManager.broadcastPacket(this.infoUpdatePacket);
+    ProtocolManager.broadcastPacket(this.spawnPacket);
+    this.broadcastNameChange();
   }
 
   @Override
   public void hideFrom(Player player) {
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-    protocolManager.sendServerPacket(player, this.despawnPacket);
-    protocolManager.sendServerPacket(player, this.infoRemovePacket);
+    ProtocolManager.sendTo(player, this.despawnPacket);
+    ProtocolManager.sendTo(player, this.infoRemovePacket);
+  }
+
+  @Override
+  public void broadcastHide() {
+    ProtocolManager.broadcastPacket(this.despawnPacket);
+    ProtocolManager.broadcastPacket(this.infoRemovePacket);
   }
 
   @Override
   public void setSkin(URL skinUrl) {
-    PlayerProfile playerProfile = this.offlinePlayer.getPlayerProfile();
+    PlayerProfile playerProfile = this.serverPlayer.getBukkitEntity().getPlayerProfile();
     PlayerTextures textures = playerProfile.getTextures();
     textures.setSkin(skinUrl);
     playerProfile.setTextures(textures);
+  }
+
+  @Override
+  public void setSkin(Skin skin) {
+    PlayerProfile playerProfile = this.serverPlayer.getBukkitEntity().getPlayerProfile();
+    playerProfile.removeProperty("textures");
+    playerProfile.setProperty(new ProfileProperty("textures", skin.data.texture.value, skin.data.texture.signature));
   }
 
   @Override
@@ -230,12 +201,34 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
   }
 
   @Override
+  public void rotate(float angle) {
+    this.serverPlayer.setYRot((this.serverPlayer.getYRot() + angle) % 360);
+    this.setupRotationPacket();
+  }
+
+  @Override
+  public void broadcastRotationChange() {
+    ProtocolManager.broadcastPacket(this.rotationPacket);
+  }
+
+  @Override
+  public void rename(String name) {
+    this.displayName = name;
+  }
+
+  @Override
+  public void broadcastNameChange() {
+    CollegeLibrary.getNameTagManager().tagVirtual(this.getLocation(), this.serverPlayer.getId(), this.displayName);
+  }
+
+  @Override
   public Location getLocation() {
-    return this.location;
+    return this.serverPlayer.getBukkitEntity().getLocation();
   }
 
   @Override
   public void postDeserialization() {
     this.setupPackets();
+    this.broadcastNameChange();
   }
 }

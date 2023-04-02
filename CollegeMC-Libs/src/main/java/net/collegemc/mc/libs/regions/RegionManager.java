@@ -2,12 +2,9 @@ package net.collegemc.mc.libs.regions;
 
 import co.aikar.commands.PaperCommandManager;
 import com.google.common.base.Preconditions;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import net.collegemc.common.mongodb.MongoMap;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.regions.permissions.RegionPermission;
-import net.collegemc.mc.libs.tasks.TaskManager;
+import net.collegemc.mc.libs.tasks.MongoBackedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -27,17 +24,13 @@ public class RegionManager implements Iterable<AbstractRegion>, Flushable {
 
   public static final String NAMESPACE = "Regions";
 
-  private final Map<UUID, RegionWorldDomain> worldDomainMap = new HashMap<>();
-  private final Map<String, AbstractRegion> regionNameMap = new HashMap<>();
   private final Map<UUID, RegionSelection> playerRegionSelections = new HashMap<>();
-  private final Map<String, AbstractRegion> regionMongoMap;
+  private final Map<UUID, RegionWorldDomain> worldDomainMap = new HashMap<>();
+  private final MongoBackedMap<String, AbstractRegion> regionNameMap;
 
   public RegionManager(JavaPlugin plugin) {
-    MongoDatabase database = CollegeLibrary.getServerDatabase();
-    MongoCollection<AbstractRegion> collection = database.getCollection(NAMESPACE, AbstractRegion.class);
-
-    this.regionMongoMap = new MongoMap<>(collection, CollegeLibrary.getGsonSerializer(), String.class);
-    this.loadRegions();
+    this.regionNameMap = new MongoBackedMap<>(new HashMap<>(), NAMESPACE, String.class, AbstractRegion.class);
+    this.regionNameMap.loadDataFromRemote();
 
     Bukkit.getPluginManager().registerEvents(new RegionListener(), plugin);
     PaperCommandManager commandManager = CollegeLibrary.getCommandManager();
@@ -51,21 +44,10 @@ public class RegionManager implements Iterable<AbstractRegion>, Flushable {
     commandManager.registerCommand(new RegionCommand());
   }
 
-  public void loadRegions() {
-    this.regionMongoMap.values().forEach(region -> this.addRegion(region, false));
-  }
-
   public void addRegion(AbstractRegion region) {
-    this.addRegion(region, true);
-  }
-
-  public void addRegion(AbstractRegion region, boolean remoteMirror) {
     Preconditions.checkArgument(!this.regionNameMap.containsKey(region.getName()));
     this.worldDomainMap.computeIfAbsent(region.getWorldId(), key -> new RegionWorldDomain()).addRegion(region);
     this.regionNameMap.put(region.getName(), region);
-    if (remoteMirror) {
-      TaskManager.runOnIOPool(() -> this.regionMongoMap.put(region.getName(), region));
-    }
   }
 
   public AbstractRegion getRegionWithHighestPriorityAt(Location location) {
@@ -82,7 +64,6 @@ public class RegionManager implements Iterable<AbstractRegion>, Flushable {
   public void removeRegion(AbstractRegion region) {
     this.worldDomainMap.computeIfAbsent(region.getWorldId(), key -> new RegionWorldDomain()).removeRegion(region);
     this.regionNameMap.remove(region.getName());
-    TaskManager.runOnIOPool(() -> this.regionMongoMap.remove(region.getName()));
   }
 
   public RegionSelection getSelection(Player player) {
@@ -101,6 +82,6 @@ public class RegionManager implements Iterable<AbstractRegion>, Flushable {
 
   @Override
   public void flush() {
-    this.regionMongoMap.putAll(this.regionNameMap);
+    this.regionNameMap.saveDataToRemote();
   }
 }

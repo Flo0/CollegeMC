@@ -16,6 +16,7 @@ public class NPCSenderTask extends BukkitRunnable {
   private final Deque<NPC> npcQueue;
 
   public NPCSenderTask(UUID playerId, Collection<NPC> npcCollection) {
+    System.out.printf("Sending %d NPCs.%n", npcCollection.size());
     this.playerId = playerId;
     this.npcQueue = new ArrayDeque<>(npcCollection);
   }

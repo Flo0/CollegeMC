@@ -38,7 +38,7 @@ public class GlobalDataMap<K, V> {
     this.dataMapContext = dataMapContext;
     this.redissonClient = dataMapContext.getRedissonClient();
     this.mongoStorage = dataMapContext.createMapper();
-    MongoBackedLoader<K, V> loader = new MongoBackedLoader<>(mongoStorage);
+    MongoBackedLoader<K, V> loader = new MongoBackedLoader<>(this.mongoStorage);
     MapOptions<K, V> options = MapOptions.<K, V>defaults()
             .loader(loader)
             .writer(loader)
@@ -47,16 +47,16 @@ public class GlobalDataMap<K, V> {
   }
 
   public MongoMap<K, V> getBackbone() {
-    return mongoStorage;
+    return this.mongoStorage;
   }
 
   public List<K> getCachedKeys() {
-    return List.copyOf(localCache.keySet());
+    return List.copyOf(this.localCache.keySet());
   }
 
   public void enableLocalCacheFor(K key) {
     Preconditions.checkArgument(key != null, "Key cant be null.");
-    Preconditions.checkState(!isLocallyCached(key), "Cant enable cache twice: " + key);
+    Preconditions.checkState(!this.isLocallyCached(key), "Cant enable cache twice: " + key);
     this.localCache.put(key, this.getOrCreateRealTimeData(key));
   }
 
@@ -73,7 +73,7 @@ public class GlobalDataMap<K, V> {
   }
 
   public void triggerLocalCacheRenew(K key) {
-    Preconditions.checkState(isLocallyCached(key), "Tried to renew cached value for uncached key: " + key);
+    Preconditions.checkState(this.isLocallyCached(key), "Tried to renew cached value for uncached key: " + key);
     this.localCache.put(key, this.getOrCreateRealTimeData(key));
   }
 
