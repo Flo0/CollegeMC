@@ -14,9 +14,11 @@ import org.bson.conversions.Bson;
 import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CollegeProfileManager {
 
@@ -61,11 +63,22 @@ public class CollegeProfileManager {
   }
 
   public CollegeProfile createProfile(String name, UUID userId, boolean cache) {
+    return createProfile(name, userId, null, cache);
+  }
+
+  public void printLoadedKeys() {
+    System.out.println("Loaded keys: " + Arrays.toString(this.userDataMap.getCachedKeys().toArray()));
+  }
+
+  public CollegeProfile createProfile(String name, UUID userId, String skinName, boolean cache) {
     ProfileId profileId = ProfileId.random();
     this.userDataMap.getOrCreateRealTimeData(profileId.getUid());
     this.userDataMap.applyToData(profileId.getUid(), profile -> {
       profile.setMinecraftUserId(userId);
       profile.setName(name);
+      if(skinName != null) {
+        profile.setSkinName(skinName);
+      }
     });
     if (cache) {
       this.load(profileId);
@@ -73,6 +86,10 @@ public class CollegeProfileManager {
     } else {
       return this.userDataMap.getOrCreateRealTimeData(profileId.getUid());
     }
+  }
+
+  public void applyToProfile(ProfileId profileId, Consumer<CollegeProfile> consumer) {
+    this.userDataMap.applyToData(profileId.getUid(), consumer);
   }
 
   public ProfileId getIdByName(String name) {

@@ -7,8 +7,6 @@ import net.collegemc.mc.libs.resourcepack.assembly.CustomSound;
 import net.collegemc.mc.libs.resourcepack.assembly.TextureModel;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 
 public interface ServerConfigurationService {
 
@@ -34,18 +32,6 @@ public interface ServerConfigurationService {
 
   default File getRawResourcepackFiles() {
     return null;
-  }
-
-  default List<CustomSound> getCustomSounds() {
-    return Collections.emptyList();
-  }
-
-  default List<TextureModel> getTextureModels() {
-    return Collections.emptyList();
-  }
-
-  default List<BlockModel> getBlockModels() {
-    return Collections.emptyList();
   }
 
   default String getMessagePrefix() {

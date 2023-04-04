@@ -53,7 +53,7 @@ public class NPCManager implements Flushable {
     }
   }
 
-  protected void add(NPC npc) {
+  public void add(NPC npc) {
     if (npc.isPersistent()) {
       this.nameMap.put(npc.getInternalName(), npc);
     } else {

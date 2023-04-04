@@ -1,18 +1,16 @@
 package net.collegemc.mc.core.profileselection;
 
-import net.collegemc.common.GlobalGateway;
+import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.network.data.college.CollegeProfile;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.hooks.itemsadder.ItemsAdderHook;
 import net.collegemc.mc.libs.npcs.abstraction.NPC;
 import net.collegemc.mc.libs.selectionmenu.SelectionMenu;
-import net.collegemc.mc.libs.selectionmenu.baseimpl.SlowLockDown;
-import net.collegemc.mc.libs.spigot.NameGenerator;
+import net.collegemc.mc.libs.selectionmenu.baseimpl.SpectatingLockDown;
 import net.collegemc.mc.libs.spigot.UtilPlayer;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.entity.Player;
-import org.mineskin.data.Skin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +25,10 @@ public class ProfileSelectionMenu extends SelectionMenu {
   private int selectedIndex;
 
   protected ProfileSelectionMenu(Player player, ProfileSelectionLocation location) {
-    super(player.getLocation(), location.getPlayerLocation(), new SlowLockDown(), false);
+    super(player.getLocation(), location.getPlayerLocation(), new SpectatingLockDown(location.getPlayerLocation()), false);
     this.player = player;
     this.displayNpc = new ProfileDisplayNPC(location.getProfileLocation(), "Profile");
+    CollegeLibrary.getNpcManager().add(this.displayNpc);
     this.profiles = new ArrayList<>(ActiveCollegeUser.of(player).getProfileList());
   }
 
@@ -43,17 +42,12 @@ public class ProfileSelectionMenu extends SelectionMenu {
   @Override
   public CompletableFuture<Void> preEnd() {
     TaskManager.runTask(this::tearDown);
+    ItemsAdderHook.blackFade(this.player, 30, 30, 30);
+    TaskManager.runTaskLater(() -> {
+      ActiveCollegeUser activeCollegeUser = ActiveCollegeUser.of(this.player);
+      activeCollegeUser.switchCollegeProfile(this.getSelectedProfile().getCollegeProfileId());
+    }, 30);
     return TaskManager.tickDelayedFuture(45);
-  }
-
-  @Override
-  protected boolean isTicked() {
-    return true;
-  }
-
-  @Override
-  protected void onTick() {
-    this.displayNpc.onTick();
   }
 
   private CollegeProfile getSelectedProfile() {
@@ -64,25 +58,10 @@ public class ProfileSelectionMenu extends SelectionMenu {
     this.displayNpc.showTo(this.player);
     ActiveCollegeUser activeCollegeUser = ActiveCollegeUser.of(this.player);
     Optional<CollegeProfile> optActiveProfile = activeCollegeUser.getCurrentCollegeProfile();
-    if (optActiveProfile.isEmpty()) {
-      TaskManager.supplyOnIOPool(() -> {
-        String name;
-        NameGenerator generator = CollegeLibrary.getNameGenerator();
-        do {
-          name = generator.generate();
-        } while (GlobalGateway.getCollegeProfileManager().nameExists(name));
-        return name;
-      }).thenAccept(name -> {
-        CollegeProfile collegeProfile = activeCollegeUser.createProfile(name).join();
-        TaskManager.runTask(() -> {
-          this.profiles.add(collegeProfile);
-          this.applyProfileOnNpc();
-        });
-      });
-    } else {
-      this.selectedIndex = this.profiles.indexOf(optActiveProfile.get());
+    optActiveProfile.ifPresent(profile -> {
+      this.selectedIndex = this.profiles.indexOf(profile);
       this.applyProfileOnNpc();
-    }
+    });
   }
 
   private void applyProfileOnNpc() {
@@ -97,13 +76,18 @@ public class ProfileSelectionMenu extends SelectionMenu {
   }
 
   private void tearDown() {
-    ActiveCollegeUser activeCollegeUser = ActiveCollegeUser.of(this.player);
-    this.displayNpc.hideFrom(this.player);
-    activeCollegeUser.switchCollegeProfile(this.getSelectedProfile().getCollegeProfileId());
+    this.displayNpc.broadcastHide();
+    CollegeLibrary.getNpcManager().removeById(this.displayNpc.getEntityId());
+  }
+
+  public void changeSelection(CollegeProfile profile) {
+    this.selectedIndex = this.profiles.indexOf(profile);
+    this.applyProfileOnNpc();
   }
 
   @Override
   protected void swingSelect() {
+    new ProfileSelectionGUI(this.player, this::changeSelection).openFor(this.player);
     UtilPlayer.playUIClick(this.player);
   }
 }

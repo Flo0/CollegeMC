@@ -3,6 +3,8 @@ package net.collegemc.mc.core.active;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import net.collegemc.common.GlobalGateway;
+import net.collegemc.common.mineskin.data.Skin;
+import net.collegemc.common.mineskin.data.Texture;
 import net.collegemc.common.network.data.college.CollegeProfile;
 import net.collegemc.common.network.data.college.CollegeProfileManager;
 import net.collegemc.common.network.data.college.ProfileId;
@@ -13,11 +15,11 @@ import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.hooks.itemsadder.ItemsAdderHook;
 import net.collegemc.mc.libs.nametag.NameTagManager;
 import net.collegemc.mc.libs.skinclient.PlayerSkinManager;
+import net.collegemc.mc.libs.spigot.NameGenerator;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.mineskin.data.Skin;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,37 +87,74 @@ public record ActiveCollegeUser(UUID minecraftId) {
     });
   }
 
+  public void applyProfileSkin() {
+    PlayerSkinManager playerSkinManager = CollegeLibrary.getPlayerSkinManager();
+    Player player = this.getBukkitPlayer();
+
+    this.getCurrentCollegeProfile().ifPresent(profile -> {
+      Skin skin = playerSkinManager.getSkin(profile.getSkinName());
+      if (skin != null) {
+        PlayerProfile playerProfile = player.getPlayerProfile();
+        playerProfile.removeProperty("textures");
+        Texture texture = skin.getData().getTexture();
+        playerProfile.setProperty(new ProfileProperty("textures", texture.getValue(), texture.getSignature()));
+        player.setPlayerProfile(playerProfile);
+      }
+    });
+  }
+
+  public void applyProfileName() {
+    NameTagManager tagManager = CollegeLibrary.getNameTagManager();
+    Player player = this.getBukkitPlayer();
+
+    this.getCurrentCollegeProfile().ifPresent(profile -> {
+      tagManager.tag(player, profile.getName());
+    });
+  }
+
   private CompletableFuture<Boolean> applyProfile(CollegeProfile profile) {
     CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
-    NameTagManager tagManager = CollegeLibrary.getNameTagManager();
-    PlayerSkinManager playerSkinManager = CollegeLibrary.getPlayerSkinManager();
-    Skin skin = playerSkinManager.getSkin(profile.getSkinName());
 
     Player player = this.getBukkitPlayer();
-    ItemsAdderHook.blackFade(player, 7, 14, 7);
-
-    tagManager.tag(player, profile.getName());
-
-    if (skin != null) {
-      PlayerProfile playerProfile = player.getPlayerProfile();
-      playerProfile.removeProperty("textures");
-      playerProfile.setProperty(new ProfileProperty("textures", skin.data.texture.value, skin.data.texture.signature));
-      player.setPlayerProfile(playerProfile);
-    }
 
     CollegeProfileMetaData metaData = metaDataManager.getMetaData(profile.getCollegeProfileId());
-    player.getInventory().setContents(metaData.getInventoryContent());
-    return player.teleportAsync(metaData.getLastKnownLocation());
+    CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+    TaskManager.runTask(() -> {
+      this.applyProfileSkin();
+
+      if(metaData.getInventoryContent() != null) {
+        player.getInventory().setContents(metaData.getInventoryContent());
+      }
+
+      if(metaData.getLastKnownLocation() != null) {
+        player.teleportAsync(metaData.getLastKnownLocation()).thenAccept(future::complete);
+      }
+
+      TaskManager.runTask(this::applyProfileName);
+    });
+
+    if(metaData.getLastKnownLocation() == null) {
+      future.complete(false);
+    }
+
+    return future;
   }
 
   public CompletableFuture<CollegeProfile> createProfile(String profileName) {
+    return createProfile(profileName, null);
+  }
+
+  public CompletableFuture<CollegeProfile> createProfile(String profileName, String skinName) {
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
-    return TaskManager.supplyOnIOPool(() -> collegeProfileManager.createProfile(profileName, this.minecraftId, true))
+    CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
+    return TaskManager.supplyOnIOPool(() -> collegeProfileManager.createProfile(profileName, this.minecraftId, skinName, true))
             .thenApply(profile -> {
               networkUserManager.applyToRemoteUser(this.minecraftId, data -> {
                 data.getCollegeProfiles().add(profile.getCollegeProfileId());
               });
+              metaDataManager.loadMetaData(profile.getCollegeProfileId());
               return profile;
             });
   }

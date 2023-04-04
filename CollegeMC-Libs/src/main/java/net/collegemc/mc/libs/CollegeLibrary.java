@@ -26,10 +26,6 @@ import net.collegemc.mc.libs.protocol.ProtocolListener;
 import net.collegemc.mc.libs.regions.AbstractRegion;
 import net.collegemc.mc.libs.regions.RegionManager;
 import net.collegemc.mc.libs.regions.serializer.PolygonSerializer;
-import net.collegemc.mc.libs.resourcepack.assembly.BlockModel;
-import net.collegemc.mc.libs.resourcepack.assembly.CustomSound;
-import net.collegemc.mc.libs.resourcepack.assembly.TextureModel;
-import net.collegemc.mc.libs.resourcepack.distribution.ResourcepackManager;
 import net.collegemc.mc.libs.selectionmenu.SelectionMenuManager;
 import net.collegemc.mc.libs.skinclient.PlayerSkinManager;
 import net.collegemc.mc.libs.spigot.NameGenerator;
@@ -70,8 +66,6 @@ public class CollegeLibrary extends JavaPlugin {
   private static TokenActionManager tokenActionManager;
   @Getter
   private static PlayerSkinManager playerSkinManager;
-  @Getter
-  private static ResourcepackManager resourcepackManager;
   @Getter
   private static GuiManager guiManager;
   @Getter
@@ -131,7 +125,7 @@ public class CollegeLibrary extends JavaPlugin {
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
     Bukkit.getPluginManager().registerEvents(new ProtocolListener(), this);
 
-    this.setupResourcepack();
+    //this.setupResourcepack();
   }
 
   @Override
@@ -139,26 +133,6 @@ public class CollegeLibrary extends JavaPlugin {
     npcManager.flush();
     regionManager.flush();
     Optional.ofNullable(blockDataManager).ifPresent(BlockDataManager::terminate);
-    if (this.coreConfigurationService.isResourcepackEnabled() && resourcepackManager != null) {
-      resourcepackManager.shutdown();
-    }
-  }
-
-  private void setupResourcepack() {
-    if (this.coreConfigurationService.isResourcepackEnabled()) {
-
-      this.coreConfigurationService.getTextureModels().forEach(TextureModel::register);
-      this.coreConfigurationService.getBlockModels().forEach(BlockModel::register);
-      this.coreConfigurationService.getCustomSounds().forEach(CustomSound::register);
-
-      String host = this.coreConfigurationService.resourcepackServerHost();
-      int port = this.coreConfigurationService.resourcepackServerPort();
-      resourcepackManager = new ResourcepackManager(host, port);
-      if (!resourcepackManager.zipResourcepack(this, this.coreConfigurationService.getRawResourcepackFiles())) {
-        Bukkit.shutdown();
-      }
-      resourcepackManager.startServer();
-    }
   }
 
   private void setupGateway() {
@@ -210,6 +184,7 @@ public class CollegeLibrary extends JavaPlugin {
     serializer.registerTypeHierarchyAdapter(OfflinePlayer.class, new OfflinePlayerSerializer());
     serializer.registerTypeHierarchyAdapter(ServerPlayer.class, new ServerPlayerSerializer());
     serializer.registerInstanceCreator(Multimap.class, new MultiMapInstanceCreator());
+    serializer.setLoggingEnabled(false);
   }
 
 }
