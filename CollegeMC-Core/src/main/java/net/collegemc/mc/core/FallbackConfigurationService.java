@@ -1,7 +1,7 @@
 package net.collegemc.mc.core;
 
 import net.collegemc.common.gson.GsonSerializer;
-import net.collegemc.common.mongodb.MongoDriverProperties;
+import net.collegemc.common.database.mongodb.MongoDriverProperties;
 import net.collegemc.mc.core.gson.CollegeGsonSerializer;
 import net.collegemc.mc.libs.ServerConfigurationService;
 

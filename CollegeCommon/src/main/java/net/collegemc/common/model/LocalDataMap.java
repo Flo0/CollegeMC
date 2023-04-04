@@ -1,7 +1,7 @@
 package net.collegemc.common.model;
 
 import com.google.common.base.Preconditions;
-import net.collegemc.common.mongodb.MongoMap;
+import net.collegemc.common.database.mongodb.MongoMap;
 import org.redisson.api.MapOptions;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;

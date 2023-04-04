@@ -1,7 +1,7 @@
 package net.collegemc.common.model;
 
 import lombok.RequiredArgsConstructor;
-import net.collegemc.common.mongodb.MongoMap;
+import net.collegemc.common.database.mongodb.MongoMap;
 import org.redisson.api.map.MapLoader;
 import org.redisson.api.map.MapWriter;
 

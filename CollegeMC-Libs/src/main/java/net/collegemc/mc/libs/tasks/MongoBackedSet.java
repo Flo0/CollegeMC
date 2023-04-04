@@ -2,8 +2,8 @@ package net.collegemc.mc.libs.tasks;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import net.collegemc.common.mongodb.Identity;
-import net.collegemc.common.mongodb.MongoSet;
+import net.collegemc.common.database.mongodb.Identity;
+import net.collegemc.common.database.mongodb.MongoSet;
 import net.collegemc.mc.libs.CollegeLibrary;
 import org.jetbrains.annotations.NotNull;
 

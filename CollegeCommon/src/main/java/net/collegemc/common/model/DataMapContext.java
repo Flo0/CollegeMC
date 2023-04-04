@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import net.collegemc.common.gson.GsonSerializer;
-import net.collegemc.common.mongodb.MongoMap;
+import net.collegemc.common.database.mongodb.MongoMap;
 import org.redisson.api.RedissonClient;
 
 import java.util.function.Function;

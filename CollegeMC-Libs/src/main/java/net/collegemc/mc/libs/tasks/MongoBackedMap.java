@@ -2,7 +2,7 @@ package net.collegemc.mc.libs.tasks;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import net.collegemc.common.mongodb.MongoMap;
+import net.collegemc.common.database.mongodb.MongoMap;
 import net.collegemc.mc.libs.CollegeLibrary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
