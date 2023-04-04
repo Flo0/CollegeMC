@@ -1,6 +1,7 @@
 package net.collegemc.mc.libs.selectionmenu.baseimpl;
 
 import net.collegemc.mc.libs.selectionmenu.TieDown;
+import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -22,9 +23,9 @@ public class SpectatingLockDown implements TieDown {
 
   @Override
   public void tieDown(Player player, Location location) {
-    this.previousGameMode = player.getPreviousGameMode();
+    this.previousGameMode = player.getGameMode();
     player.setGameMode(GameMode.SPECTATOR);
-    player.setSpectatorTarget(this.viewStand);
+    TaskManager.runTask(() -> player.setSpectatorTarget(this.viewStand));
   }
 
   @Override

@@ -1,8 +1,8 @@
 package net.collegemc.mc.libs.npcs.abstraction;
 
+import net.collegemc.common.mineskin.data.Skin;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.mineskin.data.Skin;
 
 import java.net.URL;
 

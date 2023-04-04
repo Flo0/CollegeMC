@@ -40,4 +40,5 @@ public class CollegeProfile {
   public boolean equals(Object obj) {
     return obj instanceof CollegeProfile other && this.collegeProfileId.equals(other.collegeProfileId);
   }
+
 }

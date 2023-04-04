@@ -2,10 +2,13 @@ package net.collegemc.mc.libs.spigot;
 
 import com.destroystokyo.paper.profile.CraftPlayerProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.collegemc.common.mineskin.data.Skin;
+import net.collegemc.common.mineskin.data.Texture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
@@ -50,6 +53,7 @@ public class UtilItem implements Listener {
   private static final Map<String, ItemStack> nameHeadCache = new Object2ObjectOpenHashMap<>();
   private static final Map<String, ItemStack> base64HeadCache = new Object2ObjectOpenHashMap<>();
   private static final Map<UUID, ItemStack> gameProfileHeadCache = new Object2ObjectOpenHashMap<>();
+  private static final Map<Skin, ItemStack> skinHeadCache = new Object2ObjectOpenHashMap<>();
 
   public static ItemStack getHeadFromGameProfile(final GameProfile gameProfile) {
     return UtilItem.gameProfileHeadCache.computeIfAbsent(gameProfile.getId(), pName -> UtilItem.produceHead(gameProfile)).clone();
@@ -197,6 +201,19 @@ public class UtilItem implements Listener {
 
   private UtilItem() {
 
+  }
+
+  public static ItemStack produceHead(Skin skin) {
+    return skinHeadCache.computeIfAbsent(skin, key -> {
+      PlayerProfile playerProfile = Bukkit.createProfile(key.getUniqueId(), key.getName());
+      Texture texture = skin.getData().getTexture();
+      playerProfile.setProperty(new ProfileProperty("textures", texture.getValue(), texture.getSignature()));
+      ItemStack headItem = new ItemStack(Material.PLAYER_HEAD);
+      SkullMeta headMeta = (SkullMeta) headItem.getItemMeta();
+      headMeta.setPlayerProfile(playerProfile);
+      headItem.setItemMeta(headMeta);
+      return headItem;
+    }).clone();
   }
 
   @EventHandler

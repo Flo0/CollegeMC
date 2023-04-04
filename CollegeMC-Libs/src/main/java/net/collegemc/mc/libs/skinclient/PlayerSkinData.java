@@ -1,8 +1,9 @@
 package net.collegemc.mc.libs.skinclient;
 
-import org.mineskin.data.Skin;
+import net.collegemc.common.mineskin.data.Skin;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class PlayerSkinData {
 
@@ -12,6 +13,11 @@ public class PlayerSkinData {
   public PlayerSkinData() {
     this.namedSkinIds = new HashMap<>();
     this.skinMap = new HashMap<>();
+  }
+
+  public Skin getSkinByUID(UUID uid) {
+    String noDash = uid.toString().replace("-", "");
+    return this.skinMap.values().stream().filter(skin -> skin.getUuid().equals(noDash)).findFirst().orElse(null);
   }
 
   public Integer getSkinId(String skinName) {
@@ -27,8 +33,8 @@ public class PlayerSkinData {
   }
 
   public void addSkin(Skin skin) {
-    this.namedSkinIds.put(skin.name, skin.id);
-    this.skinMap.put(skin.id, skin);
+    this.namedSkinIds.put(skin.getName(), skin.getId());
+    this.skinMap.put(skin.getId(), skin);
   }
 
 }

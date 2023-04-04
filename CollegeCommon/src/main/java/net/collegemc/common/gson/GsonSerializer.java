@@ -32,11 +32,22 @@ public class GsonSerializer {
   private final Map<Object, Consumer<GsonBuilder>> builderConsumer = new HashMap<>();
   private final Map<Object, Gson> adapterSkipMap = new HashMap<>();
   private boolean changed = true;
+  private final LoggingFactory loggingFactory;
 
   public GsonSerializer() {
+    this.loggingFactory = new LoggingFactory();
     this.registerTypeAdapter(UUID.class, new UUIDAdapter());
     this.registerTypeAdapter(Class.class, new ClassAdapter());
     this.registerTypeAdapter(ProfileId.class, new ProfileIdAdapter());
+    this.registerTypeAdapterFactory(this.loggingFactory);
+  }
+
+  public boolean isLoggingEnabled() {
+    return this.loggingFactory.isLoggingEnabled();
+  }
+
+  public void setLoggingEnabled(boolean loggingEnabled) {
+    this.loggingFactory.setLoggingEnabled(loggingEnabled);
   }
 
   public Gson getGson() {

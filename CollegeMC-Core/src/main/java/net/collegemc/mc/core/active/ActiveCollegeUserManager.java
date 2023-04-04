@@ -8,6 +8,7 @@ import net.collegemc.common.network.data.network.NetworkUserData;
 import net.collegemc.common.network.data.network.NetworkUserManager;
 import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.libs.tasks.TaskManager;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +63,15 @@ public class ActiveCollegeUserManager {
   public void unloadData(UUID userId) {
     ActiveCollegeUser activeCollegeUser = this.activeCollegeUserMap.remove(userId);
     Preconditions.checkState(activeCollegeUser != null, "Tried unloading missing data.");
+    Player player = activeCollegeUser.getBukkitPlayer();
 
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
     CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
+
+    activeCollegeUser.getCurrentCollegeProfile().ifPresent(profile -> {
+      metaDataManager.writeMeta(player, profile.getCollegeProfileId());
+    });
 
     TaskManager.runOnIOPool(() -> {
       NetworkUserData networkUserData = networkUserManager.getLocalCopy(userId);

@@ -5,7 +5,10 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.collegemc.common.gson.PostDeserializationReactor;
+import net.collegemc.common.mineskin.data.Skin;
+import net.collegemc.common.mineskin.data.Texture;
 import net.collegemc.mc.libs.CollegeLibrary;
+import net.collegemc.mc.libs.nametag.NameTag;
 import net.collegemc.mc.libs.protocol.ProtocolManager;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
@@ -24,7 +27,6 @@ import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
-import org.mineskin.data.Skin;
 
 import java.net.URL;
 import java.util.List;
@@ -155,7 +157,7 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
   public void showTo(Player player) {
     ProtocolManager.sendTo(player, this.infoUpdatePacket);
     ProtocolManager.sendTo(player, this.spawnPacket);
-    CollegeLibrary.getNameTagManager().getTag(this.serverPlayer.getId()).showTo(player);
+    this.broadcastNameChange();
   }
 
   @Override
@@ -169,12 +171,17 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
   public void hideFrom(Player player) {
     ProtocolManager.sendTo(player, this.despawnPacket);
     ProtocolManager.sendTo(player, this.infoRemovePacket);
+    NameTag tag = CollegeLibrary.getNameTagManager().getTag(this.serverPlayer.getId());
+    if(tag != null) {
+      tag.hideFrom(player);
+    }
   }
 
   @Override
   public void broadcastHide() {
     ProtocolManager.broadcastPacket(this.despawnPacket);
     ProtocolManager.broadcastPacket(this.infoRemovePacket);
+    CollegeLibrary.getNameTagManager().untag(this.serverPlayer.getId());
   }
 
   @Override
@@ -189,7 +196,9 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
   public void setSkin(Skin skin) {
     PlayerProfile playerProfile = this.serverPlayer.getBukkitEntity().getPlayerProfile();
     playerProfile.removeProperty("textures");
-    playerProfile.setProperty(new ProfileProperty("textures", skin.data.texture.value, skin.data.texture.signature));
+    Texture texture = skin.getData().getTexture();
+    playerProfile.setProperty(new ProfileProperty("textures", texture.getValue(), texture.getSignature()));
+    serverPlayer.getBukkitEntity().setPlayerProfile(playerProfile);
   }
 
   @Override

@@ -1,6 +1,8 @@
 package net.collegemc.mc.core.profileselection;
 
 import net.collegemc.mc.core.CollegeCore;
+import net.collegemc.mc.core.active.ActiveCollegeUser;
+import net.collegemc.mc.core.active.CollegeProfileMetaDataManager;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.selectionmenu.SelectionMenuManager;
 import net.collegemc.mc.libs.tasks.MongoBackedMap;
@@ -24,6 +26,11 @@ public class ProfileSelectionManager implements Flushable {
   }
 
   public String enterSelection(Player player) {
+    ActiveCollegeUser.of(player).getCurrentCollegeProfile().ifPresent(profile -> {
+      CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
+      metaDataManager.writeMeta(player, profile.getCollegeProfileId());
+    });
+
     SelectionMenuManager selectionMenuManager = CollegeLibrary.getSelectionMenuManager();
     Optional<ProfileSelectionLocation> optLocation = this.selectionLocations.values().stream().filter(loc -> !loc.isOccupied()).findAny();
     if (optLocation.isEmpty()) {

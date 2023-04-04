@@ -4,13 +4,14 @@ import com.google.common.base.Preconditions;
 import lombok.Getter;
 import net.collegemc.common.GlobalGateway;
 import net.collegemc.common.gson.GsonSerializer;
+import net.collegemc.common.mineskin.MineSkinClient;
+import net.collegemc.common.mineskin.SkinOptions;
+import net.collegemc.common.mineskin.Variant;
+import net.collegemc.common.mineskin.Visibility;
+import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.model.GlobalDataObject;
 import net.collegemc.mc.libs.CollegeLibrary;
-import org.mineskin.MineskinClient;
-import org.mineskin.SkinOptions;
-import org.mineskin.Variant;
-import org.mineskin.Visibility;
-import org.mineskin.data.Skin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -30,17 +32,17 @@ public class PlayerSkinManager {
   private static final String API_KEY = "4e4d5e9f0d61a084e0673f99f49fd182280fb670151209f46fdc5c2a38867fdb";
   private static final String KEY_SECRET = "4ee3343aec34213a2df5616b137c6a36f4a0e89884b9b3b4852019b7faa33c4d912d9cd89c78c4b968d0b78d34b0c35d9025b8f7d7da4a78c2ca131ff5c05528";
 
+  @Getter
+  private final PlayerSkinData playerSkinData;
+  private final MineSkinClient mineskinClient;
+  private final GlobalDataObject<PlayerSkinData> globalObject;
+
   public PlayerSkinManager() {
     GsonSerializer serializer = CollegeLibrary.getGsonSerializer();
-    this.mineskinClient = new MineskinClient(USER_AGENT, API_KEY);
+    this.mineskinClient = new MineSkinClient(USER_AGENT, API_KEY);
     this.globalObject = GlobalGateway.getDataDomainManager().getOrCreateGlobalObject(new PlayerSkinData(), serializer, GlobalGateway.DATABASE_NAME, NAMESPACE);
     this.playerSkinData = this.globalObject.getOrCreateRealTimeData();
   }
-
-  @Getter
-  private final PlayerSkinData playerSkinData;
-  private final MineskinClient mineskinClient;
-  private final GlobalDataObject<PlayerSkinData> globalObject;
 
   public Skin getSkin(String skinName) {
     return this.playerSkinData.getSkin(skinName);
@@ -66,6 +68,43 @@ public class PlayerSkinManager {
     this.requestSkin(id, skinConsumer);
   }
 
+  public void requestSkin(final String uid, final Consumer<Skin> skinConsumer) {
+    String withDashes = uid.substring(0, 8) + "-" + uid.substring(8, 12) + "-" + uid.substring(12, 16) + "-" + uid.substring(16, 20) + "-" + uid.substring(20);
+    requestSkin(UUID.fromString(withDashes), skinConsumer);
+  }
+
+  public void requestSkin(final UUID uid, final Consumer<Skin> skinConsumer) {
+    Skin skin = this.playerSkinData.getSkinByUID(uid);
+
+    final long unixWeek = TimeUnit.DAYS.toMillis(7);
+    final long unixDay = unixWeek / 7;
+
+    System.out.println("Requesting skin with UID: " + uid);
+
+    if (skin == null) {
+      CollegeLibrary.getInstance().getLogger().info("§7Downloading Skin with UID [" + uid + "] from Mineskin.org");
+      skin = requestSkinWithUID(uid);
+    } else if (skin.getTimestamp() + unixWeek + ThreadLocalRandom.current().nextLong(-unixDay, unixDay) < System.currentTimeMillis()) {
+      CollegeLibrary.getInstance().getLogger().info("Skin with UID [" + uid + "] has old cache data. Downloading.");
+      skin = requestSkinWithUID(uid);
+    }
+
+    CollegeLibrary.getInstance().getLogger().info("Getting Skin with UID [" + uid + "] from skin cache.");
+    skinConsumer.accept(skin);
+  }
+
+  @NotNull
+  private Skin requestSkinWithUID(UUID uid) {
+    Skin skin = this.mineskinClient.getUuid(uid).join();
+    skin.setTimestamp(System.currentTimeMillis());
+    if (skin.getName().isEmpty() || skin.getName().isBlank()) {
+      skin.setName(uid.toString());
+    }
+    this.playerSkinData.addSkin(skin);
+    this.globalObject.apply(data -> data.addSkin(skin));
+    return skin;
+  }
+
   public void requestSkin(final int id, final Consumer<Skin> skinConsumer) {
     Skin skin = this.playerSkinData.getSkin(id);
 
@@ -75,14 +114,14 @@ public class PlayerSkinManager {
     if (skin == null) {
       CollegeLibrary.getInstance().getLogger().info("§7Downloading Skin with ID [" + id + "] from Mineskin.org");
       skin = this.mineskinClient.getId(id).join();
-      skin.timestamp = System.currentTimeMillis();
+      skin.setTimestamp(System.currentTimeMillis());
       this.playerSkinData.addSkin(skin);
       Skin finalSkin = skin;
       this.globalObject.apply(data -> data.addSkin(finalSkin));
-    } else if (skin.timestamp + unixWeek + ThreadLocalRandom.current().nextLong(-unixDay, unixDay) < System.currentTimeMillis()) {
+    } else if (skin.getTimestamp() + unixWeek + ThreadLocalRandom.current().nextLong(-unixDay, unixDay) < System.currentTimeMillis()) {
       CollegeLibrary.getInstance().getLogger().info("Skin with ID [" + id + "] has old cache data. Downloading.");
       skin = this.mineskinClient.getId(id).join();
-      skin.timestamp = System.currentTimeMillis();
+      skin.setTimestamp(System.currentTimeMillis());
       this.playerSkinData.addSkin(skin);
       Skin finalSkin = skin;
       this.globalObject.apply(data -> data.addSkin(finalSkin));

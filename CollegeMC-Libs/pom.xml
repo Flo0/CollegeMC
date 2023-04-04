@@ -137,12 +137,6 @@
             <artifactId>anvilgui</artifactId>
             <version>1.6.3-SNAPSHOT</version>
         </dependency>
-        <!-- MineSkin -->
-        <dependency>
-            <groupId>org.mineskin</groupId>
-            <artifactId>java-client</artifactId>
-            <version>1.2.4-SNAPSHOT</version>
-        </dependency>
         <!-- ItemsAdder -->
         <dependency>
             <groupId>com.github.LoneDev6</groupId>
