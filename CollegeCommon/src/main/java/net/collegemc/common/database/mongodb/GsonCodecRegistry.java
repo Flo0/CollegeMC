@@ -1,4 +1,4 @@
-package net.collegemc.common.mongodb;
+package net.collegemc.common.database.mongodb;
 
 import net.collegemc.common.gson.GsonSerializer;
 import org.bson.codecs.Codec;

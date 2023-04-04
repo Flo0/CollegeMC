@@ -3,7 +3,7 @@ package net.collegemc.mc.core.profileselection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.collegemc.common.mongodb.Identity;
+import net.collegemc.common.database.mongodb.Identity;
 import org.bukkit.Location;
 
 @Getter

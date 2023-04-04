@@ -1,4 +1,4 @@
-package net.collegemc.common.mongodb;
+package net.collegemc.common.database.mongodb;
 
 public interface Identity<C> {
 

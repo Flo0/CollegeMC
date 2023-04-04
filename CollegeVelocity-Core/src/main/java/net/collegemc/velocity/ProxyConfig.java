@@ -3,7 +3,7 @@ package net.collegemc.velocity;
 import lombok.Data;
 import lombok.Getter;
 import net.collegemc.common.gson.GsonSerializer;
-import net.collegemc.common.mongodb.MongoDriverProperties;
+import net.collegemc.common.database.mongodb.MongoDriverProperties;
 
 @Data
 public class ProxyConfig {

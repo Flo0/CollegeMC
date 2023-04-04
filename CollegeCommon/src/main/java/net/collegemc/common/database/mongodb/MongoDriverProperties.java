@@ -1,4 +1,4 @@
-package net.collegemc.common.mongodb;
+package net.collegemc.common.database.mongodb;
 
 import lombok.Builder;
 import lombok.Data;

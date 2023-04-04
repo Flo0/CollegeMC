@@ -1,4 +1,4 @@
-package net.collegemc.common.redis;
+package net.collegemc.common.database.redis;
 
 import net.collegemc.common.gson.GsonSerializer;
 import org.redisson.client.codec.BaseCodec;

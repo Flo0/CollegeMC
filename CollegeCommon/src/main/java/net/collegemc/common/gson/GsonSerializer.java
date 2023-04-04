@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import net.collegemc.common.gson.adapters.ClassAdapter;
 import net.collegemc.common.gson.adapters.ProfileIdAdapter;
 import net.collegemc.common.gson.adapters.UUIDAdapter;
-import net.collegemc.common.mongodb.GsonCodecRegistry;
+import net.collegemc.common.database.mongodb.GsonCodecRegistry;
 import net.collegemc.common.network.data.college.ProfileId;
 import org.bson.codecs.configuration.CodecRegistry;
 

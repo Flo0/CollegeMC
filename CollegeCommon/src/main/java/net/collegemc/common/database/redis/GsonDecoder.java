@@ -1,4 +1,4 @@
-package net.collegemc.common.redis;
+package net.collegemc.common.database.redis;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
