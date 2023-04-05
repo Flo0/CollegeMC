@@ -7,9 +7,9 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import net.collegemc.common.GlobalGateway;
-import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.common.database.mongodb.MongoDriverProperties;
 import net.collegemc.common.database.redis.RedisGsonCodec;
+import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.mc.libs.actionbar.ActionBarManager;
 import net.collegemc.mc.libs.blockdata.BlockDataManager;
 import net.collegemc.mc.libs.displaywidgets.DisplayWidgetManager;
@@ -92,8 +92,6 @@ public class CollegeLibrary extends JavaPlugin {
   public static String getServerDatabaseName() {
     return GlobalGateway.DATABASE_NAME + "-" + serverName;
   }
-
-  private ServerConfigurationService coreConfigurationService;
 
   @Override
   public void onEnable() {
