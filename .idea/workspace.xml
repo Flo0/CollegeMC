@@ -5,54 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" name="Changes" comment="Batch update">
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/gson/LoggingFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/MineSkinClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/SkinOptions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/Variant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/Visibility.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data/Skin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data/SkinData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data/Texture.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionGUI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/DisplayWidgetManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/DebugSkin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/ClickEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverEnterEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverExitEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/WidgetEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/gson/GsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/gson/GsonSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCoreListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCoreListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/teleport/TeleportManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/teleport/TeleportManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/AbstractNPC.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/AbstractNPC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/NPC.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/NPC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/AssetLibrary.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/BlockModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/BoxedFontChar.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/CustomSound.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/FontMeta.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/ModelData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/PackMeta.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/ResourcepackAssembler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/assembly/TextureModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/distribution/PlayerBoundResourcePackServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/distribution/ResourcePackListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/distribution/ResourcePackServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/distribution/ResourceServerConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/resourcepack/distribution/ResourcepackManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SpectatingLockDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SpectatingLockDown.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinData.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/skinclient/PlayerSkinManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/spigot/UtilItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/spigot/UtilItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/DisplayWidgetManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/DisplayWidgetManager.java" afterDir="false" />
+    </list>
+    <list id="ce9471b7-2784-44ff-a0de-552b4389cb6b" name="Changes by Benjamin" comment="">
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,8 +33,37 @@
       </list>
     </option>
   </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="1be7a073-4a8e-407c-95ce-752d0e39fd13" />
+        <option name="url" value="https://github.com/Flo0/CollegeMC.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java">
+      <ranges>
+        <range start1="9" end1="10" start2="9" end2="9" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="12" end1="12" start2="11" end2="12" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="14" end1="14" start2="14" end2="15" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="82" end1="82" start2="83" end2="86" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="91" end1="93" start2="95" end2="95" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="110" end1="111" start2="112" end2="112" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="123" end1="123" start2="124" end2="125" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+      </ranges>
+    </file>
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="l9em83i5" />
@@ -84,6 +78,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="ProjectId" id="2MdZTm0m1jwuhwEWEbhDIY94B5M" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -95,6 +92,8 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;E:/collegemc/CollegeMC/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data&quot;,
@@ -106,7 +105,8 @@
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -169,7 +169,10 @@
       <workItem from="1680465423340" duration="69000" />
       <workItem from="1680465506411" duration="11530000" />
       <workItem from="1680486675914" duration="6652000" />
-      <workItem from="1680534033042" duration="15344000" />
+      <workItem from="1680534033042" duration="27776000" />
+      <workItem from="1680647914514" duration="414000" />
+      <workItem from="1680648848161" duration="638000" />
+      <workItem from="1680667832745" duration="1224000" />
     </task>
     <task id="LOCAL-00001" summary="Complete project restructure">
       <created>1678100064989</created>
@@ -206,11 +209,29 @@
       <option name="project" value="LOCAL" />
       <updated>1680455141856</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Batch update">
+      <created>1680622942919</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1680622942919</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Complete project restructure" />

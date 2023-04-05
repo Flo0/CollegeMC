@@ -12,6 +12,7 @@ import net.collegemc.common.database.mongodb.MongoDriverProperties;
 import net.collegemc.common.database.redis.RedisGsonCodec;
 import net.collegemc.mc.libs.actionbar.ActionBarManager;
 import net.collegemc.mc.libs.blockdata.BlockDataManager;
+import net.collegemc.mc.libs.displaywidgets.DisplayWidgetManager;
 import net.collegemc.mc.libs.gui.GuiManager;
 import net.collegemc.mc.libs.holograms.HologramManager;
 import net.collegemc.mc.libs.holograms.implementations.nms.NMSHologramFactory;
@@ -80,6 +81,9 @@ public class CollegeLibrary extends JavaPlugin {
   private static NameGenerator nameGenerator;
   @Getter
   private static NameTagManager nameTagManager;
+  @Getter
+  private static DisplayWidgetManager displayWidgetManager;
+  private ServerConfigurationService coreConfigurationService;
 
   public static MongoDatabase getServerDatabase() {
     return GlobalGateway.getMongoClient().getDatabase(getServerDatabaseName());
@@ -108,7 +112,6 @@ public class CollegeLibrary extends JavaPlugin {
 
     this.setupGateway();
     Msg.setServerPrefix(this.coreConfigurationService.getMessagePrefix());
-
     commandManager = new PaperCommandManager(this);
     actionBarManager = new ActionBarManager(this);
     blockDataManager = new BlockDataManager(this);
@@ -121,6 +124,7 @@ public class CollegeLibrary extends JavaPlugin {
     npcManager = new NPCManager(this);
     regionManager = new RegionManager(this);
     selectionMenuManager = new SelectionMenuManager(this);
+    displayWidgetManager = new DisplayWidgetManager(this);
 
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
     Bukkit.getPluginManager().registerEvents(new ProtocolListener(), this);
