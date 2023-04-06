@@ -26,6 +26,7 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
   @Getter
   protected final int id;
   protected final List<AbstractWidget> children;
+  @Getter
   protected final Vec2 position;
   protected final Map<Class<? extends WidgetEvent>, List<Consumer<? extends WidgetEvent>>> eventHandlers;
   @Getter
@@ -94,11 +95,17 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
     children.add(child);
   }
 
-  public void spawn(World world, Vector worldPosition, Vector rotation) {
-    Location spawnLocation = worldPosition.toLocation(world);
-    spawnLocation.setDirection(rotation);
+  public void spawn(World world, Vector spawnPosition, Vector spawnRotation) {
+    Vector up = new Vector(0.0, 1.0, 0.0);
+    Vector transformationVector = new Vector(this.position.x, this.position.y, 0.0);
+    float yaw = spawnRotation.angle(up) - (float) (Math.PI / 2.0);
+    transformationVector.rotateAroundAxis(up, yaw);
+    Location spawnLocation = spawnPosition.toLocation(world).add(transformationVector);
+    spawnLocation.setDirection(spawnRotation);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
-    children.forEach(child -> child.spawn(world, worldPosition, rotation));
+    Vector childRotation = spawnRotation.clone();
+    Vector childPosition = spawnLocation.toVector().add(childRotation.clone().multiply(0.01));
+    children.forEach(child -> child.spawn(world, childPosition, childRotation));
   }
 
   public void update() {
