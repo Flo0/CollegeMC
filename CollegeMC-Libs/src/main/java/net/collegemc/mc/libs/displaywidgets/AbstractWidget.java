@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract sealed class AbstractWidget permits WidgetFrame {
+public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
 
   @Getter
   protected final int id;
   protected final List<AbstractWidget> children;
   protected final Vec2 position;
-  private final Map<Class<? extends WidgetEvent>, List<Consumer<? extends WidgetEvent>>> eventHandlers;
+  protected final Map<Class<? extends WidgetEvent>, List<Consumer<? extends WidgetEvent>>> eventHandlers;
   @Getter
   @Setter
   private float width;
@@ -60,7 +60,7 @@ public abstract sealed class AbstractWidget permits WidgetFrame {
   private TextDisplay displayEntity;
   @Getter
   @Setter
-  private int lineWidth = 1;
+  private int lineWidth = 128;
   @Getter
   @Setter
   private Color glowColor = Color.WHITE;
@@ -135,6 +135,10 @@ public abstract sealed class AbstractWidget permits WidgetFrame {
     this.eventHandlers.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(handler);
   }
 
+  public boolean contains(Vec2 pos2D) {
+    return pos2D.x >= this.position.x && pos2D.x <= this.position.x + this.width && pos2D.y >= this.position.y && pos2D.y <= this.position.y + this.height;
+  }
+
   @SuppressWarnings("unchecked")
   public void onHoverEnter(HoverEnterEvent event) {
     this.eventHandlers.getOrDefault(HoverEnterEvent.class, List.of()).forEach(handler -> ((Consumer<HoverEnterEvent>) handler).accept(event));
@@ -147,8 +151,13 @@ public abstract sealed class AbstractWidget permits WidgetFrame {
 
   @SuppressWarnings("unchecked")
   public void onClick(ClickEvent event) {
-    this.eventHandlers.getOrDefault(ClickEvent.class, List.of()).forEach(handler -> ((Consumer<ClickEvent>) handler).accept(event));
+    if (children.isEmpty()) {
+      this.eventHandlers.getOrDefault(ClickEvent.class, List.of()).forEach(handler -> ((Consumer<ClickEvent>) handler).accept(event));
+    } else {
+      Vec2 childClickPos = event.getPosition().add(this.position.negated());
+      ClickEvent childEvent = new ClickEvent(event.getActor(), childClickPos);
+      children.stream().filter(child -> child.contains(childClickPos)).forEach(child -> child.onClick(childEvent));
+    }
   }
-
 
 }

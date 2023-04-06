@@ -1,10 +1,7 @@
 package net.collegemc.mc.libs;
 
-import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.common.database.mongodb.MongoDriverProperties;
-import net.collegemc.mc.libs.resourcepack.assembly.BlockModel;
-import net.collegemc.mc.libs.resourcepack.assembly.CustomSound;
-import net.collegemc.mc.libs.resourcepack.assembly.TextureModel;
+import net.collegemc.common.gson.GsonSerializer;
 
 import java.io.File;
 

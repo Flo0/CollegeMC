@@ -8,14 +8,14 @@ import org.bukkit.World;
 import org.bukkit.entity.Interaction;
 import org.bukkit.util.Vector;
 
-public non-sealed class WidgetFrame extends AbstractWidget {
+public final class WidgetFrame extends AbstractWidget {
 
-  @Getter
-  private Interaction interactionEntity;
   @Getter
   private final Vector worldPosition;
   @Getter
   private final Vector rotation;
+  @Getter
+  private transient Interaction interactionEntity;
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, float width, float height, Color backgroundColor, double opacity) {
     super(id, new Vec2(0, 0), width, height, backgroundColor, opacity);
@@ -27,16 +27,14 @@ public non-sealed class WidgetFrame extends AbstractWidget {
     this(id, worldPosition, rotation, width, height, backgroundColor, 1.0);
   }
 
-  public WidgetFrame(int id, Vector position, Vector direction, float width, float height) {
-    this(id, position, direction, width, height, Color.WHITE, 1.0);
+  public WidgetFrame(int id, Vector worldPosition, Vector direction, float width, float height) {
+    this(id, worldPosition, direction, width, height, Color.WHITE, 1.0);
   }
-
 
   public void build(World world) {
     super.spawn(world, worldPosition, rotation);
     createInteractionEntity(world);
   }
-
 
   @Override
   public void destroy() {
@@ -49,10 +47,10 @@ public non-sealed class WidgetFrame extends AbstractWidget {
     super.update();
   }
 
-
   private void createInteractionEntity(World world) {
     Location spawnLocation = this.worldPosition.toLocation(world);
     spawnLocation.setDirection(this.rotation);
     this.interactionEntity = world.spawn(spawnLocation, Interaction.class);
   }
+
 }

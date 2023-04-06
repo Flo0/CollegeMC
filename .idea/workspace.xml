@@ -5,19 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" name="Changes" comment="Batch update">
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/ClickEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverEnterEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverExitEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/WidgetEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetDebugCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/DisplayWidgetManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/DisplayWidgetManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverEnterEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverEnterEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverExitEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/HoverExitEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/WidgetEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/WidgetEvent.java" afterDir="false" />
     </list>
-    <list id="ce9471b7-2784-44ff-a0de-552b4389cb6b" name="Changes by Benjamin" comment="">
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
+    <list id="ce9471b7-2784-44ff-a0de-552b4389cb6b" name="Changes by Benjamin" comment="Changes by Benjamin">
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/ClickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/events/ClickEvent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,15 +55,17 @@
     </option>
   </component>
   <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java">
+    <file path="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java">
       <ranges>
-        <range start1="9" end1="10" start2="9" end2="9" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="12" end1="12" start2="11" end2="12" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="14" end1="14" start2="14" end2="15" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="82" end1="82" start2="83" end2="86" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="91" end1="93" start2="95" end2="95" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="110" end1="111" start2="112" end2="112" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="123" end1="123" start2="124" end2="125" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="23" end1="24" start2="23" end2="24" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="28" end1="28" start2="28" end2="29" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="29" end1="30" start2="30" end2="31" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="62" end1="63" start2="63" end2="64" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="96" end1="99" start2="97" end2="104" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="100" end1="101" start2="105" end2="108" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
+        <range start1="136" end1="136" start2="143" end2="147" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="149" end1="150" start2="160" end2="167" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
+        <range start1="151" end1="152" start2="168" end2="168" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
       </ranges>
     </file>
   </component>
@@ -172,7 +176,9 @@
       <workItem from="1680534033042" duration="27776000" />
       <workItem from="1680647914514" duration="414000" />
       <workItem from="1680648848161" duration="638000" />
-      <workItem from="1680667832745" duration="1224000" />
+      <workItem from="1680667832745" duration="1861000" />
+      <workItem from="1680714526922" duration="9441000" />
+      <workItem from="1680799944851" duration="890000" />
     </task>
     <task id="LOCAL-00001" summary="Complete project restructure">
       <created>1678100064989</created>
@@ -216,7 +222,21 @@
       <option name="project" value="LOCAL" />
       <updated>1680622942919</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Batch update">
+      <created>1680683920763</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1680683920763</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Changes by Benjamin">
+      <created>1680683929507</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1680683929507</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -237,6 +257,7 @@
     <MESSAGE value="Complete project restructure" />
     <MESSAGE value="Several implementations" />
     <MESSAGE value="Batch update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Batch update" />
+    <MESSAGE value="Changes by Benjamin" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes by Benjamin" />
   </component>
 </project>

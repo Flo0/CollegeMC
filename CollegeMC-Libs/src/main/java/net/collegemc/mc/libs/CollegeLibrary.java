@@ -13,6 +13,7 @@ import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.mc.libs.actionbar.ActionBarManager;
 import net.collegemc.mc.libs.blockdata.BlockDataManager;
 import net.collegemc.mc.libs.displaywidgets.DisplayWidgetManager;
+import net.collegemc.mc.libs.displaywidgets.WidgetDebugCommand;
 import net.collegemc.mc.libs.gui.GuiManager;
 import net.collegemc.mc.libs.holograms.HologramManager;
 import net.collegemc.mc.libs.holograms.implementations.nms.NMSHologramFactory;
@@ -123,6 +124,8 @@ public class CollegeLibrary extends JavaPlugin {
     regionManager = new RegionManager(this);
     selectionMenuManager = new SelectionMenuManager(this);
     displayWidgetManager = new DisplayWidgetManager(this);
+
+    commandManager.registerCommand(new WidgetDebugCommand());
 
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
     Bukkit.getPluginManager().registerEvents(new ProtocolListener(), this);

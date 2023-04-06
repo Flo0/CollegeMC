@@ -1,31 +1,30 @@
 package net.collegemc.mc.libs.displaywidgets;
 
 import io.papermc.paper.event.player.PlayerArmSwingEvent;
-import net.collegemc.mc.libs.tasks.MongoBackedMap;
+import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
+import net.minecraft.world.phys.Vec2;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 
-import java.io.Flushable;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class DisplayWidgetManager implements Flushable {
+public class DisplayWidgetManager {
 
-  public static final String NAMESPACE = "Display-Widgets";
-  private static final double MAX_TRACE_DISTANCE = 64.0D;
+  private static final int MAX_TRACE_DISTANCE = 46;
 
-  private final MongoBackedMap<Integer, WidgetFrame> widgets;
+  private final Map<Integer, WidgetFrame> widgets;
   private final Map<Player, Set<WidgetFrame>> engagedPlayers;
   private final Set<WidgetFrame> engagedWidgets;
 
   public DisplayWidgetManager(JavaPlugin plugin) {
-    this.widgets = new MongoBackedMap<>(new HashMap<>(), NAMESPACE, Integer.class, WidgetFrame.class);
+    this.widgets = new HashMap<>();
     this.engagedPlayers = new HashMap<>();
     this.engagedWidgets = new HashSet<>();
     Bukkit.getPluginManager().registerEvents(new WidgetListener(), plugin);
@@ -66,20 +65,21 @@ public class DisplayWidgetManager implements Flushable {
     if (!engagedPlayers.containsKey(event.getPlayer())) {
       return;
     }
-    Map<Player, Set<WidgetFrame>> activeWidgets = new HashMap<>(engagedPlayers);
-    RayTraceResult result = event.getPlayer().rayTraceEntities(64);
+    Set<WidgetFrame> engagedWidgets = engagedPlayers.get(event.getPlayer());
+    RayTraceResult result = event.getPlayer().rayTraceEntities(MAX_TRACE_DISTANCE);
     if (result == null) {
+      return;
     }
-
-  }
-
-  public void load() {
-    widgets.loadDataFromRemote();
-  }
-
-  @Override
-  public void flush() throws IOException {
-    widgets.saveDataToRemote();
+    for (WidgetFrame widget : engagedWidgets) {
+      if (widget.getInteractionEntity().equals(result.getHitEntity())) {
+        Vector hitPoint = result.getHitPosition();
+        Vector widgetPosition = widget.getInteractionEntity().getLocation().toVector();
+        Vector relativeHitPoint = hitPoint.subtract(widgetPosition);
+        Vec2 inFramePosition = new Vec2((float) relativeHitPoint.getX(), (float) relativeHitPoint.getY());
+        ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
+        widget.onClick(clickEvent);
+      }
+    }
   }
 
 }
