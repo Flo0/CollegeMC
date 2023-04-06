@@ -58,9 +58,6 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   private TextDisplay displayEntity;
   @Getter
   @Setter
-  private int lineWidth = 128;
-  @Getter
-  @Setter
   private Color glowColor = Color.WHITE;
   @Getter
   @Setter
@@ -81,7 +78,7 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
     this(id, position, width, height, backgroundColor, 0.5);
   }
 
-  protected AbstractWidget(int id, Vec2 position, float width, float height) {
+  protected AbstractWidget(int id, Vec2 position, int width, int height) {
     this(id, position, width, height, Color.GRAY, 0.5);
   }
 

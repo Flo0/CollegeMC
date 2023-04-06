@@ -15,7 +15,7 @@ public class WidgetDebugCommand extends BaseCommand {
   @Default
   public void onDefault(Player sender) {
     DisplayWidgetManager widgetManager = CollegeLibrary.getDisplayWidgetManager();
-    WidgetFrame frame = new WidgetFrame(0, sender.getLocation().toVector(), sender.getLocation().getDirection(), 16.0f, 16.0f, Color.GRAY);
+    WidgetFrame frame = new WidgetFrame(0, sender.getLocation().toVector(), sender.getLocation().getDirection(), 16, 16, Color.GRAY);
 
     WidgetButton.ButtonDisplayProperties defaultProperty = new WidgetButton.ButtonDisplayProperties(Color.BLUE, 1.0d);
     WidgetButton.ButtonDisplayProperties pressedProperty = new WidgetButton.ButtonDisplayProperties(Color.GREEN, 0.9d);

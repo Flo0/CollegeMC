@@ -17,17 +17,17 @@ public final class WidgetFrame extends AbstractWidget {
   @Getter
   private transient Interaction interactionEntity;
 
-  public WidgetFrame(int id, Vector worldPosition, Vector rotation, float width, float height, Color backgroundColor, double opacity) {
+  public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor, double opacity) {
     super(id, new Vec2(0, 0), width, height, backgroundColor, opacity);
     this.worldPosition = worldPosition;
     this.rotation = rotation;
   }
 
-  public WidgetFrame(int id, Vector worldPosition, Vector rotation, float width, float height, Color backgroundColor) {
+  public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor) {
     this(id, worldPosition, rotation, width, height, backgroundColor, 1.0);
   }
 
-  public WidgetFrame(int id, Vector worldPosition, Vector direction, float width, float height) {
+  public WidgetFrame(int id, Vector worldPosition, Vector direction, int width, int height) {
     this(id, worldPosition, direction, width, height, Color.WHITE, 1.0);
   }
 

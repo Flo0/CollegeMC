@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class WidgetButton extends AbstractWidget {
+public final class WidgetButton extends TextWidget {
 
   private final ButtonType type;
   private final ButtonDisplayProperties defaultProperties;
@@ -25,7 +25,7 @@ public final class WidgetButton extends AbstractWidget {
   private int buttonAutoReleaseTicks = 10;
   private BukkitTask autoReleaseTask = null;
 
-  public WidgetButton(int id, Vec2 position, float width, float height, ButtonType type, ButtonDisplayProperties defaultProperties, ButtonDisplayProperties pressedProperties) {
+  public WidgetButton(int id, Vec2 position, int width, int height, ButtonType type, ButtonDisplayProperties defaultProperties, ButtonDisplayProperties pressedProperties) {
     super(id, position, width, height, defaultProperties.backgroundColor, defaultProperties.opacity);
     this.type = type;
     this.pressed = false;
