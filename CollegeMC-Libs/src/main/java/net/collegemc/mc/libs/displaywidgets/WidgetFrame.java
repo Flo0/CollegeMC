@@ -50,7 +50,10 @@ public final class WidgetFrame extends AbstractWidget {
   private void createInteractionEntity(World world) {
     Location spawnLocation = this.worldPosition.toLocation(world);
     spawnLocation.setDirection(this.rotation);
-    this.interactionEntity = world.spawn(spawnLocation, Interaction.class);
+    this.interactionEntity = world.spawn(spawnLocation, Interaction.class, entity -> {
+      entity.setInteractionHeight(this.getHeight());
+      entity.setInteractionWidth(this.getWidth());
+    });
   }
 
 }

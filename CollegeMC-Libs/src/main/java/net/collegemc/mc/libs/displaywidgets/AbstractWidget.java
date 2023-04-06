@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
+public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
 
   @Getter
   protected final int id;
@@ -31,10 +31,10 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
   protected final Map<Class<? extends WidgetEvent>, List<Consumer<? extends WidgetEvent>>> eventHandlers;
   @Getter
   @Setter
-  private float width;
+  private int width;
   @Getter
   @Setter
-  private float height;
+  private int height;
   @Getter
   @Setter
   private Color backgroundColor;
@@ -52,9 +52,6 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
   private float shadowStrength = 0.5F;
   @Getter
   @Setter
-  private TextDisplay.TextAligment alignment = TextDisplay.TextAligment.LEFT;
-  @Getter
-  @Setter
   private boolean seeThrough = false;
   @Getter
   @Setter
@@ -68,11 +65,8 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
   @Getter
   @Setter
   private boolean glowColorEnabled = false;
-  @Getter
-  @Setter
-  private Component text = Component.empty();
 
-  protected AbstractWidget(int id, Vec2 position, float width, float height, Color backgroundColor, double opacity) {
+  protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
     this.id = id;
     this.position = position;
     this.width = width;
@@ -83,7 +77,7 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
     this.eventHandlers = new HashMap<>();
   }
 
-  protected AbstractWidget(int id, Vec2 position, float width, float height, Color backgroundColor) {
+  protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor) {
     this(id, position, width, height, backgroundColor, 0.5);
   }
 
@@ -104,7 +98,7 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
     spawnLocation.setDirection(spawnRotation);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
     Vector childRotation = spawnRotation.clone();
-    Vector childPosition = spawnLocation.toVector().add(childRotation.clone().multiply(0.01));
+    Vector childPosition = spawnLocation.toVector().add(childRotation.clone().multiply(0.001));
     children.forEach(child -> child.spawn(world, childPosition, childRotation));
   }
 
@@ -114,14 +108,15 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
 
   @SuppressWarnings("deprecation")
   private void syncPropertiesWithWidget(TextDisplay entity) {
-    entity.setDisplayWidth(this.width);
-    entity.setDisplayHeight(this.height);
+    entity.setLineWidth(512);
+    String filler = "  ".repeat(width * height);
+    entity.text(Component.text(filler));
+    entity.setTextOpacity((byte) 0);
     entity.setBackgroundColor(this.backgroundColor);
     entity.setShadowed(this.shadowed);
     entity.setShadowRadius(this.shadowRadius);
     entity.setShadowStrength(this.shadowStrength);
-    entity.setAlignment(this.alignment);
-    entity.setLineWidth(this.lineWidth);
+    entity.setAlignment(TextDisplay.TextAligment.CENTER);
     entity.setSeeThrough(this.seeThrough);
     entity.setBillboard(Display.Billboard.FIXED);
     if (this.glowColorEnabled) {
@@ -130,7 +125,6 @@ public abstract sealed class AbstractWidget permits WidgetButton, WidgetFrame {
     } else {
       entity.setGlowing(false);
     }
-    entity.text(this.text);
   }
 
   public void destroy() {
