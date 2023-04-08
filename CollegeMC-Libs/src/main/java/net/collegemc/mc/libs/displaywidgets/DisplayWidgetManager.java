@@ -70,7 +70,6 @@ public class DisplayWidgetManager {
     Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
     Set<WidgetFrame> engagedWidgets = engagedPlayers.get(event.getPlayer());
     RayTraceResult result = event.getPlayer().rayTraceEntities(MAX_TRACE_DISTANCE);
-    logger.info("result: " + result);
     if (result == null) {
       return;
     }
@@ -78,13 +77,19 @@ public class DisplayWidgetManager {
       if (widget.getInteractionEntity().equals(result.getHitEntity())) {
         Vector hitPoint = result.getHitPosition();
         Vector widgetPosition = widget.getInteractionEntity().getLocation().toVector();
+        Vector transformationVector = new Vector(-((double) widget.getWidth() / 2 / 4), (double) widget.getHeight() / 4, 0.0);
+        widgetPosition.add(transformationVector);
         Vector relativeHitPoint = hitPoint.subtract(widgetPosition);
-        logger.warning("relativeHitPoint: " + relativeHitPoint);
-        Vec2 inFramePosition = new Vec2((float) relativeHitPoint.getX(), (float) relativeHitPoint.getY());
+        Vec2 inFramePosition = new Vec2((float) relativeHitPoint.getX() * 4, (float) relativeHitPoint.getY() * -4);
+        logger.warning("2D Position: " + DisplayWidgetManager.printVec2(inFramePosition));
         ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
         widget.onClick(clickEvent);
       }
     }
+  }
+
+  public static String printVec2(Vec2 vec2) {
+    return "x: " + vec2.x + " | y: " + vec2.y;
   }
 
 }
