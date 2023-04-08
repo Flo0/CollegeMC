@@ -19,12 +19,43 @@ public class WidgetDebugCommand extends BaseCommand {
   @CommandCompletion("@VerticalAlignment width height x y z")
   public void onDefault(Player sender, @Values("@VerticalAlignment") WidgetText.VerticalAlignment alignment, int width, int height, int x, int y, int z) {
     DisplayWidgetManager widgetManager = CollegeLibrary.getDisplayWidgetManager();
-    WidgetFrame frame = new WidgetFrame(0, new Vector(x, y, z), sender.getLocation().getDirection(), width, height, Color.GRAY);
-    WidgetText text = new WidgetText(1, Component.text("Hello World!"), new Vec2(0, 0), 8, 4, Color.BLUE, 1.0);
+    WidgetFrame frame = new WidgetFrame(0, new Vector(x, y, z), sender.getLocation().getDirection(), 20, 12, Color.GRAY);
+    WidgetText text = new WidgetText(1, Component.text("Counter Example"), new Vec2(1, 1), 6, 2, Color.BLUE, 1.0);
     text.setVerticalAlignment(alignment);
     frame.addChild(text);
+    final Count count = new Count();
+    WidgetButton.ButtonDisplayProperties defaultProperties = new WidgetButton.ButtonDisplayProperties(Color.BLUE, -1.0);
+    WidgetButton.ButtonDisplayProperties clickedProperties1 = new WidgetButton.ButtonDisplayProperties(Color.GREEN, -1.0);
+    WidgetButton.ButtonDisplayProperties clickedProperties2 = new WidgetButton.ButtonDisplayProperties(Color.PURPLE, -1.0);
+    WidgetButton button1 = new WidgetButton(3, new Vec2(1, 4), 2, 2, WidgetButton.ButtonType.CLICKABLE, defaultProperties, clickedProperties1);
+    WidgetButton button2 = new WidgetButton(5, new Vec2(10, 4), 2, 2, WidgetButton.ButtonType.CLICKABLE, defaultProperties, clickedProperties2);
+    WidgetText countDisplay = new WidgetText(7, Component.text("Count: 0"), new Vec2(4, 14), 6, 2, Color.RED, 1.0);
+    button1.setText(Component.text("+1"));
+    button2.setText(Component.text("-1"));
+    button1.addEventHandler(WidgetButton.ButtonStateChangedEvent.class, buttonStateChangedEvent -> {
+      if (buttonStateChangedEvent.isPressedState()) {
+        count.count++;
+        countDisplay.update();
+      }
+    });
+    button2.addEventHandler(WidgetButton.ButtonStateChangedEvent.class, buttonStateChangedEvent -> {
+      if (buttonStateChangedEvent.isPressedState()) {
+        count.count--;
+        countDisplay.update();
+      }
+    });
+    frame.addChild(button1);
+    //frame.addChild(button2);
+    //frame.addChild(countDisplay);
+    text.setVerticalAlignment(alignment);
     widgetManager.createWindow(frame, sender.getWorld());
     widgetManager.engage(sender, frame.id);
   }
+
+  private static class Count {
+    public int count = 0;
+  }
+
+  ;
 
 }

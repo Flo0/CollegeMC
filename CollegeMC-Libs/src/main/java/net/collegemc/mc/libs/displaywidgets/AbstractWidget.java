@@ -93,7 +93,7 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
     logger.warning("Now spawning id: " + this.id);
     logger.info("worldPosition: " + spawnPosition);
     // Vector up = new Vector(0.0, 1.0, 0.0);
-    Vector transformationVector = new Vector(this.position.x, this.position.y, 0.0);
+    Vector transformationVector = new Vector(this.position.x / 4, -this.position.y / 4, 0.0);
     logger.info("transformationVector: " + transformationVector);
     transformationVector.add(worldTo2D);
     logger.info("transformationVector with positionTransform: " + transformationVector);

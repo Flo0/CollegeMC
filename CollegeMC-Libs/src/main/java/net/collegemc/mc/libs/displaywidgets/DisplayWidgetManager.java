@@ -79,6 +79,7 @@ public class DisplayWidgetManager {
         Vector hitPoint = result.getHitPosition();
         Vector widgetPosition = widget.getInteractionEntity().getLocation().toVector();
         Vector relativeHitPoint = hitPoint.subtract(widgetPosition);
+        logger.warning("relativeHitPoint: " + relativeHitPoint);
         Vec2 inFramePosition = new Vec2((float) relativeHitPoint.getX(), (float) relativeHitPoint.getY());
         ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
         widget.onClick(clickEvent);
