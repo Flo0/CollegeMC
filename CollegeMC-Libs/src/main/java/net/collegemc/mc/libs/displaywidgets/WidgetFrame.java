@@ -31,6 +31,7 @@ public final class WidgetFrame extends AbstractWidget {
     this(id, worldPosition, direction, width, height, Color.WHITE, 1.0);
   }
 
+
   public void build(World world) {
     super.spawn(world, worldPosition, rotation);
     createInteractionEntity(world);
@@ -48,11 +49,11 @@ public final class WidgetFrame extends AbstractWidget {
   }
 
   private void createInteractionEntity(World world) {
-    Location spawnLocation = this.worldPosition.toLocation(world);
+    Location spawnLocation = this.worldPosition.toLocation(world).add(worldTo2D);
     spawnLocation.setDirection(this.rotation);
     this.interactionEntity = world.spawn(spawnLocation, Interaction.class, entity -> {
-      entity.setInteractionHeight(this.getHeight());
-      entity.setInteractionWidth(this.getWidth());
+      entity.setInteractionHeight((float) this.getHeight() / 4);
+      entity.setInteractionWidth((float) this.getWidth() / 4);
     });
   }
 

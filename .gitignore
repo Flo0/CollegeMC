@@ -1,2 +1,5 @@
 /.paper-nms/
 /.idea/
+.xml
+.class
+.jar

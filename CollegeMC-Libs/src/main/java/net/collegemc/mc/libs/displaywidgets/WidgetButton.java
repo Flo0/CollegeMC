@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class WidgetButton extends TextWidget {
+public final class WidgetButton extends WidgetText {
 
   private final ButtonType type;
   private final ButtonDisplayProperties defaultProperties;
@@ -31,6 +31,7 @@ public final class WidgetButton extends TextWidget {
     this.pressed = false;
     this.defaultProperties = defaultProperties;
     this.pressedProperties = pressedProperties;
+    this.setVerticalAlignment(VerticalAlignment.CENTER);
   }
 
   @Override

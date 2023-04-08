@@ -14,6 +14,7 @@ import net.collegemc.mc.libs.actionbar.ActionBarManager;
 import net.collegemc.mc.libs.blockdata.BlockDataManager;
 import net.collegemc.mc.libs.displaywidgets.DisplayWidgetManager;
 import net.collegemc.mc.libs.displaywidgets.WidgetDebugCommand;
+import net.collegemc.mc.libs.displaywidgets.WidgetText;
 import net.collegemc.mc.libs.gui.GuiManager;
 import net.collegemc.mc.libs.holograms.HologramManager;
 import net.collegemc.mc.libs.holograms.implementations.nms.NMSHologramFactory;
@@ -46,7 +47,9 @@ import org.redisson.config.SingleServerConfig;
 
 import java.awt.Polygon;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CollegeLibrary extends JavaPlugin {
 
@@ -126,6 +129,9 @@ public class CollegeLibrary extends JavaPlugin {
     displayWidgetManager = new DisplayWidgetManager(this);
 
     commandManager.registerCommand(new WidgetDebugCommand());
+    commandManager.getCommandCompletions().registerCompletion("VerticalAlignment", context -> {
+      return Arrays.stream(WidgetText.VerticalAlignment.values()).map(WidgetText.VerticalAlignment::name).collect(Collectors.toList());
+    });
 
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
     Bukkit.getPluginManager().registerEvents(new ProtocolListener(), this);

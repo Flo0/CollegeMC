@@ -1,6 +1,7 @@
 package net.collegemc.mc.libs.displaywidgets;
 
 import io.papermc.paper.event.player.PlayerArmSwingEvent;
+import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
 import net.minecraft.world.phys.Vec2;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class DisplayWidgetManager {
 
@@ -58,15 +60,17 @@ public class DisplayWidgetManager {
 
   public void createWindow(WidgetFrame widget, World world) {
     widgets.put(widget.getId(), widget);
-    widget.spawn(world, widget.getWorldPosition(), widget.getRotation());
+    widget.build(world);
   }
 
   protected void onSwing(PlayerArmSwingEvent event) {
     if (!engagedPlayers.containsKey(event.getPlayer())) {
       return;
     }
+    Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
     Set<WidgetFrame> engagedWidgets = engagedPlayers.get(event.getPlayer());
     RayTraceResult result = event.getPlayer().rayTraceEntities(MAX_TRACE_DISTANCE);
+    logger.info("result: " + result);
     if (result == null) {
       return;
     }

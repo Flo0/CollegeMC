@@ -2,6 +2,7 @@ package net.collegemc.mc.libs.displaywidgets;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
 import net.collegemc.mc.libs.displaywidgets.events.HoverEnterEvent;
 import net.collegemc.mc.libs.displaywidgets.events.HoverExitEvent;
@@ -20,8 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
-public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
+public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
 
   @Getter
   protected final int id;
@@ -52,9 +54,6 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   private float shadowStrength = 0.5F;
   @Getter
   @Setter
-  private boolean seeThrough = false;
-  @Getter
-  @Setter
   private TextDisplay displayEntity;
   @Getter
   @Setter
@@ -62,6 +61,7 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   @Getter
   @Setter
   private boolean glowColorEnabled = false;
+  protected Vector worldTo2D;
 
   protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
     this.id = id;
@@ -72,6 +72,7 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
     this.opacity = opacity;
     this.children = new ArrayList<>();
     this.eventHandlers = new HashMap<>();
+    worldTo2D = new Vector((double) (this.getWidth() / 2) / 4, (double) (-this.getHeight()) / 4, 0.0);
   }
 
   protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor) {
@@ -87,15 +88,24 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   }
 
   public void spawn(World world, Vector spawnPosition, Vector spawnRotation) {
-    Vector up = new Vector(0.0, 1.0, 0.0);
+    //Get Logger and print relevant positions
+    Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
+    logger.warning("Now spawning id: " + this.id);
+    logger.info("worldPosition: " + spawnPosition);
+    // Vector up = new Vector(0.0, 1.0, 0.0);
     Vector transformationVector = new Vector(this.position.x, this.position.y, 0.0);
-    float yaw = spawnRotation.angle(up) - (float) (Math.PI / 2.0);
-    transformationVector.rotateAroundAxis(up, yaw);
+    logger.info("transformationVector: " + transformationVector);
+    transformationVector.add(worldTo2D);
+    logger.info("transformationVector with positionTransform: " + transformationVector);
+    // float yaw = spawnRotation.angle(up) - (float) (Math.PI / 2.0);
     Location spawnLocation = spawnPosition.toLocation(world).add(transformationVector);
+    logger.info("final spawnPosition: " + spawnLocation);
     spawnLocation.setDirection(spawnRotation);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
     Vector childRotation = spawnRotation.clone();
-    Vector childPosition = spawnLocation.toVector().add(childRotation.clone().multiply(0.001));
+    logger.info("(child) Rotation: " + childRotation);
+    Vector childPosition = spawnPosition.add(new Vector(0, 0, childRotation.getZ() * (-0.001)));
+    logger.info("childPosition: " + childPosition);
     children.forEach(child -> child.spawn(world, childPosition, childRotation));
   }
 
@@ -103,18 +113,19 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
     syncPropertiesWithWidget(this.displayEntity);
   }
 
+
   @SuppressWarnings("deprecation")
   private void syncPropertiesWithWidget(TextDisplay entity) {
-    entity.setLineWidth(512);
-    String filler = "  ".repeat(width * height);
+    entity.setLineWidth(width * 10);
+    String filler = "ꈰ".repeat(width * height);
     entity.text(Component.text(filler));
-    entity.setTextOpacity((byte) 0);
+    entity.setTextOpacity((byte) -1);
     entity.setBackgroundColor(this.backgroundColor);
     entity.setShadowed(this.shadowed);
     entity.setShadowRadius(this.shadowRadius);
     entity.setShadowStrength(this.shadowStrength);
     entity.setAlignment(TextDisplay.TextAligment.CENTER);
-    entity.setSeeThrough(this.seeThrough);
+    entity.setSeeThrough(false);
     entity.setBillboard(Display.Billboard.FIXED);
     if (this.glowColorEnabled) {
       entity.setGlowing(true);
