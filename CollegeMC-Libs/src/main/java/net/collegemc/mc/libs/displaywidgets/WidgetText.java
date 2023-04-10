@@ -75,7 +75,6 @@ public non-sealed class WidgetText extends AbstractWidget {
     logger.info("final spawn location " + spawnLocation);
     spawnLocation.setDirection(spawnRotation);
     textDisplay = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithText);
-    // textDisplay.setRotation(yaw, 0f);
   }
 
   @Override
@@ -91,7 +90,7 @@ public non-sealed class WidgetText extends AbstractWidget {
   }
 
   private int getLines(String text) {
-    return 1;
+    return (int) text.lines().count();
   }
 
   @SuppressWarnings("deprecation")

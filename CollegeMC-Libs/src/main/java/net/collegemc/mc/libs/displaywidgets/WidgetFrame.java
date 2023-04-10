@@ -19,8 +19,11 @@ public final class WidgetFrame extends AbstractWidget {
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor, double opacity) {
     super(id, new Vec2(0, 0), width, height, backgroundColor, opacity);
+    if (rotation.isZero()) {
+      throw new IllegalArgumentException("Rotation cannot be zero!");
+    }
     this.worldPosition = worldPosition;
-    this.rotation = rotation;
+    this.rotation = rotation.normalize();
   }
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor) {
