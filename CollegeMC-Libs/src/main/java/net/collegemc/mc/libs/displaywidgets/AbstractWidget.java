@@ -91,39 +91,62 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
   }
 
   public void spawn(World world, Vector spawnPosition, Vector spawnRotation) {
-    //Get Logger and print relevant positions
     Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
     logger.warning("Now spawning id: " + this.id);
     logger.info("worldPosition: " + spawnPosition);
-    Vector transformationVector = new Vector(this.position.x / 4, -this.position.y / 4, 0.0);
-    logger.info("transformationVector: " + transformationVector);
-    transformationVector.add(worldTo2D);
-    logger.info("transformationVector with positionTransform: " + transformationVector);
-    Location spawnLocation = spawnPosition.toLocation(world).add(transformationVector);
-    logger.info("final spawnPosition: " + spawnLocation);
-    spawnLocation.setDirection(spawnRotation);
+    logger.info("worldRotation: " + spawnRotation);
+    Location spawnLocation = spawnPosition.toLocation(world);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
     Vector childRotation = spawnRotation.clone();
-    logger.info("(child) Rotation: " + childRotation);
     Vector childPosition = spawnPosition.add(new Vector(0, 0, childRotation.getZ() * (-0.001)));
-    logger.info("childPosition: " + childPosition);
     children.forEach(child -> child.spawn(world, childPosition, childRotation));
-    rotateTo(spawnRotation);
   }
 
-  public void rotateTo(Vector facing) {
+  public void applyRotationAndPosition(Vector worldPosition, Vector facing) {
+    Logger logger = CollegeLibrary.getInstance().getLogger();
+    logger.warning("Applying rotation & position to id " + id);
+    logger.warning("worldPos: " + worldPosition);
+    logger.warning("facing: " + facing);
     Vector axis = new Vector(1.0, 0.0, 0.0);
     float yaw = facing.angle(axis) - (float) (Math.PI / 2.0);
-    if (facing.getZ() > 0) {
+    if (facing.getZ() < 0) {
       yaw = (float) (yaw + Math.toRadians(180d));
     }
     yaw = yaw / 2;
+
+    if (yaw < 0) {
+      yaw = (float) Math.toRadians(360d) + yaw;
+    }
+    logger.info("half-angle: " + Math.toDegrees(yaw) + "°");
     Transformation currentTransformation = displayEntity.getTransformation();
     Quaternionf rotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0.0F, 1.0F, 0.0F), yaw).normalize();
     Vector3f translation = currentTransformation.getTranslation();
-    Vector translationVector = facing.multiply(getWidth() / 8).multiply(-1);
-    translationVector.add(facing.clone().rotateAroundAxis(new Vector(0, 1.0, 0), 90).multiply(-(getWidth() / 8)));
-    translation.add(new Vector3f((float) translationVector.getX(), (float) translationVector.getY(), (float) translationVector.getZ()));
+
+    Vector translationHelp = facing.clone();
+    translationHelp.rotateAroundY(Math.toRadians(-90d));
+
+    // Entity offset
+    Vector translationVector = translationHelp.clone();
+    float verticalTranslation = (float) getHeight() / 4;
+    translationVector.multiply((((float) getWidth() / 8) + ((float) getPosition().x / 4)));
+    translationVector.add(new Vector(0, verticalTranslation, 0));
+
+    //2d pos offset
+    float verticalScale = (float) ((translationHelp.angle(new Vector(0, 1.0, 0)) / Math.toRadians(90d)));
+    float verticalPosOffset = (verticalScale / 4) * getPosition().y;
+
+    Vector resultingPosition = displayEntity.getLocation().toVector().add(translationVector);
+    logger.warning("Resulting absolute position: " + resultingPosition.toLocation(displayEntity.getWorld()));
+
+    translationVector.add(new Vector(0.0d, verticalPosOffset, 0.0d));
+    Vector resultingRelativePos = displayEntity.getLocation().toVector().add(translationVector);
+    logger.warning("Resulting relative position: " + resultingRelativePos);
+    float xOffset = ((float) worldPosition.getX() - (float) resultingRelativePos.getX());
+    float yOffset = ((float) worldPosition.getY() - (float) resultingRelativePos.getY());
+    float zOffset = ((float) worldPosition.getZ() - (float) resultingRelativePos.getZ());
+    logger.warning("xoff: " + xOffset + " yoff: " + yOffset + " zoff: " + zOffset);
+
+    translation.set(new Vector3f(xOffset, yOffset, zOffset));
     Transformation newTransformation = new Transformation(translation, rotation, currentTransformation.getScale(), rotation.invert());
     displayEntity.setTransformation(newTransformation);
   }

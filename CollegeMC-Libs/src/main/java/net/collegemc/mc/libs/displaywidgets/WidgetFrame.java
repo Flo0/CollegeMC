@@ -37,6 +37,7 @@ public final class WidgetFrame extends AbstractWidget {
 
   public void build(World world) {
     super.spawn(world, worldPosition, rotation);
+    applyRotationAndPosition(worldPosition, rotation);
     createInteractionEntity(world);
   }
 
@@ -44,6 +45,12 @@ public final class WidgetFrame extends AbstractWidget {
   public void destroy() {
     super.destroy();
     interactionEntity.remove();
+  }
+
+  @Override
+  public void applyRotationAndPosition(Vector worldPosition, Vector facing) {
+    super.applyRotationAndPosition(worldPosition, facing);
+    children.forEach(child -> child.applyRotationAndPosition(worldPosition, facing));
   }
 
   @Override
