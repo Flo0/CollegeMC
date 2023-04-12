@@ -17,6 +17,7 @@ public final class WidgetFrame extends AbstractWidget {
   @Getter
   private transient Interaction interactionEntity;
 
+
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor, double opacity) {
     super(id, new Vec2(0, 0), width, height, backgroundColor, opacity);
     if (rotation.isZero()) {
@@ -36,8 +37,8 @@ public final class WidgetFrame extends AbstractWidget {
 
 
   public void build(World world) {
-    super.spawn(world, worldPosition, rotation);
-    applyRotationAndPosition(worldPosition, rotation);
+    super.spawn(world, worldPosition.clone());
+    applyTransformation(worldPosition.clone(), rotation.clone(), true);
     createInteractionEntity(world);
   }
 
@@ -47,11 +48,6 @@ public final class WidgetFrame extends AbstractWidget {
     interactionEntity.remove();
   }
 
-  @Override
-  public void applyRotationAndPosition(Vector worldPosition, Vector facing) {
-    super.applyRotationAndPosition(worldPosition, facing);
-    children.forEach(child -> child.applyRotationAndPosition(worldPosition, facing));
-  }
 
   @Override
   public void update() {
@@ -59,7 +55,7 @@ public final class WidgetFrame extends AbstractWidget {
   }
 
   private void createInteractionEntity(World world) {
-    Location spawnLocation = this.worldPosition.toLocation(world).add(worldTo2D);
+    Location spawnLocation = this.worldPosition.toLocation(world);
     spawnLocation.add(new Vector(0, 0, -(this.getWidth() / 8)));
     spawnLocation.setDirection(this.rotation);
     this.interactionEntity = world.spawn(spawnLocation, Interaction.class, entity -> {

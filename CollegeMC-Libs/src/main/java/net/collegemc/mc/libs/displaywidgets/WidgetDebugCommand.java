@@ -23,7 +23,8 @@ public class WidgetDebugCommand extends BaseCommand {
     DisplayWidgetManager widgetManager = CollegeLibrary.getDisplayWidgetManager();
     WidgetFrame frame = new WidgetFrame(0, new Vector(x, y, z), new Vector(0, 0, 1), 16, 16, Color.GREEN, 1.0);
     this.frame = frame;
-    WidgetText widgetText = new WidgetText(1, Component.text("Hello World!"), new Vec2(1, 1), 4, 4, Color.BLACK, 1.0);
+    WidgetText widgetText = new WidgetText(1, Component.text("Hello World!"), new Vec2(1, 1), 4, 4, Color.BLUE, 1.0);
+    widgetText.setVerticalAlignment(WidgetText.VerticalAlignment.CENTER);
     frame.addChild(widgetText);
     widgetManager.createWindow(frame, sender.getWorld());
     widgetManager.engage(sender, 0);
@@ -33,17 +34,12 @@ public class WidgetDebugCommand extends BaseCommand {
   @CommandCompletion("angle")
   public void onRotate(Player sender, String facing) {
     switch (facing) {
-      case "NORTH" -> frame.applyRotationAndPosition(new Vector(-10, 100, 12), new Vector(0, 0, -1));
-      case "SOUTH" -> frame.applyRotationAndPosition(new Vector(-10, 100, 12), new Vector(0, 0, 1));
-      case "WEST" -> frame.applyRotationAndPosition(new Vector(-10, 100, 12), new Vector(-1, 0, 0));
-      case "EAST" -> frame.applyRotationAndPosition(new Vector(-10, 100, 12), new Vector(1, 0, 0));
+      case "NORTH" -> frame.applyTransformation(new Vector(-10, 100, 12), new Vector(0, 0, -1), true);
+      case "SOUTH" -> frame.applyTransformation(new Vector(-10, 100, 12), new Vector(0, 0, 1), true);
+      case "WEST" -> frame.applyTransformation(new Vector(-10, 100, 12), new Vector(-1, 0, 0), true);
+      case "EAST" -> frame.applyTransformation(new Vector(-10, 100, 12), new Vector(1, 0, 0), true);
     }
   }
 
-  @Subcommand("vrot")
-  @CommandCompletion("x y z angle")
-  public void vonVRot(int x, int y, int z, double angle) {
-    CollegeLibrary.getInstance().getLogger().warning("rotated: " + new Vector(x, y, z).rotateAroundY(Math.toRadians(angle)));
-  }
 
 }

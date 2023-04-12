@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
+public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, WidgetText.WidgetBackground {
 
   @Getter
   protected final int id;
@@ -64,7 +64,7 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
   @Getter
   @Setter
   private boolean glowColorEnabled = false;
-  protected Vector worldTo2D;
+  public final static float CHILD_OFFSET = 0.0001f;
 
   protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
     this.id = id;
@@ -75,7 +75,6 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
     this.opacity = opacity;
     this.children = new ArrayList<>();
     this.eventHandlers = new HashMap<>();
-    worldTo2D = new Vector((double) (this.getWidth() / 2) / 4, (double) (-this.getHeight()) / 4, 0.0);
   }
 
   protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor) {
@@ -90,23 +89,16 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
     children.add(child);
   }
 
-  public void spawn(World world, Vector spawnPosition, Vector spawnRotation) {
+  public void spawn(World world, Vector spawnPosition) {
     Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
     logger.warning("Now spawning id: " + this.id);
     logger.info("worldPosition: " + spawnPosition);
-    logger.info("worldRotation: " + spawnRotation);
     Location spawnLocation = spawnPosition.toLocation(world);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
-    Vector childRotation = spawnRotation.clone();
-    Vector childPosition = spawnPosition.add(new Vector(0, 0, childRotation.getZ() * (-0.001)));
-    children.forEach(child -> child.spawn(world, childPosition, childRotation));
+    children.forEach(child -> child.spawn(world, spawnPosition));
   }
 
-  public void applyRotationAndPosition(Vector worldPosition, Vector facing) {
-    Logger logger = CollegeLibrary.getInstance().getLogger();
-    logger.warning("Applying rotation & position to id " + id);
-    logger.warning("worldPos: " + worldPosition);
-    logger.warning("facing: " + facing);
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
     Vector axis = new Vector(1.0, 0.0, 0.0);
     float yaw = facing.angle(axis) - (float) (Math.PI / 2.0);
     if (facing.getZ() < 0) {
@@ -117,7 +109,6 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
     if (yaw < 0) {
       yaw = (float) Math.toRadians(360d) + yaw;
     }
-    logger.info("half-angle: " + Math.toDegrees(yaw) + "°");
     Transformation currentTransformation = displayEntity.getTransformation();
     Quaternionf rotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0.0F, 1.0F, 0.0F), yaw).normalize();
     Vector3f translation = currentTransformation.getTranslation();
@@ -134,21 +125,22 @@ public abstract sealed class AbstractWidget permits WidgetText, WidgetFrame {
     //2d pos offset
     float verticalScale = (float) ((translationHelp.angle(new Vector(0, 1.0, 0)) / Math.toRadians(90d)));
     float verticalPosOffset = (verticalScale / 4) * getPosition().y;
-
     Vector resultingPosition = displayEntity.getLocation().toVector().add(translationVector);
-    logger.warning("Resulting absolute position: " + resultingPosition.toLocation(displayEntity.getWorld()));
-
     translationVector.add(new Vector(0.0d, verticalPosOffset, 0.0d));
     Vector resultingRelativePos = displayEntity.getLocation().toVector().add(translationVector);
-    logger.warning("Resulting relative position: " + resultingRelativePos);
     float xOffset = ((float) worldPosition.getX() - (float) resultingRelativePos.getX());
     float yOffset = ((float) worldPosition.getY() - (float) resultingRelativePos.getY());
     float zOffset = ((float) worldPosition.getZ() - (float) resultingRelativePos.getZ());
-    logger.warning("xoff: " + xOffset + " yoff: " + yOffset + " zoff: " + zOffset);
 
     translation.set(new Vector3f(xOffset, yOffset, zOffset));
     Transformation newTransformation = new Transformation(translation, rotation, currentTransformation.getScale(), rotation.invert());
     displayEntity.setTransformation(newTransformation);
+    final Vector childFacing = facing.clone();
+
+    if (passThrough) {
+      children.forEach(child -> child.applyTransformation(worldPosition.add(facing.multiply(CHILD_OFFSET).multiply(id)), childFacing, true));
+    }
+
   }
 
 
