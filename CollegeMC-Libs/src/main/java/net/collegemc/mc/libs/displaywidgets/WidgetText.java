@@ -53,7 +53,6 @@ public non-sealed class WidgetText extends AbstractWidget {
   @Override
   public void update() {
     syncPropertiesWithText();
-    super.update();
   }
 
 

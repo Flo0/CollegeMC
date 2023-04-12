@@ -79,7 +79,7 @@ public class DisplayWidgetManager {
       Vector relativeHitPoint = hitPosition.subtract(widgetPosition);
       relativeHitPoint.rotateAroundAxis(new Vector(0, 1.0, 0), -widget.getYaw());
 
-      Vec2 inFramePosition = new Vec2((float) Math.abs(relativeHitPoint.getX()) * 4, (float) Math.abs(relativeHitPoint.getY()) * -4);
+      Vec2 inFramePosition = new Vec2((float) Math.abs(relativeHitPoint.getX()) * 4, -(float) Math.abs(relativeHitPoint.getY()) * -4);
       ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
       widget.onClick(clickEvent);
     }
