@@ -9,6 +9,7 @@ import net.collegemc.mc.libs.CollegeLibrary;
 import net.kyori.adventure.text.Component;
 import net.minecraft.world.phys.Vec2;
 import org.bukkit.Color;
+import org.bukkit.entity.Interaction;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -16,6 +17,7 @@ import org.bukkit.util.Vector;
 public class WidgetDebugCommand extends BaseCommand {
 
   private WidgetFrame frame;
+  private Interaction interactionEntity;
 
   @Default
   @CommandCompletion("x y z")

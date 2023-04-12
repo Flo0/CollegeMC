@@ -1,11 +1,10 @@
 package net.collegemc.mc.libs.displaywidgets;
 
 import lombok.Getter;
+import net.collegemc.mc.libs.CollegeLibrary;
 import net.minecraft.world.phys.Vec2;
 import org.bukkit.Color;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Interaction;
 import org.bukkit.util.Vector;
 
 public final class WidgetFrame extends AbstractWidget {
@@ -13,9 +12,7 @@ public final class WidgetFrame extends AbstractWidget {
   @Getter
   private final Vector worldPosition;
   @Getter
-  private final Vector rotation;
-  @Getter
-  private transient Interaction interactionEntity;
+  private Vector rotation;
 
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor, double opacity) {
@@ -24,7 +21,8 @@ public final class WidgetFrame extends AbstractWidget {
       throw new IllegalArgumentException("Rotation cannot be zero!");
     }
     this.worldPosition = worldPosition;
-    this.rotation = rotation.normalize();
+    this.rotation = rotation.normalize().clone();
+    CollegeLibrary.getInstance().getLogger().warning("rotation: " + rotation);
   }
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor) {
@@ -39,13 +37,12 @@ public final class WidgetFrame extends AbstractWidget {
   public void build(World world) {
     super.spawn(world, worldPosition.clone());
     applyTransformation(worldPosition.clone(), rotation.clone(), true);
-    createInteractionEntity(world);
+    update();
   }
 
   @Override
   public void destroy() {
     super.destroy();
-    interactionEntity.remove();
   }
 
 
@@ -54,14 +51,30 @@ public final class WidgetFrame extends AbstractWidget {
     super.update();
   }
 
-  private void createInteractionEntity(World world) {
-    Location spawnLocation = this.worldPosition.toLocation(world);
-    spawnLocation.add(new Vector(0, 0, -(this.getWidth() / 8)));
-    spawnLocation.setDirection(this.rotation);
-    this.interactionEntity = world.spawn(spawnLocation, Interaction.class, entity -> {
-      entity.setInteractionHeight((float) this.getHeight() / 4);
-      entity.setInteractionWidth((float) this.getWidth() / 4);
-    });
+  @Override
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
+    super.applyTransformation(worldPosition, facing.clone(), passThrough);
+    this.rotation = facing.clone();
+    CollegeLibrary.getInstance().getLogger().warning("rotation: " + rotation);
+    update();
+  }
+
+  public Vector getBottomRight() {
+    Vector entityLocation = getDisplayEntity().getLocation().toVector().clone();
+    Vector translationHelp = rotation.clone();
+    translationHelp.rotateAroundY(Math.toRadians(-90d));
+    translationHelp.multiply(-(float) getWidth() / 4);
+    translationHelp.add(new Vector(0, -(getHeight() / 4), 0));
+
+    return entityLocation.clone().add(translationHelp);
+  }
+
+  public Vector getTopLeft() {
+    return worldPosition;
+  }
+
+  public float getYaw() {
+    return getHalfYaw(rotation) * 2 % 365;
   }
 
 }

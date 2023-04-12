@@ -2,7 +2,6 @@ package net.collegemc.mc.libs.displaywidgets;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
 import net.collegemc.mc.libs.displaywidgets.events.HoverEnterEvent;
 import net.collegemc.mc.libs.displaywidgets.events.HoverExitEvent;
@@ -24,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, WidgetText.WidgetBackground {
 
@@ -90,26 +88,14 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
   }
 
   public void spawn(World world, Vector spawnPosition) {
-    Logger logger = CollegeLibrary.getPlugin(CollegeLibrary.class).getLogger();
-    logger.warning("Now spawning id: " + this.id);
-    logger.info("worldPosition: " + spawnPosition);
     Location spawnLocation = spawnPosition.toLocation(world);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
     children.forEach(child -> child.spawn(world, spawnPosition));
   }
 
   public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
-    Vector axis = new Vector(1.0, 0.0, 0.0);
-    float yaw = facing.angle(axis) - (float) (Math.PI / 2.0);
-    if (facing.getZ() < 0) {
-      yaw = (float) (yaw + Math.toRadians(180d));
-    }
-    yaw = yaw / 2;
-
-    if (yaw < 0) {
-      yaw = (float) Math.toRadians(360d) + yaw;
-    }
     Transformation currentTransformation = displayEntity.getTransformation();
+    float yaw = getHalfYaw(facing);
     Quaternionf rotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0.0F, 1.0F, 0.0F), yaw).normalize();
     Vector3f translation = currentTransformation.getTranslation();
 
@@ -125,7 +111,6 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     //2d pos offset
     float verticalScale = (float) ((translationHelp.angle(new Vector(0, 1.0, 0)) / Math.toRadians(90d)));
     float verticalPosOffset = (verticalScale / 4) * getPosition().y;
-    Vector resultingPosition = displayEntity.getLocation().toVector().add(translationVector);
     translationVector.add(new Vector(0.0d, verticalPosOffset, 0.0d));
     Vector resultingRelativePos = displayEntity.getLocation().toVector().add(translationVector);
     float xOffset = ((float) worldPosition.getX() - (float) resultingRelativePos.getX());
@@ -202,6 +187,20 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
       ClickEvent childEvent = new ClickEvent(event.getActor(), childClickPos);
       children.stream().filter(child -> child.contains(childClickPos)).forEach(child -> child.onClick(childEvent));
     }
+  }
+
+  protected float getHalfYaw(Vector facing) {
+    Vector axis = new Vector(1.0, 0.0, 0.0);
+    float yaw = facing.angle(axis) - (float) (Math.PI / 2.0);
+    if (facing.getZ() < 0) {
+      yaw = (float) (yaw + Math.toRadians(180d));
+    }
+    yaw = yaw / 2;
+
+    if (yaw < 0) {
+      yaw = (float) Math.toRadians(360d) + yaw;
+    }
+    return yaw;
   }
 
 }
