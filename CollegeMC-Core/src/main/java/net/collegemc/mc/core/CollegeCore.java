@@ -6,10 +6,15 @@ import net.collegemc.common.GlobalGateway;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
 import net.collegemc.mc.core.active.ActiveCollegeUserManager;
 import net.collegemc.mc.core.active.CollegeProfileMetaDataManager;
+import net.collegemc.mc.core.daycycle.DayCycleManager;
+import net.collegemc.mc.core.economy.EconomyCommand;
+import net.collegemc.mc.core.economy.EconomyManager;
 import net.collegemc.mc.core.friends.FriendsList;
 import net.collegemc.mc.core.friends.FriendsManager;
 import net.collegemc.mc.core.profileselection.ProfileSelectionCommand;
 import net.collegemc.mc.core.profileselection.ProfileSelectionManager;
+import net.collegemc.mc.core.quests.QuestCommand;
+import net.collegemc.mc.core.quests.QuestManager;
 import net.collegemc.mc.core.transport.teleport.TeleportCommand;
 import net.collegemc.mc.core.transport.teleport.TeleportManager;
 import net.collegemc.mc.core.transport.warp.WarpCommand;
@@ -36,6 +41,12 @@ public class CollegeCore extends CollegePlugin {
   private static CollegeProfileMetaDataManager collegeProfileMetaDataManager;
   @Getter
   private static ProfileSelectionManager profileSelectionManager;
+  @Getter
+  private static EconomyManager economyManager;
+  @Getter
+  private static QuestManager questManager;
+  @Getter
+  private static DayCycleManager dayCycleManager;
 
   @Override
   public void onEnable() {
@@ -45,6 +56,9 @@ public class CollegeCore extends CollegePlugin {
     friendsManager = new FriendsManager();
     collegeProfileMetaDataManager = new CollegeProfileMetaDataManager();
     profileSelectionManager = new ProfileSelectionManager();
+    economyManager = new EconomyManager();
+    questManager = new QuestManager(this);
+    dayCycleManager = new DayCycleManager();
 
     PaperCommandManager commandManager = CollegeLibrary.getCommandManager();
 
@@ -78,6 +92,9 @@ public class CollegeCore extends CollegePlugin {
     commandManager.getCommandCompletions().registerCompletion("ProfileSelectionLocations", context -> {
       return profileSelectionManager.getLocationNames();
     });
+
+    commandManager.registerCommand(new EconomyCommand());
+    commandManager.registerCommand(new QuestCommand());
   }
 
   @Override

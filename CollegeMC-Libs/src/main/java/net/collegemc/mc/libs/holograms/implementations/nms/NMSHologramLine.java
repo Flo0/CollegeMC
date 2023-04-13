@@ -24,9 +24,9 @@ public class NMSHologramLine implements HologramLine {
 
   private final ClientboundRemoveEntitiesPacket removePacket;
   private final ClientboundAddEntityPacket addPacket;
+  private final ArmorStand nmsArmorStandBackbone;
   private ClientboundTeleportEntityPacket teleportPacket;
   private ClientboundSetEntityDataPacket dataPacket;
-  private final ArmorStand nmsArmorStandBackbone;
   private String currentText;
 
   public NMSHologramLine(Location loc) {
@@ -50,6 +50,13 @@ public class NMSHologramLine implements HologramLine {
   }
 
   @Override
+  public void setText(String text) {
+    this.currentText = text;
+    this.nmsArmorStandBackbone.setCustomName(Component.literal(text.replace("&", "§")));
+    this.dataPacket = this.createDataPacket();
+  }
+
+  @Override
   public void showTo(Player player) {
     ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
     connection.send(this.addPacket);
@@ -66,13 +73,6 @@ public class NMSHologramLine implements HologramLine {
   public void teleport(Location location) {
     this.nmsArmorStandBackbone.setPos(location.getX(), location.getY(), location.getZ());
     this.teleportPacket = this.createMovePacket();
-  }
-
-  @Override
-  public void setText(String text) {
-    this.currentText = text;
-    this.nmsArmorStandBackbone.setCustomName(Component.literal(text.replace("&", "§")));
-    this.dataPacket = this.createDataPacket();
   }
 
   @Override

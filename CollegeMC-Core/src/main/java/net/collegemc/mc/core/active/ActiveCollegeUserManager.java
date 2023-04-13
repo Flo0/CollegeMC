@@ -7,6 +7,8 @@ import net.collegemc.common.network.data.college.ProfileId;
 import net.collegemc.common.network.data.network.NetworkUserData;
 import net.collegemc.common.network.data.network.NetworkUserManager;
 import net.collegemc.mc.core.CollegeCore;
+import net.collegemc.mc.core.economy.EconomyManager;
+import net.collegemc.mc.core.quests.QuestManager;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.entity.Player;
 
@@ -45,6 +47,8 @@ public class ActiveCollegeUserManager {
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
     CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
+    EconomyManager economyManager = CollegeCore.getEconomyManager();
+    QuestManager questManager = CollegeCore.getQuestManager();
 
     List<ProfileId> profileIdsToLoad = new ArrayList<>();
 
@@ -58,6 +62,8 @@ public class ActiveCollegeUserManager {
     networkUserManager.cache(userId);
     profileIdsToLoad.forEach(collegeProfileManager::load);
     profileIdsToLoad.forEach(metaDataManager::loadMetaData);
+    profileIdsToLoad.forEach(economyManager::cacheAccount);
+    profileIdsToLoad.forEach(questManager::cacheQuestList);
   }
 
   public void unloadData(UUID userId) {
@@ -68,6 +74,8 @@ public class ActiveCollegeUserManager {
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
     CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
+    EconomyManager economyManager = CollegeCore.getEconomyManager();
+    QuestManager questManager = CollegeCore.getQuestManager();
 
     activeCollegeUser.getCurrentCollegeProfile().ifPresent(profile -> {
       metaDataManager.writeMeta(player, profile.getCollegeProfileId());
@@ -77,6 +85,8 @@ public class ActiveCollegeUserManager {
       NetworkUserData networkUserData = networkUserManager.getLocalCopy(userId);
       networkUserData.getCollegeProfiles().forEach(collegeProfileManager::unload);
       networkUserData.getCollegeProfiles().forEach(metaDataManager::unloadMetaData);
+      networkUserData.getCollegeProfiles().forEach(economyManager::uncacheAccount);
+      networkUserData.getCollegeProfiles().forEach(questManager::uncacheQuestList);
       networkUserManager.uncache(userId);
     });
   }

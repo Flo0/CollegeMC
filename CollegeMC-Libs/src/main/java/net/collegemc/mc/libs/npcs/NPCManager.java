@@ -73,6 +73,7 @@ public class NPCManager implements Flushable {
   public void removeById(int id) {
     NPC npc = this.activeMap.remove(id);
     if (npc != null) {
+      npc.onDestroy();
       this.nameMap.remove(npc.getInternalName());
     }
   }
@@ -80,6 +81,7 @@ public class NPCManager implements Flushable {
   public void removeByName(String name) {
     NPC npc = this.nameMap.remove(name);
     if (npc != null) {
+      npc.onDestroy();
       this.activeMap.remove(npc.getEntityId());
     }
   }

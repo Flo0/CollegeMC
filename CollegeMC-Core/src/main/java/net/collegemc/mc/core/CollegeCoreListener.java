@@ -64,7 +64,7 @@ public class CollegeCoreListener implements Listener {
           } while (GlobalGateway.getCollegeProfileManager().nameExists(name));
           return name;
         }).thenAccept(name -> {
-          collegeUser.createProfile(name, skin.getName()).join();
+          collegeUser.createProfile(name, skin).join();
         }).join();
       }
     }

@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import reactor.core.publisher.Mono;
 
 public class WarpGUI extends DynamicGUI {
   @Override
@@ -27,10 +26,10 @@ public class WarpGUI extends DynamicGUI {
 
   private GuiButton createWarpButton(Warp warp) {
     return GuiButton.builder()
-            .iconCreator(Mono.fromSupplier(() -> ItemBuilder.of(warp.getIcon())
+            .iconCreator(() -> ItemBuilder.of(warp.getIcon())
                     .lore("", "§7[Click to TP]", "§7[Click with item to change]")
                     .name("§e" + warp.getName())
-                    .build()))
+                    .build())
             .eventConsumer(event -> {
               Player player = (Player) event.getWhoClicked();
               ItemStack cursor = event.getCursor();

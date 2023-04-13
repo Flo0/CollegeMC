@@ -1,6 +1,5 @@
 package net.collegemc.mc.libs.selectionmenu;
 
-import net.collegemc.mc.libs.protocol.ProtocolManager;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ public class SelectionMenuManager {
     this.menuMap = new HashMap<>();
     Bukkit.getPluginManager().registerEvents(new SelectionMenuListener(), plugin);
     TaskManager.runTaskTimer(this::tickMenus, 1, 1);
-    ProtocolManager.registerPacketHandler(new SelectionMenuPacketListener());
   }
 
   public boolean isInSelection(Player player) {
@@ -28,13 +26,10 @@ public class SelectionMenuManager {
 
   public CompletableFuture<Void> startSelection(Player player, SelectionMenu selectionMenu) {
     if (this.isInSelection(player)) {
-      this.endSelection(player);
+      this.endSelection(player, true);
     }
     this.menuMap.put(player, selectionMenu);
-    return selectionMenu.preStart().thenRun(() -> {
-      TaskManager.runTask(() -> player.teleportAsync(selectionMenu.getSelectionLocation())
-              .thenRun(() -> selectionMenu.getTieDown().tieDown(player, selectionMenu.getSelectionLocation())));
-    });
+    return selectionMenu.onStart().thenRun(() -> selectionMenu.getTieDown().tieDown(player));
   }
 
   protected CompletableFuture<Void> endSelection(Player player, boolean now) {
@@ -43,19 +38,7 @@ public class SelectionMenuManager {
       return CompletableFuture.completedFuture(null);
     }
     menu.getTieDown().release(player);
-    if (now) {
-      menu.preEnd();
-      if (menu.isTeleportOnEnd()) {
-        player.teleport(menu.getReturnLocation());
-      }
-      return CompletableFuture.completedFuture(null);
-    } else {
-      return menu.preEnd().thenRun(() -> TaskManager.runTask(() -> {
-        if (menu.isTeleportOnEnd()) {
-          player.teleportAsync(menu.getReturnLocation());
-        }
-      }));
-    }
+    return menu.onEnd(now);
   }
 
   public CompletableFuture<Void> endSelection(Player player) {

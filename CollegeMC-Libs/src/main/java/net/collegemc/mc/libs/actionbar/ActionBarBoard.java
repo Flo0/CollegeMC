@@ -8,6 +8,33 @@ import lombok.Setter;
 public class ActionBarBoard {
 
   protected static final int MIN_SECTION_LENGTH = 20;
+  private final ActionBarSection[] sections;
+  private final String[] lines = {
+          "खदशॆॖ०ॶআখদশ৆৖০৶",
+          "਌ਜਬ਼ੌੜ੬੼ઌજબ઼ૌ૜૬",
+          "ଂ଒ଢଲୂ୒ୢ୲ஂஒ஢லூ௒௢"
+  };
+  private final String[] prefixes = {
+          "§a৥৥  §f",
+          "§a૛૛  §f",
+          "§a௑௑  §f"
+  };
+  private final String[] spacesS = {
+          "ऄऄऄऄ§f",
+          "৺৺৺৺§f",
+          "૰૰૰૰§f"
+  };
+  private final String[] spaces = {
+          "ऄऄऄऄ§7",
+          "৺৺৺৺§7",
+          "૰૰૰૰§7"
+  };
+  @Getter
+  private String currentDisplay = "";
+  @Setter
+  private String delimiter = " ";
+  private int ticks = 0;
+  private int index = 0;
 
   protected ActionBarBoard() {
     this.sections = new ActionBarSection[3];
@@ -15,38 +42,6 @@ public class ActionBarBoard {
     this.sections[1] = new ActionBarSection();
     this.sections[2] = new ActionBarSection();
   }
-
-  private final ActionBarSection[] sections;
-  @Getter
-  private String currentDisplay = "";
-  @Setter
-  private String delimiter = " ";
-
-  private int ticks = 0;
-  private int index = 0;
-  private final String[] lines = {
-          "खदशॆॖ०ॶআখদশ৆৖০৶",
-          "਌ਜਬ਼ੌੜ੬੼ઌજબ઼ૌ૜૬",
-          "ଂ଒ଢଲୂ୒ୢ୲ஂஒ஢லூ௒௢"
-  };
-
-  private final String[] prefixes = {
-          "§a৥৥  §f",
-          "§a૛૛  §f",
-          "§a௑௑  §f"
-  };
-
-  private final String[] spacesS = {
-          "ऄऄऄऄ§f",
-          "৺৺৺৺§f",
-          "૰૰૰૰§f"
-  };
-
-  private final String[] spaces = {
-          "ऄऄऄऄ§7",
-          "৺৺৺৺§7",
-          "૰૰૰૰§7"
-  };
 
   public void update() {
     StringBuilder builder = new StringBuilder();

@@ -7,6 +7,7 @@ import net.collegemc.common.model.DataMapContext;
 import net.collegemc.common.model.GlobalDataMap;
 import net.collegemc.common.network.data.college.ProfileId;
 import net.collegemc.mc.libs.CollegeLibrary;
+import net.collegemc.mc.libs.ServerConfigurationService;
 import net.collegemc.mc.libs.tasks.TaskManager;
 
 import java.util.UUID;
@@ -42,6 +43,10 @@ public class FriendsManager {
             .build();
     this.friendsLists = GlobalGateway.getDataDomainManager().getOrCreateAutoSyncDataDomain(listContext);
     this.friendRequests = GlobalGateway.getDataDomainManager().getOrCreateGlobalDomain(requestsContext);
+
+    if (CollegeLibrary.getDebugLevel() == ServerConfigurationService.DebugLevel.HIGH) {
+      friendsLists.registerListener("__debug", (key, value) -> CollegeLibrary.info("FriendsList cache changed: " + key));
+    }
   }
 
   public FriendsList fetchRemoteList(ProfileId profileId) {

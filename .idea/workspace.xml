@@ -5,16 +5,96 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" name="Changes" comment="Batch update">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/daycycle/DayCycleManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/daycycle/DayTimeChangeEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyOperation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyTransaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyTransactionEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/economy/EconomyTransactionResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/Quest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestReward.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/QuestTarget.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/rewards/ExperienceReward.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/rewards/MoneyReward.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/targets/SimpleBlockBreakTarget.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/targets/SimpleKillEntityQuest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/ui/QuestMainGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/quests/ui/QuestViewGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/util/OnlineProfileSelectionGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/advancements/AdvancementManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/abstraction/AutoUpdated.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/baseimpl/PaginatedDynamicGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/CollegemcSound.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/CollegemcSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagDespawnPacketHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagPlayerPacketHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagSpawnPacketHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagTeleportPacketHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/spigot/events/DelegateListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/spigot/events/kill/PlayerKillEntityEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" afterDir="false" />
-    </list>
-    <list id="ce9471b7-2784-44ff-a0de-552b4389cb6b" name="Changes by Benjamin" comment="Changes by Benjamin">
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetDebugCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetDebugCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.paper-nms/mappings_1.19.4.tiny" beforeDir="false" afterPath="$PROJECT_DIR$/.paper-nms/mappings_1.19.4.tiny" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/database/mongodb/MongoMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/database/mongodb/MongoMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data/Skin.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data/Skin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/model/AutoSynchronizedGlobalDataMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/model/AutoSynchronizedGlobalDataMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/college/CollegeProfileManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/network/NetworkUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/network/data/network/NetworkUserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/utils/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeCommon/src/main/java/net/collegemc/common/utils/StringUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/CollegeMC-Core.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/CollegeMC-Core.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCoreListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/CollegeCoreListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/active/ActiveCollegeUserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/friends/FriendsAddGUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/friends/FriendsMainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/friends/FriendsMainGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/friends/FriendsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/friends/FriendsManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/gson/CollegeGsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/gson/CollegeGsonSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileDisplayNPC.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileDisplayNPC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/profileselection/ProfileSelectionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/warp/WarpGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Core/src/main/java/net/collegemc/mc/core/transport/warp/WarpGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/CollegeLibrary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/ServerConfigurationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/actionbar/ActionBarBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/GuiManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/GuiManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/abstraction/GuiButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/abstraction/GuiButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/baseimpl/DynamicGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/baseimpl/DynamicGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/baseimpl/GuiHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/baseimpl/GuiHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/util/ConfirmationGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/gui/util/ConfirmationGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/holograms/implementations/nms/NMSHologramLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/holograms/implementations/nms/NMSHologramLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/ItemsAdderHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/hooks/itemsadder/ItemsAdderHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/messaging/Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/messaging/Msg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/nametag/NameTagManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/NPCManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/AbstractNPC.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/AbstractNPC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/NPC.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/abstraction/NPC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/listener/NPCPacketListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/listener/NPCPacketListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/serializer/ServerPlayerSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/npcs/serializer/ServerPlayerSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/AbstractPacketInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/AbstractPacketInjector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/BukkitPacketInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/BukkitPacketInjector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/PacketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/PacketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/ProtocolListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/ProtocolListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/ProtocolManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/protocol/ProtocolManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/permissions/RegionPermissionGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/regions/permissions/RegionPermissionGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/SelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/SelectionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/SelectionMenuManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/SelectionMenuManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/SelectionMenuPacketListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/TieDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/TieDown.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SlowLockDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SlowLockDown.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SpectatingLockDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/selectionmenu/baseimpl/SpectatingLockDown.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/tasks/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/tasks/TaskManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +114,11 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -48,33 +133,6 @@
         <option name="url" value="https://github.com/Flo0/CollegeMC.git" />
       </UrlAndAccount>
     </option>
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/AbstractWidget.java">
-      <ranges>
-        <range start1="23" end1="24" start2="23" end2="24" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="33" end1="34" start2="33" end2="34" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="36" end1="37" start2="36" end2="37" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="52" end1="55" start2="52" end2="52" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="61" end1="64" start2="58" end2="58" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="70" end1="73" start2="64" end2="64" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="74" end1="75" start2="65" end2="66" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="85" end1="86" start2="76" end2="77" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="89" end1="90" start2="80" end2="81" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="106" end1="107" start2="97" end2="98" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="116" end1="118" start2="107" end2="111" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="122" end1="124" start2="115" end2="116" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-        <range start1="132" end1="133" start2="124" end2="124" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/CollegeMC-Libs/src/main/java/net/collegemc/mc/libs/displaywidgets/WidgetFrame.java">
-      <ranges>
-        <range start1="19" end1="20" start2="19" end2="20" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="25" end1="26" start2="25" end2="26" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="29" end1="30" start2="29" end2="30" changelist="ce9471b7-2784-44ff-a0de-552b4389cb6b" />
-        <range start1="52" end1="53" start2="52" end2="56" changelist="af1e22c1-66d0-44ce-b944-3e01fafc9e2a" />
-      </ranges>
-    </file>
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="l9em83i5" />
@@ -109,7 +167,7 @@
     &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;selection&quot;,
     &quot;last_opened_file_path&quot;: &quot;E:/collegemc/CollegeMC/CollegeCommon/src/main/java/net/collegemc/common/mineskin/data&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -188,7 +246,17 @@
       <workItem from="1680648848161" duration="638000" />
       <workItem from="1680667832745" duration="1861000" />
       <workItem from="1680714526922" duration="9441000" />
-      <workItem from="1680799944851" duration="4444000" />
+      <workItem from="1680799944851" duration="8454000" />
+      <workItem from="1680811800702" duration="1059000" />
+      <workItem from="1680840822014" duration="10343000" />
+      <workItem from="1680888015972" duration="12695000" />
+      <workItem from="1680978123521" duration="1315000" />
+      <workItem from="1681001367952" duration="8139000" />
+      <workItem from="1681118077265" duration="13935000" />
+      <workItem from="1681190035252" duration="9338000" />
+      <workItem from="1681280579633" duration="26964000" />
+      <workItem from="1681356555098" duration="13224000" />
+      <workItem from="1681377192921" duration="1563000" />
     </task>
     <task id="LOCAL-00001" summary="Complete project restructure">
       <created>1678100064989</created>
@@ -260,7 +328,28 @@
       <option name="project" value="LOCAL" />
       <updated>1680803833735</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Batch update">
+      <created>1680807125391</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1680807125391</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Changes by Benjamin">
+      <created>1680807134582</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1680807134582</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Batch update">
+      <created>1680807190781</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1680807190781</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -280,8 +369,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Complete project restructure" />
     <MESSAGE value="Several implementations" />
-    <MESSAGE value="Batch update" />
     <MESSAGE value="Changes by Benjamin" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes by Benjamin" />
+    <MESSAGE value="Batch update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Batch update" />
   </component>
 </project>

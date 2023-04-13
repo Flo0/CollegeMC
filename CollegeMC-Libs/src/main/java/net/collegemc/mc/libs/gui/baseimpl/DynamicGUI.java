@@ -5,9 +5,8 @@ public abstract non-sealed class DynamicGUI extends GuiHandler {
 
   @Override
   public void decorate() {
-    if (!this.isDecorated()) {
-      this.setupButtons();
-    }
+    this.clearButtons();
+    this.setupButtons();
     super.decorate();
   }
 

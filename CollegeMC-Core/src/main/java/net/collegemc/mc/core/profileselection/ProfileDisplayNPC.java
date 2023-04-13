@@ -34,5 +34,4 @@ public class ProfileDisplayNPC extends AbstractNPC {
   public boolean isPersistent() {
     return false;
   }
-
 }

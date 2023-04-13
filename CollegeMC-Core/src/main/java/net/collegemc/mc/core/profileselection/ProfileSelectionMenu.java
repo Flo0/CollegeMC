@@ -3,7 +3,6 @@ package net.collegemc.mc.core.profileselection;
 import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.network.data.college.CollegeProfile;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
-import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.hooks.itemsadder.ItemsAdderHook;
 import net.collegemc.mc.libs.npcs.abstraction.NPC;
 import net.collegemc.mc.libs.selectionmenu.SelectionMenu;
@@ -19,34 +18,37 @@ import java.util.concurrent.CompletableFuture;
 
 public class ProfileSelectionMenu extends SelectionMenu {
 
+  private final ProfileSelectionLocation location;
   private final Player player;
   private final NPC displayNpc;
   private final List<CollegeProfile> profiles;
   private int selectedIndex;
 
   protected ProfileSelectionMenu(Player player, ProfileSelectionLocation location) {
-    super(player.getLocation(), location.getPlayerLocation(), new SpectatingLockDown(location.getPlayerLocation()), false);
+    super(new SpectatingLockDown(location.getPlayerLocation()));
+    this.location = location;
     this.player = player;
     this.displayNpc = new ProfileDisplayNPC(location.getProfileLocation(), "Profile");
-    CollegeLibrary.getNpcManager().add(this.displayNpc);
     this.profiles = new ArrayList<>(ActiveCollegeUser.of(player).getProfileList());
   }
 
   @Override
-  public CompletableFuture<Void> preStart() {
+  public CompletableFuture<Void> onStart() {
     ItemsAdderHook.blackFade(this.player, 30, 30, 30);
-    TaskManager.runTask(this::setup);
-    return TaskManager.tickDelayedFuture(45);
+    this.setup();
+    CompletableFuture<Void> teleportFuture = new CompletableFuture<>();
+    TaskManager.runTaskLater(() -> player.teleportAsync(this.location.getPlayerLocation()).thenRun(() -> teleportFuture.complete(null)), 40);
+    return teleportFuture;
   }
 
   @Override
-  public CompletableFuture<Void> preEnd() {
+  public CompletableFuture<Void> onEnd(boolean now) {
     TaskManager.runTask(this::tearDown);
     ItemsAdderHook.blackFade(this.player, 30, 30, 30);
     TaskManager.runTaskLater(() -> {
       ActiveCollegeUser activeCollegeUser = ActiveCollegeUser.of(this.player);
       activeCollegeUser.switchCollegeProfile(this.getSelectedProfile().getCollegeProfileId());
-    }, 30);
+    }, 40);
     return TaskManager.tickDelayedFuture(45);
   }
 
@@ -67,17 +69,16 @@ public class ProfileSelectionMenu extends SelectionMenu {
   private void applyProfileOnNpc() {
     CollegeProfile selectedProfile = this.getSelectedProfile();
     this.displayNpc.rename(selectedProfile.getName());
-    Skin skin = CollegeLibrary.getPlayerSkinManager().getSkin(selectedProfile.getSkinName());
+    Skin skin = selectedProfile.getSkin();
     if (skin != null) {
       this.displayNpc.setSkin(skin);
     }
-    this.displayNpc.broadcastNameChange();
     this.displayNpc.broadcastSkinUpdate();
+    this.displayNpc.broadcastNameChange();
   }
 
   private void tearDown() {
     this.displayNpc.broadcastHide();
-    CollegeLibrary.getNpcManager().removeById(this.displayNpc.getEntityId());
   }
 
   public void changeSelection(CollegeProfile profile) {
@@ -89,5 +90,15 @@ public class ProfileSelectionMenu extends SelectionMenu {
   protected void swingSelect() {
     new ProfileSelectionGUI(this.player, this::changeSelection).openFor(this.player);
     UtilPlayer.playUIClick(this.player);
+  }
+
+  @Override
+  protected boolean isTicked() {
+    return true;
+  }
+
+  @Override
+  protected void onTick() {
+    displayNpc.onTick();
   }
 }

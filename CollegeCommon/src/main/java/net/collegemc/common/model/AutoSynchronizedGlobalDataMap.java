@@ -1,5 +1,6 @@
 package net.collegemc.common.model;
 
+import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.collegemc.common.GlobalGateway;
@@ -7,6 +8,8 @@ import net.collegemc.common.gson.GsonSerializer;
 import net.collegemc.common.utils.TypeInferredSerializedUnit;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -17,6 +20,7 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
   private final ContextKey<K, V> contextKey;
   @Getter(AccessLevel.PROTECTED)
   private final GsonSerializer serializer;
+  private final Map<String, BiConsumer<K, V>> listeners = new ConcurrentHashMap<>();
 
   protected AutoSynchronizedGlobalDataMap(DataMapContext<K, V> dataMapContext) {
     super(dataMapContext);
@@ -29,6 +33,22 @@ public class AutoSynchronizedGlobalDataMap<K, V> extends GlobalDataMap<K, V> {
     TypeInferredSerializedUnit<K> typeInferredSerializedUnit = new TypeInferredSerializedUnit<>(this.contextKey.keyClass, json);
     AutoSyncUpdateEvent<K, V> event = new AutoSyncUpdateEvent<>(this.contextKey, typeInferredSerializedUnit);
     GlobalGateway.getRemoteEventManager().callEvent("_AUTO_SYNC_", event);
+  }
+
+  public void registerListener(String key, BiConsumer<K, V> listener) {
+    Preconditions.checkArgument(!this.listeners.containsKey(key), "Listener already registered for key " + key);
+    this.listeners.put(key, listener);
+  }
+
+  public void unregisterListener(String key) {
+    Preconditions.checkArgument(this.listeners.containsKey(key), "Listener not registered for key " + key);
+    this.listeners.remove(key);
+  }
+
+  @Override
+  public void triggerLocalCacheRenew(K key) {
+    super.triggerLocalCacheRenew(key);
+    listeners.values().forEach(listener -> listener.accept(key, this.getCachedValue(key)));
   }
 
   @Override

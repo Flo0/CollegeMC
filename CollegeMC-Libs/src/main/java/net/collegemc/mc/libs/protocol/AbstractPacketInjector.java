@@ -1,8 +1,6 @@
 package net.collegemc.mc.libs.protocol;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInitializer;
+import net.collegemc.mc.libs.tasks.TaskManager;
 import net.minecraft.network.protocol.Packet;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,31 +8,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
-public abstract class AbstractPacketInjector<T> extends ChannelInitializer<Channel> {
+public abstract class AbstractPacketInjector<T> {
 
-  private final Map<Class<?>, List<Consumer<Object>>> incomingPacketCallbacks = new HashMap<>();
-  private final Map<Class<?>, List<Consumer<Object>>> outgoingPacketCallbacks = new HashMap<>();
 
-  private static final String CHANNEL_OUT = "HandlerOutgoing";
-  private static final String CHANNEL_IN = "HandlerIncoming";
+  private final Map<Class<?>, List<PacketHandler<T, Packet<?>>>> incomingPacketCallbacks = new HashMap<>();
+  private final Map<Class<?>, List<PacketHandler<T, Packet<?>>>> outgoingPacketCallbacks = new HashMap<>();
 
-  protected abstract String getPacketDecoderName();
+  protected abstract String getPacketHandlerName();
 
-  protected abstract String getPacketEncoderName();
-
-  protected abstract ChannelHandler channelOut();
-
-  protected abstract ChannelHandler channelIn();
-
-  public <P extends Packet<?>> void register(Consumer<P> consumer, Class<P> type, Direction... directions) {
-    for (Direction direction : directions) {
+  @SuppressWarnings("unchecked")
+  public <P extends Packet<?>> void register(PacketHandler<T, P> packetHandler) {
+    for (Direction direction : packetHandler.getDirections()) {
       switch (direction) {
         case INCOMING -> this.incomingPacketCallbacks
-                .computeIfAbsent(type, key -> new ArrayList<>()).add(x -> consumer.accept(type.cast(x)));
+                .computeIfAbsent(packetHandler.getPacketType(), key -> new ArrayList<>())
+                .add((PacketHandler<T, Packet<?>>) packetHandler);
         case OUTGOING -> this.outgoingPacketCallbacks
-                .computeIfAbsent(type, key -> new ArrayList<>()).add(x -> consumer.accept(type.cast(x)));
+                .computeIfAbsent(packetHandler.getPacketType(), key -> new ArrayList<>())
+                .add((PacketHandler<T, Packet<?>>) packetHandler);
       }
     }
   }
@@ -43,42 +35,29 @@ public abstract class AbstractPacketInjector<T> extends ChannelInitializer<Chann
 
   public abstract void uninject(T target);
 
-  protected void decouple(Channel channel) {
-    if (channel.pipeline().get(this.getPacketEncoderName()) != null) {
-      channel.pipeline().remove(this.getPacketEncoderName());
-    }
-    if (channel.pipeline().get(this.getPacketDecoderName()) != null) {
-      channel.pipeline().remove(this.getPacketDecoderName());
-    }
-  }
-
-  @Override
-  protected void initChannel(Channel channel) {
-    channel.pipeline().flush();
-    if (channel.pipeline().get(this.getPacketEncoderName()) != null) {
-      channel.pipeline().addAfter(this.getPacketEncoderName(), CHANNEL_OUT, this.channelOut());
-    }
-    if (channel.pipeline().get(this.getPacketDecoderName()) != null) {
-      channel.pipeline().addAfter(this.getPacketDecoderName(), CHANNEL_IN, this.channelIn());
-    }
-  }
-
-  protected void triggerIncoming(Object msg) {
+  protected void triggerIncoming(T target, Object msg) {
     Class<?> type = msg.getClass();
-    List<Consumer<Object>> callbacks = this.incomingPacketCallbacks.get(type);
+    List<PacketHandler<T, Packet<?>>> callbacks = this.incomingPacketCallbacks.get(type);
+    invokeCallbacks(target, msg, callbacks);
+  }
+
+  protected void triggerOutgoing(T target, Object msg) {
+    Class<?> type = msg.getClass();
+    List<PacketHandler<T, Packet<?>>> callbacks = this.outgoingPacketCallbacks.get(type);
+    invokeCallbacks(target, msg, callbacks);
+  }
+
+  private void invokeCallbacks(T target, Object msg, List<PacketHandler<T, Packet<?>>> callbacks) {
     if (callbacks == null) {
       return;
     }
-    callbacks.forEach(callback -> callback.accept(msg));
-  }
-
-  protected void triggerOutgoing(Object msg) {
-    Class<?> type = msg.getClass();
-    List<Consumer<Object>> callbacks = this.outgoingPacketCallbacks.get(type);
-    if (callbacks == null) {
-      return;
-    }
-    callbacks.forEach(callback -> callback.accept(msg));
+    callbacks.forEach(callback -> {
+      if (callback.isAsync()) {
+        TaskManager.runOnComputationPool(() -> callback.accept(target, callback.getPacketType().cast(msg)));
+      } else {
+        callback.accept(target, callback.getPacketType().cast(msg));
+      }
+    });
   }
 
   public enum Direction {
