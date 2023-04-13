@@ -1,7 +1,9 @@
 package net.collegemc.mc.libs.gui;
 
+import net.collegemc.mc.libs.gui.abstraction.AutoUpdated;
 import net.collegemc.mc.libs.gui.abstraction.InventoryHandler;
 import net.collegemc.mc.libs.gui.baseimpl.GuiHandler;
+import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,9 +17,20 @@ import java.util.Map;
 public class GuiManager {
 
   private final Map<Inventory, InventoryHandler> handlerMap = new HashMap<>();
+  private long updateTick = 0;
 
   public GuiManager(JavaPlugin plugin) {
     Bukkit.getPluginManager().registerEvents(new GuiListener(this), plugin);
+    TaskManager.runTaskTimer(this::checkForUpdatableOpenInventories, 1, 1);
+  }
+
+  private void checkForUpdatableOpenInventories() {
+    updateTick++;
+    handlerMap.values().stream()
+            .filter(AutoUpdated.class::isInstance)
+            .map(AutoUpdated.class::cast)
+            .filter(autoUpdated -> updateTick % autoUpdated.getUpdateInterval() == 0)
+            .forEach(AutoUpdated::update);
   }
 
   public void initializeAndRegister(GuiHandler guiHandler) {

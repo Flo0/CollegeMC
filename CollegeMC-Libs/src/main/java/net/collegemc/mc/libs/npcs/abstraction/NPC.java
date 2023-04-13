@@ -52,6 +52,8 @@ public interface NPC {
 
   void onTick();
 
+  void onDestroy();
+
   default boolean isPersistent() {
     return true;
   }

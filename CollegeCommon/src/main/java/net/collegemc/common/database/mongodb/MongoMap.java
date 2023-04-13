@@ -162,4 +162,8 @@ public class MongoMap<K, V> implements Map<K, V> {
   public <I, R> R query(@NotNull Function<MongoCollection<V>, I> queryFunction, @NotNull Function<I, R> resultFunction) {
     return resultFunction.apply(queryFunction.apply(this.mongoBackbone));
   }
+
+  public <E> E queryProperty(K key, @NotNull String property, Class<E> type) {
+    return this.mongoBackbone.distinct(property, Filters.eq(key), type).first();
+  }
 }

@@ -18,11 +18,6 @@ import java.util.WeakHashMap;
 @CommandAlias("profileselection|ps")
 public class ProfileSelectionCommand extends BaseCommand {
 
-  private static class Selection {
-    private Location locationA;
-    private Location locationB;
-  }
-
   private final WeakHashMap<Player, Selection> selectionMap = new WeakHashMap<>();
 
   @Default
@@ -91,6 +86,11 @@ public class ProfileSelectionCommand extends BaseCommand {
   public void onList(Player player) {
     Msg.sendAdminInfo(player, "Profile Selection Locations:");
     CollegeCore.getProfileSelectionManager().getLocationNames().forEach(name -> player.sendMessage("§e- " + name));
+  }
+
+  private static class Selection {
+    private Location locationA;
+    private Location locationB;
   }
 
 }

@@ -13,10 +13,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public abstract sealed class GuiHandler implements InventoryHandler permits DynamicGUI, StaticGUI {
 
@@ -70,14 +70,17 @@ public abstract sealed class GuiHandler implements InventoryHandler permits Dyna
   }
 
   private void addToPhysicalInventory(Integer slot, GuiButton button) {
-    Mono<ItemStack> iconCreator = button.getIconCreator();
+    Supplier<ItemStack> iconCreator = button.getIconCreator();
     if (iconCreator == null) {
       return;
     }
     if (button.isAsyncCreated()) {
-      iconCreator.subscribe(TaskManager.consumeSync(icon -> this.inventory.setItem(slot, icon)));
+      TaskManager.runOnComputationPool(() -> {
+        ItemStack icon = iconCreator.get();
+        TaskManager.runTask(() -> this.inventory.setItem(slot, icon));
+      });
     } else {
-      this.inventory.setItem(slot, iconCreator.block());
+      this.inventory.setItem(slot, iconCreator.get());
     }
   }
 
@@ -107,6 +110,9 @@ public abstract sealed class GuiHandler implements InventoryHandler permits Dyna
     }
   }
 
+  protected void clearButtons() {
+    this.buttonMap.clear();
+  }
 
   @Override
   public void onOpen(InventoryOpenEvent event) {

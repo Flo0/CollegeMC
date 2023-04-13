@@ -77,6 +77,18 @@ public class TaskManager {
     return runnable.runTaskTimerAsynchronously(plugin(), delay, repeatDelay);
   }
 
+  public static BukkitTask runTaskAsync(Runnable runnable) {
+    return scheduler.runTaskAsynchronously(plugin(), runnable);
+  }
+
+  public static BukkitTask runTaskLaterAsync(Runnable runnable, long delay) {
+    return scheduler.runTaskLaterAsynchronously(plugin(), runnable, delay);
+  }
+
+  public static BukkitTask runTaskTimerAsync(Runnable runnable, long delay, long repeatDelay) {
+    return scheduler.runTaskTimerAsynchronously(plugin(), runnable, delay, repeatDelay);
+  }
+
   public static BukkitTask runTask(Runnable runnable) {
     return scheduler.runTask(plugin(), runnable);
   }

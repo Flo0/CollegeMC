@@ -9,7 +9,6 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.Inventory;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -31,11 +30,11 @@ public class RegionPermissionGUI extends DynamicGUI {
   private GuiButton createPermissionButton(RegionPermission permission) {
     return GuiButton.builder()
             .asyncCreated(false)
-            .iconCreator(Mono.fromSupplier(() -> ItemBuilder.of(permission.getDisplayIcon())
+            .iconCreator(() -> ItemBuilder.of(permission.getDisplayIcon())
                     .name("§e" + this.region.getName())
                     .lore("", "§fUsers:")
                     .lore(this.getUserNames(permission))
-                    .build()))
+                    .build())
             .eventConsumer(event -> {
 
             }).build();

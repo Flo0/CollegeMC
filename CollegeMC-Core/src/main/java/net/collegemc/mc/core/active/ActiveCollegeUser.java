@@ -11,15 +11,23 @@ import net.collegemc.common.network.data.college.ProfileId;
 import net.collegemc.common.network.data.network.NetworkUserData;
 import net.collegemc.common.network.data.network.NetworkUserManager;
 import net.collegemc.mc.core.CollegeCore;
+import net.collegemc.mc.core.economy.EconomyAccount;
+import net.collegemc.mc.core.economy.EconomyManager;
+import net.collegemc.mc.core.economy.EconomyOperation;
+import net.collegemc.mc.core.economy.EconomyTransaction;
+import net.collegemc.mc.core.economy.EconomyTransactionResult;
+import net.collegemc.mc.core.friends.FriendsList;
+import net.collegemc.mc.core.quests.QuestList;
 import net.collegemc.mc.libs.CollegeLibrary;
-import net.collegemc.mc.libs.hooks.itemsadder.ItemsAdderHook;
+import net.collegemc.mc.libs.hooks.itemsadder.CollegemcSound;
+import net.collegemc.mc.libs.hooks.itemsadder.CollegemcSymbol;
+import net.collegemc.mc.libs.messaging.Msg;
 import net.collegemc.mc.libs.nametag.NameTagManager;
-import net.collegemc.mc.libs.skinclient.PlayerSkinManager;
-import net.collegemc.mc.libs.spigot.NameGenerator;
 import net.collegemc.mc.libs.tasks.TaskManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +44,56 @@ public record ActiveCollegeUser(UUID minecraftId) {
     return CollegeCore.getActiveCollegeUserManager().get(minecraftId);
   }
 
-  @NotNull
+  @Nullable
+  public EconomyAccount getEconomyAccountSnapshot() {
+    EconomyManager economyManager = CollegeCore.getEconomyManager();
+    return getCurrentCollegeProfile()
+            .map(CollegeProfile::getCollegeProfileId)
+            .map(economyManager::getAccountSnapshot)
+            .orElse(null);
+  }
+
+  public CompletableFuture<EconomyTransactionResult> applyToEconomyAccount(EconomyOperation operation, double amount) {
+    EconomyManager economyManager = CollegeCore.getEconomyManager();
+    return getCurrentCollegeProfile().map(profile -> {
+      ProfileId profileId = profile.getCollegeProfileId();
+      EconomyTransaction economyTransaction = new EconomyTransaction(profileId, operation, amount);
+      return TaskManager.supplyOnIOPool(() -> economyManager.applyTransaction(economyTransaction));
+    }).orElse(CompletableFuture.completedFuture(EconomyTransactionResult.FAILED)).thenApply((result) -> {
+      if (!result.isSuccess()) {
+        return result;
+      }
+      Player player = this.getBukkitPlayer();
+      if (player != null) {
+        boolean addOperation = operation == EconomyOperation.ADD;
+        String prefix = addOperation ? "§a+" : "§c-";
+        String message = prefix + amount + " §f" + CollegemcSymbol.COIN.get();
+
+        Msg.sendInfo(player, message);
+        if (addOperation) {
+          CollegemcSound.CACHING.play(player, 0.66F, 1.0F);
+        }
+      }
+      return result;
+    });
+  }
+
+  @Nullable
+  public QuestList getQuestList() {
+    return this.getCurrentCollegeProfile().map(profile -> {
+      return CollegeCore.getQuestManager().getQuestList(profile.getCollegeProfileId());
+    }).orElse(null);
+  }
+
+  @Nullable
+  public FriendsList getFriendList() {
+    return this.getCurrentCollegeProfile().map(profile -> {
+      return CollegeCore.getFriendsManager().getActiveFriendsList(profile.getCollegeProfileId());
+    }).orElse(null);
+  }
+
   public Player getBukkitPlayer() {
-    Player player = Bukkit.getPlayer(this.minecraftId);
-    if (player == null) {
-      throw new IllegalStateException("Active user with offline player present.");
-    }
-    return player;
+    return Bukkit.getPlayer(this.minecraftId);
   }
 
   public List<CollegeProfile> getProfileList() {
@@ -88,11 +139,9 @@ public record ActiveCollegeUser(UUID minecraftId) {
   }
 
   public void applyProfileSkin() {
-    PlayerSkinManager playerSkinManager = CollegeLibrary.getPlayerSkinManager();
     Player player = this.getBukkitPlayer();
-
     this.getCurrentCollegeProfile().ifPresent(profile -> {
-      Skin skin = playerSkinManager.getSkin(profile.getSkinName());
+      Skin skin = profile.getSkin();
       if (skin != null) {
         PlayerProfile playerProfile = player.getPlayerProfile();
         playerProfile.removeProperty("textures");
@@ -108,6 +157,7 @@ public record ActiveCollegeUser(UUID minecraftId) {
     Player player = this.getBukkitPlayer();
 
     this.getCurrentCollegeProfile().ifPresent(profile -> {
+      tagManager.untag(player.getEntityId());
       tagManager.tag(player, profile.getName());
     });
   }
@@ -121,20 +171,28 @@ public record ActiveCollegeUser(UUID minecraftId) {
     CompletableFuture<Boolean> future = new CompletableFuture<>();
 
     TaskManager.runTask(() -> {
-      this.applyProfileSkin();
+      if (metaData.getLastKnownLocation() != null) {
+        player.teleportAsync(metaData.getLastKnownLocation()).thenRun(() -> {
+          this.applyProfileSkin();
 
-      if(metaData.getInventoryContent() != null) {
-        player.getInventory().setContents(metaData.getInventoryContent());
+          if (metaData.getInventoryContent() != null) {
+            player.getInventory().setContents(metaData.getInventoryContent());
+          }
+
+          TaskManager.runTask(this::applyProfileName);
+        });
+      } else {
+        this.applyProfileSkin();
+
+        if (metaData.getInventoryContent() != null) {
+          player.getInventory().setContents(metaData.getInventoryContent());
+        }
+
+        TaskManager.runTask(this::applyProfileName);
       }
-
-      if(metaData.getLastKnownLocation() != null) {
-        player.teleportAsync(metaData.getLastKnownLocation()).thenAccept(future::complete);
-      }
-
-      TaskManager.runTask(this::applyProfileName);
     });
 
-    if(metaData.getLastKnownLocation() == null) {
+    if (metaData.getLastKnownLocation() == null) {
       future.complete(false);
     }
 
@@ -145,11 +203,11 @@ public record ActiveCollegeUser(UUID minecraftId) {
     return createProfile(profileName, null);
   }
 
-  public CompletableFuture<CollegeProfile> createProfile(String profileName, String skinName) {
+  public CompletableFuture<CollegeProfile> createProfile(String profileName, Skin skin) {
     NetworkUserManager networkUserManager = GlobalGateway.getNetworkUserManager();
     CollegeProfileManager collegeProfileManager = GlobalGateway.getCollegeProfileManager();
     CollegeProfileMetaDataManager metaDataManager = CollegeCore.getCollegeProfileMetaDataManager();
-    return TaskManager.supplyOnIOPool(() -> collegeProfileManager.createProfile(profileName, this.minecraftId, skinName, true))
+    return TaskManager.supplyOnIOPool(() -> collegeProfileManager.createProfile(profileName, this.minecraftId, skin, true))
             .thenApply(profile -> {
               networkUserManager.applyToRemoteUser(this.minecraftId, data -> {
                 data.getCollegeProfiles().add(profile.getCollegeProfileId());

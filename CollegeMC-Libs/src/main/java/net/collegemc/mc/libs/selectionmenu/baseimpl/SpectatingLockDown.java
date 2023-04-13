@@ -22,7 +22,7 @@ public class SpectatingLockDown implements TieDown {
   }
 
   @Override
-  public void tieDown(Player player, Location location) {
+  public void tieDown(Player player) {
     this.previousGameMode = player.getGameMode();
     player.setGameMode(GameMode.SPECTATOR);
     TaskManager.runTask(() -> player.setSpectatorTarget(this.viewStand));

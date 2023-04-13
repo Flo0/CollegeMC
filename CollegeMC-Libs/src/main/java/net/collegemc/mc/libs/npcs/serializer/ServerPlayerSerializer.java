@@ -11,10 +11,12 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ServerPlayerSerializer implements JsonSerializer<ServerPlayer>, JsonDeserializer<ServerPlayer> {
@@ -24,9 +26,12 @@ public class ServerPlayerSerializer implements JsonSerializer<ServerPlayer>, Jso
 
     GameProfile profile = context.deserialize(jsonObject.get("profile"), GameProfile.class);
     UUID worldId = context.deserialize(jsonObject.get("world"), UUID.class);
-    ServerLevel world = ((CraftWorld) Bukkit.getWorld(worldId)).getHandle();
-    
-    return new ServerPlayer(MinecraftServer.getServer(), world, profile);
+    ServerLevel world = ((CraftWorld) Objects.requireNonNull(Bukkit.getWorld(worldId))).getHandle();
+    Vec3 position = context.deserialize(jsonObject.get("location"), Vec3.class);
+    ServerPlayer serverPlayer = new ServerPlayer(MinecraftServer.getServer(), world, profile);
+    serverPlayer.setPos(position);
+
+    return serverPlayer;
   }
 
   @Override
@@ -36,6 +41,7 @@ public class ServerPlayerSerializer implements JsonSerializer<ServerPlayer>, Jso
     GameProfile profile = src.getGameProfile();
     jsonObject.add("profile", context.serialize(profile));
     jsonObject.add("world", context.serialize(src.getLevel().getWorld().getUID()));
+    jsonObject.add("location", context.serialize(src.position()));
 
     return jsonObject;
   }

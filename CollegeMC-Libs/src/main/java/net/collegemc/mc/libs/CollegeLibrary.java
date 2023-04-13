@@ -32,6 +32,7 @@ import net.collegemc.mc.libs.selectionmenu.SelectionMenuManager;
 import net.collegemc.mc.libs.skinclient.PlayerSkinManager;
 import net.collegemc.mc.libs.spigot.NameGenerator;
 import net.collegemc.mc.libs.spigot.UtilChunk;
+import net.collegemc.mc.libs.spigot.events.DelegateListener;
 import net.collegemc.mc.libs.tablist.TabListManager;
 import net.collegemc.mc.libs.tablist.implementation.EmptyTabList;
 import net.collegemc.mc.libs.tokenclick.TokenActionManager;
@@ -52,6 +53,8 @@ public class CollegeLibrary extends JavaPlugin {
 
   @Getter
   private static String serverName;
+  @Getter
+  private static ServerConfigurationService.DebugLevel debugLevel;
   @Getter
   private static CollegeLibrary instance;
   @Getter
@@ -84,6 +87,7 @@ public class CollegeLibrary extends JavaPlugin {
   private static NameTagManager nameTagManager;
   @Getter
   private static DisplayWidgetManager displayWidgetManager;
+
   private ServerConfigurationService coreConfigurationService;
 
   public static MongoDatabase getServerDatabase() {
@@ -92,6 +96,10 @@ public class CollegeLibrary extends JavaPlugin {
 
   public static String getServerDatabaseName() {
     return GlobalGateway.DATABASE_NAME + "-" + serverName;
+  }
+
+  public static void info(String info) {
+    getInstance().getLogger().info(info);
   }
 
   @Override
@@ -103,8 +111,10 @@ public class CollegeLibrary extends JavaPlugin {
     }
 
     serverName = this.coreConfigurationService.getServerName();
+    debugLevel = this.coreConfigurationService.getDebugLevel();
     gsonSerializer = this.coreConfigurationService.getSerializer();
     this.injectLibrarySerialisation(gsonSerializer);
+    this.setupCacheDebugListener();
 
     this.saveResource("names.json", true);
     nameGenerator = new NameGenerator(new File(this.getDataFolder(), "names.json"));
@@ -114,7 +124,7 @@ public class CollegeLibrary extends JavaPlugin {
     commandManager = new PaperCommandManager(this);
     actionBarManager = new ActionBarManager(this);
     blockDataManager = new BlockDataManager(this);
-    nameTagManager = new NameTagManager();
+    nameTagManager = new NameTagManager(this);
     hologramManager = new HologramManager(new NMSHologramFactory());
     tabListManager = new TabListManager(this, player -> new EmptyTabList());
     tokenActionManager = new TokenActionManager(this, commandManager);
@@ -129,6 +139,7 @@ public class CollegeLibrary extends JavaPlugin {
 
     Bukkit.getPluginManager().registerEvents(new UtilChunk.ChunkTrackListener(), this);
     Bukkit.getPluginManager().registerEvents(new ProtocolListener(), this);
+    Bukkit.getPluginManager().registerEvents(new DelegateListener(), this);
 
     //this.setupResourcepack();
   }
@@ -190,6 +201,14 @@ public class CollegeLibrary extends JavaPlugin {
     serializer.registerTypeHierarchyAdapter(ServerPlayer.class, new ServerPlayerSerializer());
     serializer.registerInstanceCreator(Multimap.class, new MultiMapInstanceCreator());
     serializer.setLoggingEnabled(false);
+  }
+
+  private void setupCacheDebugListener() {
+    if (debugLevel != ServerConfigurationService.DebugLevel.HIGH) {
+      return;
+    }
+    GlobalGateway.getCollegeProfileManager().registerListener("__debug", (key, value) -> info("CollegeProfile cache changed: " + key));
+    GlobalGateway.getNetworkUserManager().registerListener("__debug", (key, value) -> info("NetworkUser cache changed: " + key));
   }
 
 }

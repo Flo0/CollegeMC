@@ -4,15 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import reactor.core.publisher.Mono;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Getter
 @Builder
 public class GuiButton {
 
-  private Mono<ItemStack> iconCreator;
+  private Supplier<ItemStack> iconCreator;
   private Consumer<InventoryClickEvent> eventConsumer;
   private boolean asyncCreated;
 

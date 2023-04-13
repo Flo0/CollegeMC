@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import reactor.core.publisher.Mono;
 
 import java.util.function.Consumer;
 
@@ -36,9 +35,9 @@ public class ConfirmationGUI extends DynamicGUI {
             .eventConsumer(event -> {
               TaskManager.runTask(() -> this.consumer.accept(true));
               UtilPlayer.playUIClick((Player) event.getWhoClicked());
-            }).iconCreator(Mono.just(new ItemBuilder(Material.GREEN_WOOL)
+            }).iconCreator(() -> new ItemBuilder(Material.GREEN_WOOL)
                     .name("§aYes")
-                    .build()))
+                    .build())
             .build();
   }
 
@@ -47,9 +46,9 @@ public class ConfirmationGUI extends DynamicGUI {
             .eventConsumer(event -> {
               TaskManager.runTask(() -> this.consumer.accept(false));
               UtilPlayer.playUIClick((Player) event.getWhoClicked());
-            }).iconCreator(Mono.just(new ItemBuilder(Material.RED_WOOL)
+            }).iconCreator(() -> new ItemBuilder(Material.RED_WOOL)
                     .name("§cNo")
-                    .build()))
+                    .build())
             .build();
   }
 

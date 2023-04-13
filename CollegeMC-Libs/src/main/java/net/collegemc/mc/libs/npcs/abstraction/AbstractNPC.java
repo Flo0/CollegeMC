@@ -1,14 +1,14 @@
 package net.collegemc.mc.libs.npcs.abstraction;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.collegemc.common.gson.PostDeserializationReactor;
 import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.mineskin.data.Texture;
 import net.collegemc.mc.libs.CollegeLibrary;
-import net.collegemc.mc.libs.nametag.NameTag;
+import net.collegemc.mc.libs.nametag.NameTagManager;
 import net.collegemc.mc.libs.protocol.ProtocolManager;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
@@ -35,9 +35,8 @@ import java.util.UUID;
 public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   private final ServerPlayer serverPlayer;
-  private String displayName;
   private final String internalName;
-
+  private String displayName;
   private transient ClientboundPlayerInfoUpdatePacket infoUpdatePacket;
   private transient ClientboundAddPlayerPacket spawnPacket;
   private transient ClientboundPlayerInfoRemovePacket infoRemovePacket;
@@ -99,6 +98,18 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
     this.rotationPacket = new ClientboundMoveEntityPacket.Rot(id, yRot, xRot, onGround);
   }
 
+  private void ensureNameTag() {
+    NameTagManager manager = CollegeLibrary.getNameTagManager();
+    if (!manager.isTagged(getEntityId())) {
+      manager.tagVirtual(getLocation(), getEntityId(), displayName);
+    }
+  }
+
+  @Override
+  public void onDestroy() {
+    CollegeLibrary.getNameTagManager().untag(getEntityId());
+  }
+
   @Override
   public String getInternalName() {
     return this.internalName;
@@ -155,33 +166,28 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   @Override
   public void showTo(Player player) {
+    ensureNameTag();
     ProtocolManager.sendTo(player, this.infoUpdatePacket);
     ProtocolManager.sendTo(player, this.spawnPacket);
-    this.broadcastNameChange();
   }
 
   @Override
   public void broadcastShow() {
+    ensureNameTag();
     ProtocolManager.broadcastPacket(this.infoUpdatePacket);
     ProtocolManager.broadcastPacket(this.spawnPacket);
-    this.broadcastNameChange();
   }
 
   @Override
   public void hideFrom(Player player) {
     ProtocolManager.sendTo(player, this.despawnPacket);
     ProtocolManager.sendTo(player, this.infoRemovePacket);
-    NameTag tag = CollegeLibrary.getNameTagManager().getTag(this.serverPlayer.getId());
-    if(tag != null) {
-      tag.hideFrom(player);
-    }
   }
 
   @Override
   public void broadcastHide() {
     ProtocolManager.broadcastPacket(this.despawnPacket);
     ProtocolManager.broadcastPacket(this.infoRemovePacket);
-    CollegeLibrary.getNameTagManager().untag(this.serverPlayer.getId());
   }
 
   @Override
@@ -194,11 +200,10 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   @Override
   public void setSkin(Skin skin) {
-    PlayerProfile playerProfile = this.serverPlayer.getBukkitEntity().getPlayerProfile();
-    playerProfile.removeProperty("textures");
+    GameProfile gameProfile = this.serverPlayer.getGameProfile();
+    gameProfile.getProperties().removeAll("textures");
     Texture texture = skin.getData().getTexture();
-    playerProfile.setProperty(new ProfileProperty("textures", texture.getValue(), texture.getSignature()));
-    serverPlayer.getBukkitEntity().setPlayerProfile(playerProfile);
+    gameProfile.getProperties().put("textures", new Property("textures", texture.getValue(), texture.getSignature()));
   }
 
   @Override
@@ -227,7 +232,7 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
 
   @Override
   public void broadcastNameChange() {
-    CollegeLibrary.getNameTagManager().tagVirtual(this.getLocation(), this.serverPlayer.getId(), this.displayName);
+    CollegeLibrary.getNameTagManager().getTag(this.getEntityId()).updateDisplay(this.displayName);
   }
 
   @Override
@@ -238,6 +243,5 @@ public abstract class AbstractNPC implements NPC, PostDeserializationReactor {
   @Override
   public void postDeserialization() {
     this.setupPackets();
-    this.broadcastNameChange();
   }
 }

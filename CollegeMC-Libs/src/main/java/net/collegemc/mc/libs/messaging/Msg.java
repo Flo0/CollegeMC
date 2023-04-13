@@ -15,18 +15,8 @@ public class Msg {
 
   private static final char ELEMENT_START = '{';
   private static final char ELEMENT_END = '}';
-
-  @Setter
-  private static String serverPrefix = "UNKNOWN";
-
-  private static final Supplier<TextComponent> normalPrefixSup = () -> Component.text(serverPrefix)
-          .color(TextColor.color(0, 102, 204))
-          .append(Component.text(" >> ").color(NamedTextColor.WHITE));
   private static final Supplier<TextComponent> errorPrefixSup = () -> Component.text("Error")
           .color(TextColor.color(230, 0, 0))
-          .append(Component.text(" >> ").color(NamedTextColor.WHITE));
-  private static final Supplier<TextComponent> warningPrefixSup = () -> Component.text(serverPrefix)
-          .color(TextColor.color(240, 40, 0))
           .append(Component.text(" >> ").color(NamedTextColor.WHITE));
   private static final Supplier<TextComponent> adminPrefixSup = () -> Component.text("Admin")
           .color(TextColor.color(110, 102, 204))
@@ -35,21 +25,52 @@ public class Msg {
   private static final Function<TextComponent, TextComponent> errorMessageMod = component -> component.color(TextColor.color(255, 102, 102));
   private static final Function<TextComponent, TextComponent> warningMessageMod = component -> component.color(NamedTextColor.GRAY);
   private static final Function<TextComponent, TextComponent> elementMessageMod = component -> component.color(TextColor.color(255, 225, 77));
+  @Setter
+  private static String serverPrefix = "UNKNOWN";
+  private static final Supplier<TextComponent> normalPrefixSup = () -> Component.text(serverPrefix)
+          .color(TextColor.color(0, 102, 204))
+          .append(Component.text(" >> ").color(NamedTextColor.WHITE));
+  private static final Supplier<TextComponent> warningPrefixSup = () -> Component.text(serverPrefix)
+          .color(TextColor.color(240, 40, 0))
+          .append(Component.text(" >> ").color(NamedTextColor.WHITE));
 
   public static void sendAdminInfo(final CommandSender target, final String message, final Object... elements) {
     sendFormatMessage(target, message, adminPrefixSup, normalMessageMod, elements);
+  }
+
+  public static void sendAdminInfo(final CommandSender target, final TextComponent component) {
+    sendComponentMessage(target, component, adminPrefixSup);
   }
 
   public static void sendInfo(final CommandSender target, final String message, final Object... elements) {
     sendFormatMessage(target, message, normalPrefixSup, normalMessageMod, elements);
   }
 
+  public static void sendInfo(final CommandSender target, final TextComponent component) {
+    sendComponentMessage(target, component, normalPrefixSup);
+  }
+
   public static void sendWarning(final CommandSender target, final String message, final Object... elements) {
     sendFormatMessage(target, message, warningPrefixSup, warningMessageMod, elements);
   }
 
+  public static void sendWarning(final CommandSender target, final TextComponent component) {
+    sendComponentMessage(target, component, warningPrefixSup);
+  }
+
   public static void sendError(final CommandSender target, final String message, final Object... elements) {
     sendFormatMessage(target, message, errorPrefixSup, errorMessageMod, elements);
+  }
+
+  public static void sendError(final CommandSender target, final TextComponent component) {
+    sendComponentMessage(target, component, errorPrefixSup);
+  }
+
+  private static void sendComponentMessage(
+          final CommandSender target,
+          final TextComponent component,
+          final Supplier<TextComponent> prefixSup) {
+    target.sendMessage(prefixSup.get().append(component));
   }
 
   private static void sendFormatMessage(

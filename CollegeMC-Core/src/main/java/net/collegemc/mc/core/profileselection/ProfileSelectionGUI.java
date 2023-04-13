@@ -3,7 +3,6 @@ package net.collegemc.mc.core.profileselection;
 import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.network.data.college.CollegeProfile;
 import net.collegemc.mc.core.active.ActiveCollegeUser;
-import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.gui.abstraction.GuiButton;
 import net.collegemc.mc.libs.gui.baseimpl.DynamicGUI;
 import net.collegemc.mc.libs.spigot.ItemBuilder;
@@ -14,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,10 +31,10 @@ public class ProfileSelectionGUI extends DynamicGUI {
   @Override
   protected void setupButtons() {
     int index = 10;
-    for(CollegeProfile profile : profiles) {
+    for (CollegeProfile profile : profiles) {
       GuiButton button = createProfileButton(profile);
       setButton(index, button);
-      if(index == 16) {
+      if (index == 16) {
         index = 28;
       } else {
         index += 2;
@@ -46,7 +44,7 @@ public class ProfileSelectionGUI extends DynamicGUI {
 
   private GuiButton createProfileButton(CollegeProfile profile) {
     return GuiButton.builder()
-            .iconCreator(Mono.just(createProfileItem(profile)))
+            .iconCreator(() -> createProfileItem(profile))
             .asyncCreated(false)
             .eventConsumer(event -> {
               event.getWhoClicked().closeInventory();
@@ -56,8 +54,7 @@ public class ProfileSelectionGUI extends DynamicGUI {
   }
 
   private ItemStack createProfileItem(CollegeProfile profile) {
-    String skinName = profile.getSkinName();
-    Skin skin = CollegeLibrary.getPlayerSkinManager().getSkin(skinName);
+    Skin skin = profile.getSkin();
     ItemStack headItem = UtilItem.produceHead(skin);
     return ItemBuilder.of(headItem)
             .name("§6" + profile.getName())

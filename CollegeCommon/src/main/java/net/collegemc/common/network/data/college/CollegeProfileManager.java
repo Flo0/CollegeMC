@@ -7,6 +7,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import net.collegemc.common.GlobalGateway;
 import net.collegemc.common.gson.GsonSerializer;
+import net.collegemc.common.mineskin.data.Skin;
 import net.collegemc.common.model.AutoSynchronizedGlobalDataMap;
 import net.collegemc.common.model.DataDomainManager;
 import net.collegemc.common.model.DataMapContext;
@@ -14,10 +15,10 @@ import org.bson.conversions.Bson;
 import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CollegeProfileManager {
@@ -40,6 +41,10 @@ public class CollegeProfileManager {
 
     DataDomainManager domainManager = GlobalGateway.getDataDomainManager();
     this.userDataMap = domainManager.getOrCreateAutoSyncDataDomain(dataMapContext);
+  }
+
+  public void registerListener(String key, BiConsumer<UUID, CollegeProfile> listener) {
+    this.userDataMap.registerListener(key, listener);
   }
 
   public Boolean nameExists(String name) {
@@ -66,18 +71,22 @@ public class CollegeProfileManager {
     return createProfile(name, userId, null, cache);
   }
 
-  public void printLoadedKeys() {
-    System.out.println("Loaded keys: " + Arrays.toString(this.userDataMap.getCachedKeys().toArray()));
+  public Skin requestSkin(ProfileId profileId) {
+    CollegeProfile profile = this.getLoaded(profileId);
+    if (profile == null) {
+      return userDataMap.getBackbone().queryProperty(profileId.getUid(), "skin", Skin.class);
+    }
+    return profile.getSkin();
   }
 
-  public CollegeProfile createProfile(String name, UUID userId, String skinName, boolean cache) {
+  public CollegeProfile createProfile(String name, UUID userId, Skin skin, boolean cache) {
     ProfileId profileId = ProfileId.random();
     this.userDataMap.getOrCreateRealTimeData(profileId.getUid());
     this.userDataMap.applyToData(profileId.getUid(), profile -> {
       profile.setMinecraftUserId(userId);
       profile.setName(name);
-      if(skinName != null) {
-        profile.setSkinName(skinName);
+      if (skin != null) {
+        profile.setSkin(skin);
       }
     });
     if (cache) {
@@ -112,4 +121,11 @@ public class CollegeProfileManager {
     });
   }
 
+  public CollegeProfile requestProfile(ProfileId friendId) {
+    CollegeProfile profile = this.getLoaded(friendId);
+    if (profile == null) {
+      profile = this.userDataMap.getOrCreateRealTimeData(friendId.getUid());
+    }
+    return profile;
+  }
 }

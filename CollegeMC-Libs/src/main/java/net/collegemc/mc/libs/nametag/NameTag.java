@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.collegemc.mc.libs.protocol.ProtocolManager;
+import net.collegemc.mc.libs.tasks.TaskManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -45,7 +46,7 @@ public class NameTag {
     this.displayEntity.setWidth(128);
 
     Transformation identity = Transformation.identity();
-    Vector3f translation = new Vector3f(0, 0.55f, 0);
+    Vector3f translation = new Vector3f(0, 0.75f, 0);
     Transformation transformation = new Transformation(translation, identity.getLeftRotation(), identity.getScale(), identity.getRightRotation());
 
     this.displayEntity.setTransformation(transformation);
@@ -99,10 +100,14 @@ public class NameTag {
     this.destroyPacket = new ClientboundRemoveEntitiesPacket(IntList.of(this.displayEntity.getId()));
   }
 
+  public void remountFor(Player player) {
+    ProtocolManager.sendTo(player, this.mountPacket);
+  }
+
   public void showTo(Player player) {
     ProtocolManager.sendTo(player, this.spawnPacket);
     ProtocolManager.sendTo(player, this.metaPacket);
-    ProtocolManager.sendTo(player, this.mountPacket);
+    TaskManager.runTaskLaterAsync(() -> ProtocolManager.sendTo(player, this.mountPacket), 1);
   }
 
   public void hideFrom(Player player) {
@@ -112,8 +117,7 @@ public class NameTag {
   public void broadcastShow() {
     ProtocolManager.broadcastPacket(this.spawnPacket);
     ProtocolManager.broadcastPacket(this.metaPacket);
-    ProtocolManager.broadcastPacket(this.mountPacket);
-
+    TaskManager.runTaskLaterAsync(() -> ProtocolManager.broadcastPacket(this.mountPacket), 1);
   }
 
   private void broadcastMetaChange() {

@@ -51,4 +51,14 @@ public interface ServerConfigurationService {
     return 32;
   }
 
+  default DebugLevel getDebugLevel() {
+    return DebugLevel.NONE;
+  }
+
+  enum DebugLevel {
+    NONE,
+    LOW,
+    HIGH
+  }
+
 }

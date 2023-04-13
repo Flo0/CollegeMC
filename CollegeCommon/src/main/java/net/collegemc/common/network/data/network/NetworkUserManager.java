@@ -10,6 +10,7 @@ import net.collegemc.common.model.DataMapContext;
 import org.redisson.api.RedissonClient;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class NetworkUserManager {
@@ -50,4 +51,7 @@ public class NetworkUserManager {
     this.userDataMap.applyToData(userId, consumer);
   }
 
+  public void registerListener(String debug, BiConsumer<UUID, NetworkUserData> listener) {
+    this.userDataMap.registerListener(debug, listener);
+  }
 }
