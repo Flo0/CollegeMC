@@ -57,9 +57,9 @@ public class DisplayWidgetManager {
     }
   }
 
-  public void createWindow(WidgetFrame widget, World world) {
-    widgets.put(widget.getId(), widget);
-    widget.build(world);
+  public void createWindow(WidgetFrame frame, World world) {
+    widgets.put(frame.getId(), frame);
+    frame.build(world);
   }
 
   protected void onSwing(PlayerArmSwingEvent event) {

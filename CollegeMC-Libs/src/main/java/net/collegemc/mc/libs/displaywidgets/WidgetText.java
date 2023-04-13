@@ -31,7 +31,7 @@ public non-sealed class WidgetText extends AbstractWidget {
   @Setter
   private TextDisplay.TextAligment alignment = TextDisplay.TextAligment.LEFT;
   @Getter
-  WidgetBackground background;
+  private WidgetBackground background;
 
   public WidgetText(int id, Component text, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
     super(id, position, width, height, Color.fromARGB(0, 0, 0, 0), opacity);

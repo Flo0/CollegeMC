@@ -36,7 +36,7 @@ public final class WidgetFrame extends AbstractWidget {
 
   public void build(World world) {
     super.spawn(world, worldPosition.clone());
-    applyTransformation(worldPosition.clone(), rotation.clone(), true);
+    applyTransformation(worldPosition, rotation.clone(), true);
     update();
   }
 
@@ -53,9 +53,8 @@ public final class WidgetFrame extends AbstractWidget {
 
   @Override
   public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
-    super.applyTransformation(worldPosition, facing.clone(), passThrough);
+    super.applyTransformation(worldPosition.add(facing.clone().multiply(CHILD_OFFSET)), facing.clone(), passThrough);
     this.rotation = facing.clone();
-    CollegeLibrary.getInstance().getLogger().warning("rotation: " + rotation);
     update();
   }
 
