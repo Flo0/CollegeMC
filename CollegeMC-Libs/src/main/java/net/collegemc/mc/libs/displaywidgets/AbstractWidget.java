@@ -13,7 +13,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
+import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
+public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, WidgetText.WidgetBackground {
 
   @Getter
   protected final int id;
@@ -52,9 +55,6 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   private float shadowStrength = 0.5F;
   @Getter
   @Setter
-  private boolean seeThrough = false;
-  @Getter
-  @Setter
   private TextDisplay displayEntity;
   @Getter
   @Setter
@@ -62,6 +62,7 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
   @Getter
   @Setter
   private boolean glowColorEnabled = false;
+  public final static float CHILD_OFFSET = 0.0001f;
 
   protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
     this.id = id;
@@ -86,35 +87,65 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
     children.add(child);
   }
 
-  public void spawn(World world, Vector spawnPosition, Vector spawnRotation) {
-    Vector up = new Vector(0.0, 1.0, 0.0);
-    Vector transformationVector = new Vector(this.position.x, this.position.y, 0.0);
-    float yaw = spawnRotation.angle(up) - (float) (Math.PI / 2.0);
-    transformationVector.rotateAroundAxis(up, yaw);
-    Location spawnLocation = spawnPosition.toLocation(world).add(transformationVector);
-    spawnLocation.setDirection(spawnRotation);
+  public void spawn(World world, Vector spawnPosition) {
+    Location spawnLocation = spawnPosition.toLocation(world);
     displayEntity = world.spawn(spawnLocation, TextDisplay.class, this::syncPropertiesWithWidget);
-    Vector childRotation = spawnRotation.clone();
-    Vector childPosition = spawnLocation.toVector().add(childRotation.clone().multiply(0.001));
-    children.forEach(child -> child.spawn(world, childPosition, childRotation));
+    children.forEach(child -> child.spawn(world, spawnPosition));
   }
+
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
+    Transformation currentTransformation = displayEntity.getTransformation();
+    float yaw = getHalfYaw(facing);
+    Quaternionf rotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0.0F, 1.0F, 0.0F), yaw).normalize();
+    Vector3f translation = currentTransformation.getTranslation();
+
+    Vector translationHelp = facing.clone();
+    translationHelp.rotateAroundY(Math.toRadians(-90d));
+
+    // Entity offset
+    Vector translationVector = translationHelp.clone();
+    float verticalTranslation = (float) getHeight() / 4;
+    translationVector.multiply((((float) getWidth() / 8) + ((float) getPosition().x / 4)));
+    translationVector.add(new Vector(0, verticalTranslation, 0));
+
+    //2d pos offset
+    float verticalScale = (float) ((translationHelp.angle(new Vector(0, 1.0, 0)) / Math.toRadians(90d)));
+    float verticalPosOffset = (verticalScale / 4) * getPosition().y;
+    translationVector.add(new Vector(0.0d, verticalPosOffset, 0.0d));
+    Vector resultingRelativePos = displayEntity.getLocation().toVector().add(translationVector);
+    float xOffset = ((float) worldPosition.getX() - (float) resultingRelativePos.getX());
+    float yOffset = ((float) worldPosition.getY() - (float) resultingRelativePos.getY());
+    float zOffset = ((float) worldPosition.getZ() - (float) resultingRelativePos.getZ());
+
+    translation.set(new Vector3f(xOffset, yOffset, zOffset));
+    Transformation newTransformation = new Transformation(translation, rotation, currentTransformation.getScale(), rotation.invert());
+    displayEntity.setTransformation(newTransformation);
+    final Vector childFacing = facing.clone();
+
+    if (passThrough) {
+      children.forEach(child -> child.applyTransformation(worldPosition.add(facing.multiply(CHILD_OFFSET).multiply(id)), childFacing, true));
+    }
+
+  }
+
 
   public void update() {
     syncPropertiesWithWidget(this.displayEntity);
   }
 
+
   @SuppressWarnings("deprecation")
   private void syncPropertiesWithWidget(TextDisplay entity) {
-    entity.setLineWidth(512);
-    String filler = "  ".repeat(width * height);
+    entity.setLineWidth(width * 10);
+    String filler = "ꈰ".repeat(width * height);
     entity.text(Component.text(filler));
-    entity.setTextOpacity((byte) 0);
+    entity.setTextOpacity((byte) -1);
     entity.setBackgroundColor(this.backgroundColor);
     entity.setShadowed(this.shadowed);
     entity.setShadowRadius(this.shadowRadius);
     entity.setShadowStrength(this.shadowStrength);
     entity.setAlignment(TextDisplay.TextAligment.CENTER);
-    entity.setSeeThrough(this.seeThrough);
+    entity.setSeeThrough(false);
     entity.setBillboard(Display.Billboard.FIXED);
     if (this.glowColorEnabled) {
       entity.setGlowing(true);
@@ -156,6 +187,20 @@ public abstract sealed class AbstractWidget permits TextWidget, WidgetFrame {
       ClickEvent childEvent = new ClickEvent(event.getActor(), childClickPos);
       children.stream().filter(child -> child.contains(childClickPos)).forEach(child -> child.onClick(childEvent));
     }
+  }
+
+  protected float getHalfYaw(Vector facing) {
+    Vector axis = new Vector(1.0, 0.0, 0.0);
+    float yaw = facing.angle(axis) - (float) (Math.PI / 2.0);
+    if (facing.getZ() < 0) {
+      yaw = (float) (yaw + Math.toRadians(180d));
+    }
+    yaw = yaw / 2;
+
+    if (yaw < 0) {
+      yaw = (float) Math.toRadians(360d) + yaw;
+    }
+    return yaw;
   }
 
 }

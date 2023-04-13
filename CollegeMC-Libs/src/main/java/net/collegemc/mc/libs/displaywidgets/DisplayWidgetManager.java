@@ -4,20 +4,21 @@ import io.papermc.paper.event.player.PlayerArmSwingEvent;
 import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
 import net.minecraft.world.phys.Vec2;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class DisplayWidgetManager {
 
-  private static final int MAX_TRACE_DISTANCE = 46;
+  private static final int MAX_TRACE_DISTANCE = 6;
 
   private final Map<Integer, WidgetFrame> widgets;
   private final Map<Player, Set<WidgetFrame>> engagedPlayers;
@@ -56,9 +57,9 @@ public class DisplayWidgetManager {
     }
   }
 
-  public void createWindow(WidgetFrame widget, World world) {
-    widgets.put(widget.getId(), widget);
-    widget.spawn(world, widget.getWorldPosition(), widget.getRotation());
+  public void createWindow(WidgetFrame frame, World world) {
+    widgets.put(frame.getId(), frame);
+    frame.build(world);
   }
 
   protected void onSwing(PlayerArmSwingEvent event) {
@@ -66,20 +67,55 @@ public class DisplayWidgetManager {
       return;
     }
     Set<WidgetFrame> engagedWidgets = engagedPlayers.get(event.getPlayer());
-    RayTraceResult result = event.getPlayer().rayTraceEntities(MAX_TRACE_DISTANCE);
-    if (result == null) {
-      return;
-    }
+    Location eyeLocation = event.getPlayer().getEyeLocation();
+    Vector eyeDirection = eyeLocation.getDirection();
     for (WidgetFrame widget : engagedWidgets) {
-      if (widget.getInteractionEntity().equals(result.getHitEntity())) {
-        Vector hitPoint = result.getHitPosition();
-        Vector widgetPosition = widget.getInteractionEntity().getLocation().toVector();
-        Vector relativeHitPoint = hitPoint.subtract(widgetPosition);
-        Vec2 inFramePosition = new Vec2((float) relativeHitPoint.getX(), (float) relativeHitPoint.getY());
-        ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
-        widget.onClick(clickEvent);
+      Optional<Vector> hit = getBillboardRaytrace(eyeLocation, eyeDirection, widget);
+      if (hit.isEmpty()) {
+        continue;
       }
+      Vector hitPosition = hit.get();
+      Vector widgetPosition = widget.getDisplayEntity().getLocation().toVector();
+      Vector relativeHitPoint = hitPosition.subtract(widgetPosition);
+      relativeHitPoint.rotateAroundAxis(new Vector(0, 1.0, 0), -widget.getYaw());
+
+      Vec2 inFramePosition = new Vec2((float) Math.abs(relativeHitPoint.getX()) * 4, -(float) Math.abs(relativeHitPoint.getY()) * -4);
+      ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
+      widget.onClick(clickEvent);
     }
+  }
+
+  public Optional<Vector> getBillboardRaytrace(Location viewLocation, Vector view, WidgetFrame targetFrame) {
+    Vector intersect = lineIntersection(targetFrame.getWorldPosition(), targetFrame.getRotation().clone().normalize(), viewLocation.toVector(), view);
+    Vector topLeft = targetFrame.getTopLeft();
+    Vector bottomRight = targetFrame.getBottomRight();
+    if (!onPlane(intersect, topLeft, bottomRight)) {
+      return Optional.empty();
+    }
+    if (intersect.toLocation(viewLocation.getWorld()).distance(viewLocation) >= MAX_TRACE_DISTANCE) {
+      return Optional.empty();
+    }
+    return Optional.of(intersect);
+  }
+
+  public Vector lineIntersection(Vector planePoint, Vector planeNormal, Vector linePoint, Vector lineDirection) {
+    if (planeNormal.dot(lineDirection.normalize()) == 0) {
+      return null;
+    }
+
+    double t = (planeNormal.dot(planePoint) - planeNormal.dot(linePoint)) / planeNormal.dot(lineDirection.normalize());
+    return linePoint.add(lineDirection.normalize().multiply(t));
+  }
+
+  private boolean onPlane(Vector position, Vector topLeft, Vector bottomRight) {
+    return (position.getX() >= topLeft.getX() && position.getX() <= bottomRight.getX() || position.getX() <= topLeft.getX() && position.getX() >= bottomRight.getX())
+            && ((position.getY() >= topLeft.getY() && position.getY() <= bottomRight.getY() || position.getY() <= topLeft.getY() && position.getY() >= bottomRight.getY()))
+            && ((position.getZ() >= topLeft.getZ() && position.getZ() <= bottomRight.getZ() || position.getZ() <= topLeft.getZ() && position.getZ() >= bottomRight.getZ()));
+
+  }
+
+  public static String printVec2(Vec2 vec2) {
+    return "x: " + vec2.x + " | y: " + vec2.y;
   }
 
 }
