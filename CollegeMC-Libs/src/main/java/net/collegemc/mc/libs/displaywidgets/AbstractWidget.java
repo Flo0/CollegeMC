@@ -7,7 +7,6 @@ import net.collegemc.mc.libs.displaywidgets.events.HoverEnterEvent;
 import net.collegemc.mc.libs.displaywidgets.events.HoverExitEvent;
 import net.collegemc.mc.libs.displaywidgets.events.WidgetEvent;
 import net.kyori.adventure.text.Component;
-import net.minecraft.world.phys.Vec2;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,11 +25,10 @@ import java.util.function.Consumer;
 
 public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, WidgetText.WidgetBackground {
 
-  @Getter
-  protected final int id;
+
   protected final List<AbstractWidget> children;
   @Getter
-  protected final Vec2 position;
+  protected final Vec2f position;
   protected final Map<Class<? extends WidgetEvent>, List<Consumer<? extends WidgetEvent>>> eventHandlers;
   @Getter
   @Setter
@@ -64,8 +62,7 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
   private boolean glowColorEnabled = false;
   public final static float CHILD_OFFSET = 0.0001f;
 
-  protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
-    this.id = id;
+  protected AbstractWidget(Vec2f position, int width, int height, Color backgroundColor, double opacity) {
     this.position = position;
     this.width = width;
     this.height = height;
@@ -75,12 +72,12 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     this.eventHandlers = new HashMap<>();
   }
 
-  protected AbstractWidget(int id, Vec2 position, int width, int height, Color backgroundColor) {
-    this(id, position, width, height, backgroundColor, 0.5);
+  protected AbstractWidget(Vec2f position, int width, int height, Color backgroundColor) {
+    this(position, width, height, backgroundColor, 0.5);
   }
 
-  protected AbstractWidget(int id, Vec2 position, int width, int height) {
-    this(id, position, width, height, Color.GRAY, 0.5);
+  protected AbstractWidget(Vec2f position, int width, int height) {
+    this(position, width, height, Color.GRAY, 0.5);
   }
 
   public void addChild(AbstractWidget child) {
@@ -93,7 +90,7 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     children.forEach(child -> child.spawn(world, spawnPosition));
   }
 
-  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough, int depth) {
     Transformation currentTransformation = displayEntity.getTransformation();
     float yaw = getHalfYaw(facing);
     Quaternionf rotation = new Quaternionf().fromAxisAngleRad(new Vector3f(0.0F, 1.0F, 0.0F), yaw).normalize();
@@ -121,9 +118,10 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     Transformation newTransformation = new Transformation(translation, rotation, currentTransformation.getScale(), rotation.invert());
     displayEntity.setTransformation(newTransformation);
     final Vector childFacing = facing.clone();
+    final int childDepth = depth + 1;
 
     if (passThrough) {
-      children.forEach(child -> child.applyTransformation(worldPosition.add(facing.multiply(CHILD_OFFSET).multiply(id)), childFacing, true));
+      children.forEach(child -> child.applyTransformation(worldPosition.add(facing.multiply(CHILD_OFFSET).multiply(childDepth)), childFacing, true, childDepth));
     }
 
   }
@@ -164,7 +162,7 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     this.eventHandlers.computeIfAbsent(eventClass, k -> new ArrayList<>()).add(handler);
   }
 
-  public boolean contains(Vec2 pos2D) {
+  public boolean contains(Vec2f pos2D) {
     return pos2D.x >= this.position.x && pos2D.x <= this.position.x + this.width && pos2D.y >= this.position.y && pos2D.y <= this.position.y + this.height;
   }
 
@@ -183,8 +181,9 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     if (children.isEmpty()) {
       this.eventHandlers.getOrDefault(ClickEvent.class, List.of()).forEach(handler -> ((Consumer<ClickEvent>) handler).accept(event));
     } else {
-      Vec2 childClickPos = event.getPosition().add(this.position.negated());
+      Vec2f childClickPos = event.getPosition().clone().add(this.position.clone().negated());
       ClickEvent childEvent = new ClickEvent(event.getActor(), childClickPos);
+      List<AbstractWidget> hit = children.stream().filter(child -> child.contains(childClickPos)).toList();
       children.stream().filter(child -> child.contains(childClickPos)).forEach(child -> child.onClick(childEvent));
     }
   }
@@ -203,4 +202,15 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     return yaw;
   }
 
+  @Override
+  public String toString() {
+    return "AbstractWidget{" +
+            "children=" + children.size() +
+            ", position=" + position +
+            ", eventHandlers=" + eventHandlers +
+            ", width=" + width +
+            ", height=" + height +
+            ", backgroundColor=" + backgroundColor +
+            '}';
+  }
 }

@@ -3,7 +3,6 @@ package net.collegemc.mc.libs.displaywidgets;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.minecraft.world.phys.Vec2;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
@@ -31,17 +30,17 @@ public non-sealed class WidgetText extends AbstractWidget {
   @Setter
   private TextDisplay.TextAligment alignment = TextDisplay.TextAligment.LEFT;
   @Getter
-  private WidgetBackground background;
+  private WidgetBackground backgroundWidget;
 
-  public WidgetText(int id, Component text, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
-    super(id, position, width, height, Color.fromARGB(0, 0, 0, 0), opacity);
+  public WidgetText(Component text, Vec2f position, int width, int height, Color backgroundColor, double opacity) {
+    super(position, width, height, Color.fromARGB(0, 0, 0, 0), opacity);
     this.text = text;
-    background = new WidgetBackground(++id, new Vec2(position.x, position.y), width, height, backgroundColor);
-    this.children.add(background);
+    backgroundWidget = new WidgetBackground(new Vec2f(position.x, position.y), width, height, backgroundColor);
+    this.children.add(backgroundWidget);
   }
 
-  public WidgetText(int id, Vec2 position, int width, int height, Color backgroundColor, double opacity) {
-    this(id, null, position, width, height, backgroundColor, opacity);
+  public WidgetText(Vec2f position, int width, int height, Color backgroundColor, double opacity) {
+    this(Component.text(""), position, width, height, backgroundColor, opacity);
   }
 
   @Override
@@ -57,9 +56,9 @@ public non-sealed class WidgetText extends AbstractWidget {
 
 
   @Override
-  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
-    super.applyTransformation(worldPosition.clone().add(new Vector(0, getTextYOffset(), 0)), facing.clone(), false);
-    background.applyTransformation(worldPosition.add(facing.clone().multiply(AbstractWidget.CHILD_OFFSET)), facing.clone(), true);
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough, int depth) {
+    super.applyTransformation(worldPosition.clone().add(new Vector(0, getTextYOffset(), 0)), facing.clone(), false, depth);
+    backgroundWidget.applyTransformation(worldPosition.add(facing.clone().multiply(AbstractWidget.CHILD_OFFSET)), facing.clone(), true, ++depth);
   }
 
   private float getTextYOffset() {
@@ -86,6 +85,7 @@ public non-sealed class WidgetText extends AbstractWidget {
     getDisplayEntity().setBillboard(Display.Billboard.FIXED);
     getDisplayEntity().setGlowing(false);
     getDisplayEntity().setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
+    getBackgroundWidget().update();
   }
 
   public enum VerticalAlignment {
@@ -95,8 +95,8 @@ public non-sealed class WidgetText extends AbstractWidget {
   }
 
   non-sealed static class WidgetBackground extends AbstractWidget {
-    protected WidgetBackground(int id, Vec2 position, int width, int height, Color backgroundColor) {
-      super(id, position, width, height, backgroundColor);
+    protected WidgetBackground(Vec2f position, int width, int height, Color backgroundColor) {
+      super(position, width, height, backgroundColor);
     }
   }
 

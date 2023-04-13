@@ -19,6 +19,8 @@ import net.collegemc.mc.core.transport.teleport.TeleportCommand;
 import net.collegemc.mc.core.transport.teleport.TeleportManager;
 import net.collegemc.mc.core.transport.warp.WarpCommand;
 import net.collegemc.mc.core.transport.warp.WarpManager;
+import net.collegemc.mc.core.widgetdisplays.craftle.CraftleDebugCommand;
+import net.collegemc.mc.core.widgetdisplays.craftle.CraftleManager;
 import net.collegemc.mc.libs.CollegeLibrary;
 import net.collegemc.mc.libs.CollegePlugin;
 import net.collegemc.mc.libs.ServerConfigurationService;
@@ -29,6 +31,8 @@ import java.util.List;
 
 public class CollegeCore extends CollegePlugin {
 
+  @Getter
+  private static CollegeCore instance;
   @Getter
   private static ActiveCollegeUserManager activeCollegeUserManager;
   @Getter
@@ -47,9 +51,13 @@ public class CollegeCore extends CollegePlugin {
   private static QuestManager questManager;
   @Getter
   private static DayCycleManager dayCycleManager;
+  @Getter
+  private static CraftleManager craftleManager;
 
   @Override
   public void onEnable() {
+    instance = this;
+
     activeCollegeUserManager = new ActiveCollegeUserManager();
     teleportManager = new TeleportManager();
     warpManager = new WarpManager();
@@ -59,6 +67,7 @@ public class CollegeCore extends CollegePlugin {
     economyManager = new EconomyManager();
     questManager = new QuestManager(this);
     dayCycleManager = new DayCycleManager();
+    craftleManager = new CraftleManager();
 
     PaperCommandManager commandManager = CollegeLibrary.getCommandManager();
 
@@ -95,6 +104,7 @@ public class CollegeCore extends CollegePlugin {
 
     commandManager.registerCommand(new EconomyCommand());
     commandManager.registerCommand(new QuestCommand());
+    commandManager.registerCommand(new CraftleDebugCommand());
   }
 
   @Override

@@ -1,28 +1,28 @@
 package net.collegemc.mc.libs.displaywidgets;
 
 import lombok.Getter;
-import net.collegemc.mc.libs.CollegeLibrary;
-import net.minecraft.world.phys.Vec2;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-public final class WidgetFrame extends AbstractWidget {
+public non-sealed class WidgetFrame extends AbstractWidget {
 
   @Getter
   private final Vector worldPosition;
   @Getter
   private Vector rotation;
+  @Getter
+  private final int id;
 
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor, double opacity) {
-    super(id, new Vec2(0, 0), width, height, backgroundColor, opacity);
+    super(new Vec2f(0, 0), width, height, backgroundColor, opacity);
     if (rotation.isZero()) {
       throw new IllegalArgumentException("Rotation cannot be zero!");
     }
     this.worldPosition = worldPosition;
     this.rotation = rotation.normalize().clone();
-    CollegeLibrary.getInstance().getLogger().warning("rotation: " + rotation);
+    this.id = id;
   }
 
   public WidgetFrame(int id, Vector worldPosition, Vector rotation, int width, int height, Color backgroundColor) {
@@ -36,7 +36,7 @@ public final class WidgetFrame extends AbstractWidget {
 
   public void build(World world) {
     super.spawn(world, worldPosition.clone());
-    applyTransformation(worldPosition, rotation.clone(), true);
+    applyTransformation(worldPosition, rotation.clone(), true, 1);
     update();
   }
 
@@ -52,8 +52,8 @@ public final class WidgetFrame extends AbstractWidget {
   }
 
   @Override
-  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough) {
-    super.applyTransformation(worldPosition.add(facing.clone().multiply(CHILD_OFFSET)), facing.clone(), passThrough);
+  public void applyTransformation(Vector worldPosition, Vector facing, boolean passThrough, int depth) {
+    super.applyTransformation(worldPosition.add(facing.clone().multiply(CHILD_OFFSET)), facing.clone(), passThrough, 1);
     this.rotation = facing.clone();
     update();
   }

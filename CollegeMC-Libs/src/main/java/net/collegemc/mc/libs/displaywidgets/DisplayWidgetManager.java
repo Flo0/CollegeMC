@@ -2,7 +2,6 @@ package net.collegemc.mc.libs.displaywidgets;
 
 import io.papermc.paper.event.player.PlayerArmSwingEvent;
 import net.collegemc.mc.libs.displaywidgets.events.ClickEvent;
-import net.minecraft.world.phys.Vec2;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,7 +17,7 @@ import java.util.Set;
 
 public class DisplayWidgetManager {
 
-  private static final int MAX_TRACE_DISTANCE = 6;
+  private static final int MAX_TRACE_DISTANCE = 12;
 
   private final Map<Integer, WidgetFrame> widgets;
   private final Map<Player, Set<WidgetFrame>> engagedPlayers;
@@ -79,7 +78,7 @@ public class DisplayWidgetManager {
       Vector relativeHitPoint = hitPosition.subtract(widgetPosition);
       relativeHitPoint.rotateAroundAxis(new Vector(0, 1.0, 0), -widget.getYaw());
 
-      Vec2 inFramePosition = new Vec2((float) Math.abs(relativeHitPoint.getX()) * 4, -(float) Math.abs(relativeHitPoint.getY()) * -4);
+      Vec2f inFramePosition = new Vec2f((float) Math.abs(relativeHitPoint.getX()) * 4, -(float) Math.abs(relativeHitPoint.getY()) * -4);
       ClickEvent clickEvent = new ClickEvent(event.getPlayer(), inFramePosition);
       widget.onClick(clickEvent);
     }
@@ -114,7 +113,7 @@ public class DisplayWidgetManager {
 
   }
 
-  public static String printVec2(Vec2 vec2) {
+  public static String printVec2(Vec2f vec2) {
     return "x: " + vec2.x + " | y: " + vec2.y;
   }
 
