@@ -14,17 +14,19 @@ public class CraftleDisplay extends WidgetFrame {
   private final CraftleKeyboard craftleKeyboard;
   private final CraftleInputOverview craftleOverview;
   private WidgetButton enterButton;
-  private static final WidgetButton.ButtonDisplayProperties enterButtonDefault = new WidgetButton.ButtonDisplayProperties(Color.BLUE, 1.0);
+  private static final WidgetButton.ButtonDisplayProperties enterButtonDefault = new WidgetButton.ButtonDisplayProperties(Color.fromRGB(38, 40, 46), 1.0);
   private static final WidgetButton.ButtonDisplayProperties enterButtonPressed = new WidgetButton.ButtonDisplayProperties(Color.WHITE, 1.0);
-  private static final int enterButtonWidth = 1;
-  private static final int enterButtonHeight = 2;
+  private static final int enterButtonWidth = 2;
+  private static final int enterButtonHeight = 3;
   private static final int craftleWidth = 8 * 4;
   private static final int craftleHeight = 4 * 4;
   private static final Vec2f keyboardPosition = new Vec2f(3 * 4, 0);
   private static final Vec2f overviewPosition = new Vec2f(0, 0);
-  private static final Vec2f enterPosition = new Vec2f(2 * 4, 2 * 4 + 1);
+  private static final Vec2f enterPosition = new Vec2f(2 * 4 + 2, 2 * 4);
+  private static final Color backgroundColor = Color.fromARGB(150, 43, 45, 48);
 
-  public CraftleDisplay(int id, Vector worldPosition, Vector rotation, Color backgroundColor, String word) {
+
+  public CraftleDisplay(int id, Vector worldPosition, Vector rotation, String word) {
     super(id, worldPosition, rotation, craftleWidth, craftleHeight, backgroundColor);
     this.craftleKeyboard = new CraftleKeyboard(this, keyboardPosition);
     this.craftleOverview = new CraftleInputOverview(overviewPosition);
@@ -40,8 +42,7 @@ public class CraftleDisplay extends WidgetFrame {
       return;
     }
 
-    craftleOverview.input(character, craftleKeyboard.getState(character));
-
+    craftleOverview.input(character, CraftleInputKey.KeyState.NOT_GUESSED);
   }
 
   public void enterWord() {
@@ -49,6 +50,7 @@ public class CraftleDisplay extends WidgetFrame {
       return;
     }
     String inputWord = craftleOverview.getCurrentWord();
+    inputWord = inputWord.toLowerCase();
     if (!CollegeCore.getCraftleManager().validWord(inputWord)) {
       //TODO user feedback
       return;
@@ -64,17 +66,30 @@ public class CraftleDisplay extends WidgetFrame {
       if (inputChar == wordChars[i]) {
         state = CraftleInputKey.KeyState.CORRECT_POSITION;
       } else if (word.contains(String.valueOf(inputChar))) {
-        state = CraftleInputKey.KeyState.IN_WORD;
+        int count = 0;
+        for (int j = 0; j < inputChars.length; j++) {
+          if (inputChars[j] == inputChar) {
+            count++;
+          }
+        }
+        if (count >= 2) {
+          state = CraftleInputKey.KeyState.IN_WORD;
+        } else {
+          state = CraftleInputKey.KeyState.NOT_IN_WORD;
+        }
+
       } else {
         state = CraftleInputKey.KeyState.NOT_IN_WORD;
       }
 
-      craftleKeyboard.setState(inputChar, state);
-      craftleOverview.setState(currentLetter - (4 - i), currentRow, state);
+      if (craftleKeyboard.getState(inputChar) == CraftleInputKey.KeyState.NOT_GUESSED) {
+        craftleKeyboard.setState(inputChar, state);
+      }
+      craftleOverview.setState(currentLetter - (4 - i) - 1, currentRow, state);
     }
 
     if (inputWord.equals(word)) {
-      System.out.println("FOUND WORD!");
+
     }
 
     craftleOverview.newLine();

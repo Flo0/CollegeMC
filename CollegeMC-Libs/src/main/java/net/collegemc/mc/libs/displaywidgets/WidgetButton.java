@@ -44,11 +44,6 @@ public class WidgetButton extends WidgetText {
     super.update();
   }
 
-  @Override
-  public void setBackgroundColor(Color backgroundColor) {
-    this.getBackgroundWidget().setBackgroundColor(backgroundColor);
-  }
-
   public void interact() {
     this.interact(null);
   }

@@ -1,11 +1,14 @@
 package net.collegemc.mc.core.widgetdisplays.craftle;
 
 import lombok.Getter;
+import net.collegemc.mc.core.CollegeCore;
 import net.collegemc.mc.libs.displaywidgets.Vec2f;
 import net.collegemc.mc.libs.displaywidgets.WidgetFrame;
 import net.collegemc.mc.libs.displaywidgets.WidgetText;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
+
+import java.util.logging.Logger;
 
 public class CraftleInputOverview {
 
@@ -37,6 +40,8 @@ public class CraftleInputOverview {
   }
 
   public void setState(int letter, int row, CraftleInputKey.KeyState state) {
+    Logger logger = CollegeCore.getInstance().getLogger();
+    logger.warning("applying " + state.name() + " to row " + row + " letter " + letter);
     applyState(widgets[row][letter], state);
   }
 
@@ -50,10 +55,11 @@ public class CraftleInputOverview {
     if (letter == 0) {
       return;
     }
-    WidgetText letterWidget = widgets[row][letter--];
+    WidgetText letterWidget = widgets[row][--letter];
     letterWidget.setText(Component.text("-"));
     letterWidget.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
     letterWidget.update();
+    this.currentWord = this.currentWord.substring(0, currentWord.length() - 1);
   }
 
   public void construct(WidgetFrame frame) {

@@ -28,7 +28,7 @@ public non-sealed class WidgetText extends AbstractWidget {
   private int charactersPerLine = 128;
   @Getter
   @Setter
-  private TextDisplay.TextAligment alignment = TextDisplay.TextAligment.LEFT;
+  private TextDisplay.TextAlignment alignment = TextDisplay.TextAlignment.LEFT;
   @Getter
   private WidgetBackground backgroundWidget;
 
@@ -52,6 +52,12 @@ public non-sealed class WidgetText extends AbstractWidget {
   @Override
   public void update() {
     syncPropertiesWithText();
+  }
+
+
+  @Override
+  public void setBackgroundColor(Color backgroundColor) {
+    this.getBackgroundWidget().setBackgroundColor(backgroundColor);
   }
 
 

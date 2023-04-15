@@ -142,7 +142,7 @@ public abstract sealed class AbstractWidget permits WidgetFrame, WidgetText, Wid
     entity.setShadowed(this.shadowed);
     entity.setShadowRadius(this.shadowRadius);
     entity.setShadowStrength(this.shadowStrength);
-    entity.setAlignment(TextDisplay.TextAligment.CENTER);
+    entity.setAlignment(TextDisplay.TextAlignment.CENTER);
     entity.setSeeThrough(false);
     entity.setBillboard(Display.Billboard.FIXED);
     if (this.glowColorEnabled) {
